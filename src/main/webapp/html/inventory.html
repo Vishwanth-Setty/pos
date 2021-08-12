@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="snippets.html :: name_head"></head>
+<body>
+<nav th:replace="snippets.html :: name_navbar"></nav>
+<div th:replace="snippets.html :: toast-service"></div>
+<div class="container">
+    <div class="row" style="margin:30px">
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" id="addInventoryModal">Add Inventory</button>
+        </div>
+    </div>
+    <table class="table" id="inventory-table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Barcode</th>
+            <th scope="col">Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editInventory">
+                        <div class="form-group row">
+                            <input id="productId" type="hidden" name="productId">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3">Quantity : </label>
+                            <input class="form-control form-control-lg col-4" name="quantity" id="quantity" type="text">
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update-inventory">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addInventory">
+                        <div class="form-group row">
+                            <label class="col-3">Barcode : </label>
+                            <input class="form-control form-control-lg col-4" name="barcode" id="addBarcode" type="text">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3">Quantity : </label>
+                            <input class="form-control form-control-lg col-4" name="quantity" id="addQuantity" type="text">
+                        </div>
+                    </form>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="addInventoryButton">Add Inventory</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<footer th:replace="snippets.html :: footer"></footer>
+<script th:src="@{/static/inventory.js}"/>
+</script>
+</html>

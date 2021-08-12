@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="snippets.html :: name_head"></head>
+<body>
+<nav th:replace="snippets.html :: name_navbar"></nav>
+<div th:replace="snippets.html :: toast-service"></div>
+<div class="container">
+    <div class="row" style="margin:30px">
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" id="createOrderModal">Create Order</button>
+        </div>
+    </div>
+    <table class="table" id="order-table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Order Time</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editInventory">
+                        <table class="table" id="order-item-table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Barcode</th>
+                                <th scope="col">Quantity</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                    
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update-inventory">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Crete Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="createOrder">
+                        <div class="form-group row">
+                            <label class="col-3 label">Barcode : </label>
+                            <input class="form-control form-control col-4" name="barcode" id="addBarcode" type="text">
+                            <lable class="errorForm">Invalid</p>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 lable">Quantity : </label>
+                            <input class="form-control form-control col-4" name="quantity" id="addQuantity" type="text">
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-primary col-4" style="margin: 10px;" id="addProduct">Add Product</button>
+                        </div>
+                    </form>
+                    <table class="table" id="new-order-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="addInventoryButton">Create Order</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<footer th:replace="snippets.html :: footer"></footer>
+<script th:src="@{/static/order.js}">
+</script>
+</html>
