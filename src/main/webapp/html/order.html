@@ -5,7 +5,7 @@
 <nav th:replace="snippets.html :: name_navbar"></nav>
 <div th:replace="snippets.html :: toast-service"></div>
 <div class="container">
-    <div class="row" style="margin:30px">
+    <div class="row" style="margin:30px;margin-left:-15px">
         <div class="col-2">
             <button type="button" class="btn btn-primary" id="createOrderModal">Create Order</button>
         </div>
@@ -13,7 +13,7 @@
     <table class="table" id="order-table">
         <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">Id</th>
             <th scope="col">Order Time</th>
             <th scope="col">Actions</th>
         </tr>

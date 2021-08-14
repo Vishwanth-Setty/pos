@@ -35,12 +35,6 @@ public class BrandDao extends AbstractDao<BrandPojo> {
         return brandPojo;
     }
 
-    public int delete(int id) {
-        Query query = em.createQuery(delete_id);
-        query.setParameter("id", id);
-        return query.executeUpdate();
-    }
-
     public BrandPojo selectByNameAndCategory(String brand,String category) {
         TypedQuery<BrandPojo> query = getQuery(select_name_category);
         query.setParameter("brand", brand);

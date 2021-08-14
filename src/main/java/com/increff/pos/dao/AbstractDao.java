@@ -14,6 +14,5 @@ public abstract class AbstractDao<T> {
     }
     public abstract List<T> selectAll();
     public abstract T select(int id);
-    public abstract int delete(int id);
 
 }

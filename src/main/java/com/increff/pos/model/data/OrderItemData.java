@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class orderItemData {
+public class OrderItemData {
     private int orderItemId;
     private int orderId;
     private String barcode;

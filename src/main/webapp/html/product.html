@@ -5,7 +5,7 @@
 <nav th:replace="snippets.html :: name_navbar"></nav>
 <div th:replace="snippets.html :: toast-service"></div>
 <div class="container">
-    <div class="row" style="margin:30px">
+    <div class="row" style="margin:30px ;margin-left:-15px">
         <div class="col-2">
             <button type="button" class="btn btn-primary" id="addProductModal">Add Product</button>
         </div>
@@ -49,34 +49,35 @@
                             <input id="brandId" type="hidden" name="brandId">
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Barcode : </label>
+                            <label class="col-3">Barcode<span class="required">*</span> </label>
                             <input class="form-control form-control-lg col-4" name="barcode" id="barcode" type="text" readonly>
                         </div>
                         
                         <div class="form-group row">
-                            <label class="col-3">Brand : </label>
-                            <input class="form-control form-control-lg col-4" name="brand" id="brandName" type="text">
+                            <label class="col-3">Brand<span class="required">*</span> </label>
+                            <input class="form-control form-control-lg col-4" name="brand" id="brandName" type="text" required />
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Category : </label>
+                            <label class="col-3">Category<span class="required">*</span></label>
                             <input class="form-control form-control-lg col-4" name="category" id="categoryName"
-                                   type="text">
+                                   type="text" required />
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-3">Name : </label>
-                            <input class="form-control form-control-lg col-4" name="name" id="name" type="text">
+                            <label class="col-3">Name<span class="required">*</span> </label>
+                            <input class="form-control form-control-lg col-4" name="name" id="name" type="text" required/>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">mrp : </label>
-                            <input class="form-control form-control-lg col-4" name="mrp" id="mrp" type="text">
+                            <label class="col-3">mrp<span class="required">*</span> </label>
+                            <input class="form-control form-control-lg col-4" name="mrp" id="mrp" type="text" required/>
+                            <div id="mrpEditError" class="error-message"></div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="update-product">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="update-product">Submit</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -95,42 +96,42 @@
                     <form id="addProduct">
 
                         <div class="form-group row">
-                            <label class="col-3">Barcode : </label>
+                            <label class="col-3">Barcode<span class="required">*</span> </label>
                             <input required class="form-control form-control col-4" name="barcode" id="addBarcode" type="text" />
                             <div>
-                                <p id="mrpError" class="error"></p>
+                                <p id="barcodeError" class="error"></p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Brand: </label>
+                            <label class="col-3">Brand<span class="required">*</span> </label>
                             <input class="form-control form-control col-4" name="brand" id="addBrandName" type="text" required />
                             <div>
-                                <p id="mrpError" class="error"></p>
+                                <p id="brandNameError" class="error"></p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Category : </label>
+                            <label class="col-3">Category<span class="required">*</span> </label>
                             <input class="form-control form-control col-4" name="category" id="addCategoryName" type="text" required />
                             <div>
-                                <p id="mrpError" class="error"></p>
+                                <p id="categoryNameError" class="error"></p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Name : </label>
+                            <label class="col-3">Name<span class="required">*</span> </label>
                             <input class="form-control form-control col-4" name="name" id="addName" type="text" required />
                             <div>
-                                <p id="mrpError" class="error"></p>
+                                <p id="nameError" class="error"></p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">mrp : </label>
+                            <label class="col-3">mrp<span class="required">*</span> </label>
                             <input class="form-control form-control col-4" name="mrp" id="addMrp" type="text" required />
                             <div>
                                 <p id="mrpError" class="error"></p>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="addProductButton">Submit</button>
+                            <button type="submit" class="btn btn-primary" id="addProductButton">Submit</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>

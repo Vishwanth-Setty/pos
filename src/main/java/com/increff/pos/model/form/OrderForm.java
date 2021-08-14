@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class orderForm {
+public class OrderForm {
     private int id;
-    private List<orderItemForm> orderItemList;
+    private List<OrderItemForm> orderItemList;
 }

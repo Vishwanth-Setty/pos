@@ -19,14 +19,12 @@ function toast(message,type){
 //HELPER METHOD
 function toJson($form){
     var serialized = $form.serializeArray();
-    console.log(serialized);
     var s = '';
     var data = {};
     for(s in serialized){
-        data[serialized[s]['name']] = serialized[s]['value']
+        data[serialized[s]['name']] = serialized[s]['value'].trim().toLowerCase()
     }
     var json = JSON.stringify(data);
-    console.log(json);
     return json;
 }
 
@@ -41,6 +39,15 @@ function getProductUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/product";
 }
+function getInventoryUrl() {
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/inventory";
+}
+function getOrderUrl() {
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/order";
+}
+
 
 //validations
 
@@ -61,6 +68,99 @@ function validateDouble(number){
     }
     return false;
 }
+
+// FILE UPLOAD METHODS
+var fileData = [];
+var errorData = [];
+var processCount = 0;
+var type;
+
+
+function processData($file,from){
+    // console.log($file);
+    type = from;
+	var file = $file[0].files[0];
+    // console.log("file" ,file)
+	readFileData(file, readFileDataCallback);
+}
+
+function readFileDataCallback(results){
+	fileData = results.data;
+    console.log(fileData)
+    if(fileData.length>5000){
+        alert("Cant upload more than 5000 rows")
+        return false;
+    }
+	uploadRows();
+}
+
+function uploadRows(){
+	
+	var json = JSON.stringify(fileData);
+    console.log(json);
+    let url = getBrandUrl();
+    switch(type){
+        case 'Brand':
+            url = getBrandUrl();
+    }
+
+	// Make ajax call
+	$.ajax({
+	   url: url+'/upload',
+	   type: 'POST',
+	   data: json,
+	   headers: {
+       	'Content-Type': 'application/json'
+       },	   
+	   success: function(response) {
+	   		console.log("susccess")  
+	   },
+	   error: function(response){
+           console.log(response);
+	   }
+	});
+
+}
+
+function downloadErrors(){
+	writeFileData(errorData);
+}
+
+function readFileData(file, callback){
+	var config = {
+		header: true,
+		delimiter: "\t",
+		skipEmptyLines: "greedy",
+		complete: function(results) {
+			callback(results);
+	  	}	
+	}
+	Papa.parse(file, config);
+}
+
+
+function writeFileData(arr){
+	var config = {
+		quoteChar: '',
+		escapeChar: '',
+		delimiter: "\t"
+	};
+	
+	var data = Papa.unparse(arr, config);
+    var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
+    var fileUrl =  null;
+
+    if (navigator.msSaveBlob) {
+        fileUrl = navigator.msSaveBlob(blob, 'download.tsv');
+    } else {
+        fileUrl = window.URL.createObjectURL(blob);
+    }
+    var tempLink = document.createElement('a');
+    tempLink.href = fileUrl;
+    tempLink.setAttribute('download', 'download.tsv');
+    tempLink.click(); 
+}
+
 
 
 

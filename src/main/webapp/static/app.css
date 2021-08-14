@@ -12,6 +12,9 @@ body {
 .container {
 	margin: 0%;
 	margin-left:40px;
+	padding-right: 100px;
+	max-width: none;
+	
 }
 .toast{
 	opacity:0;
@@ -76,4 +79,15 @@ body {
 .modal{
 	margin-top:100px;
 	margin-right: 180px;
+}
+
+.error-message {
+	color: #cc0033;
+	display: inline-block;
+	font-size: 12px;
+	line-height: 15px;
+	margin: 17px 15px 0;
+  }
+.required{
+	color:red;
 }

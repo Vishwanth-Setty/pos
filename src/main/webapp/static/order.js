@@ -1,13 +1,15 @@
 let orderItems = {};
 
-function displayInventoryData(inventories) {
-    var $tbody = $('#inventory-table').find('tbody');
-    var dataTable = $('#inventory-table').DataTable()
+function displayOrderData(inventories) {
+    var $tbody = $('#order-table').find('tbody');
+    var dataTable = $('#order-table').DataTable()
     dataTable.clear();
     for (var i in inventories) {
         var e = inventories[i];
-        e["id"] = new Number(i) + 1;
+        console.log(e);
+        e.orderTime = new Date(e.orderTime.year,e.orderTime.monthValue-1,e.orderTime.dayOfMonth).toLocaleDateString();
         dataTable.row.add(e).draw(false);
+        
         // var buttonHtml = '<span id="editButton" class="bi-pen" onclick="editInventory('+e.productId+')"></span>'
         // var row = '<tr id="inventory'+i+'">'
         // + '<td>' + e.productId + '</td>'
@@ -22,7 +24,7 @@ function displayInventoryData(inventories) {
     return false;
 }
 
-function addInventory() {
+function addOrder() {
     var $form = $('#addInventory');
     console.log($form)
     var json = toJson($form);
@@ -55,7 +57,7 @@ function addInventory() {
 
 }
 
-async function editInventory(id, quantity) {
+async function editOrder(id, quantity) {
     $('#editModal').modal('show');
     quantity = new Number(quantity);
     $('#quantity').val(quantity)
@@ -104,17 +106,16 @@ async function getProductByBarcode(barcode) {
     return product;
 }
 
-function getInventories() {
-    let url = getInventoryUrl();
-    let inventories;
+function getOrders() {
+    let url = getOrderUrl();
+    let orders;
     $.ajax({
         url: url,
         type: 'GET',
         success: function (response) {
-            inventories = response;
-            console.log("sdf")
-            console.log(inventories)
-            displayInventoryData(inventories);
+            orders = response;
+            console.log(orders)
+            displayOrderData(orders);
         },
         error: function (error) {
             console.log(error)
@@ -122,22 +123,6 @@ function getInventories() {
         }
     });
 }
-async function getInventoryById(id) {
-    let url = getInventoryUrl() + '/' + id;
-    let inventory;
-    await $.ajax({
-        url: url,
-        type: 'GET',
-        success: function (response) {
-            inventory = response;
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    });
-    return inventory;
-}
-
 async function checkProduct(barcode){
     return await getProductByBarcode(barcode)
 }
@@ -176,10 +161,8 @@ function openModal() {
 
 function init() {
     activeTab();
-    $('#update-inventory').click(updateInventory);
     $('#createOrderModal').click(openModal);
-    $('#addInventoryButton').click(addInventory);
-    $('#addProduct').click(addProductToTable);
+    $('#addInventoryButton').click(addOrder);
     $("#order-table").DataTable({
         data: [],
         columns: [{

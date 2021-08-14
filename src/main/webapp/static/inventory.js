@@ -1,15 +1,10 @@
-function getInventoryUrl() {
-    var baseUrl = $("meta[name=baseUrl]").attr("content")
-    return baseUrl + "/api/inventory";
-}
-
 function displayInventoryData(inventories) {
     var $tbody = $('#inventory-table').find('tbody');
     var dataTable = $('#inventory-table').DataTable()
     dataTable.clear();
     for(var i in inventories){
     		var e = inventories[i];
-            e["id"]=new Number(i)+1;
+            // e["id"]=new Number(i)+1;
             dataTable.row.add(e).draw(false);
     		// var buttonHtml = '<span id="editButton" class="bi-pen" onclick="editInventory('+e.productId+')"></span>'
     		// var row = '<tr id="inventory'+i+'">'
@@ -30,6 +25,13 @@ function addInventory() {
     console.log($form)
     var json = toJson($form);
     var url = getInventoryUrl();
+    if (!validateDouble(JSON.parse(json).quantity)) {
+        $("#quantityAddError").html("Should be Positive Number and Integer");
+        setTimeout(function () {
+          $("#quantityAddError").empty();
+        }, 10000);
+        return false;
+    }
     console.log(json);
     $.ajax({
         url: url,
@@ -70,6 +72,14 @@ function updateInventory() {
     console.log($form)
     var id = $('#productId').val();
     var json = toJson($form);
+    if (!validateDouble(JSON.parse(json).quantity)) {
+        $("#quantityEditError").html("Should be Positive Number and Integer");
+        setTimeout(function () {
+          $("#quantityEditError").empty();
+        }, 4000);
+        return false;
+    }
+      
     var url = getInventoryUrl();
     console.log(json);
     $.ajax({
@@ -141,15 +151,13 @@ function openModal() {
 
 function init() {
     activeTab();
-    $('#update-inventory').click(updateInventory);
+    $('#editInventory').submit(updateInventory);
     $('#addInventoryModal').click(openModal);
-    $('#addInventoryButton').click(addInventory);
+    $('#addInventory').submit(addInventory);
     $("#inventory-table").DataTable({
         data: [],
         info:false,
-        columns: [{
-                data: "id",
-            },
+        columns: [
             {
                 data: "barcode",
             },

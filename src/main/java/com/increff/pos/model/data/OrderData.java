@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class orderData {
+public class OrderData {
     private int orderId;
     private ZonedDateTime orderTime;
     private boolean invoiceGenerated;

@@ -1,4 +1,3 @@
-
 let prevValue = {};
 
 function displayBrandData(brands) {
@@ -50,10 +49,11 @@ function openCreateModal() {
     //     .val('');
     $('#createBrand').trigger("reset");
     $('#addModal').modal('show');
-    
+
 }
 
-function addBrand() {
+function addBrand(e) {
+    e.preventDefault();
     var $form = $('#createBrand');
     var json = toJson($form);
     var url = getBrandUrl();
@@ -76,7 +76,6 @@ function addBrand() {
         error: function (error) {
             error = JSON.parse(error.responseText);
             toast(error.message, 'WARN');
-            $('#editModal').modal('hide');
         }
     });
 
@@ -97,14 +96,13 @@ function editBrand(e) {
             prevValue["category"] = response.category;
         },
         error: function () {
-            alert("An error has occurred");
-        }
+            toast("Error while Retriving Data");        }
     });
 }
 
-function updateBrand() {
+function updateBrand(e) {
+    e.preventDefault();
     var $form = $('#editBrand');
-    console.log($form)
     var id = $('#brandId').val();
     var json = toJson($form);
     var url = getBrandUrl();
@@ -124,10 +122,15 @@ function updateBrand() {
         error: function (error) {
             error = JSON.parse(error.responseText);
             toast(error.message, 'WARN');
-            // $('#editModal').modal('hide');
 
         }
     });
+}
+
+function updateFileName(){
+	var $file = $('#brandFile');
+	var fileName = $file.val();
+	$('#brandFileName').html(fileName);
 }
 
 //ACTIVE TAB
@@ -137,11 +140,17 @@ function activeTab() {
     $('#nav-inventory').removeClass('active');
     $('#nav-order').removeClass('active');
 }
+function upload(){
+    var $file = $('#brandFile')
+    processData($file);
+}
 
 function init() {
-    $('#update-brand').click(updateBrand);
+    $('#editBrand').submit(updateBrand);
     $('#addBrand').click(openCreateModal);
-    $('#addBrandButton').click(addBrand);
+    $('#createBrand').submit(addBrand);
+    $('#brandFile').on('change', updateFileName);
+    $('#upload-data').click(upload);
     $("#brand-table").DataTable({
         data: [],
         info: false,
@@ -161,18 +170,18 @@ function init() {
             }
         ]
     });
-    $('#editBrand :input').keyup(function() {
+    $('#editBrand :input').keyup(function () {
         let brand = $('#brandName').val();
         let category = $('#categoryName').val();
         console.log(prevValue)
-        console.log(brand,category)
-        if(brand == prevValue["brand"] && category == prevValue["category"]){
+        console.log(brand, category)
+        if (brand == prevValue["brand"] && category == prevValue["category"]) {
             $('#update-brand').prop('disabled', true);
             return;
         }
         $('#update-brand').prop('disabled', false);
     });
-      
+
 }
 $(document).ready(init);
 $(document).ready(activeTab);
