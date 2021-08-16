@@ -134,6 +134,42 @@ async function getInventoryById(id) {
     });
     return inventory;
 }
+//Upload
+
+function upload(){
+    var $file = $('#inventoryFile')
+    processData($file);
+}
+
+function updateFileName(){
+	var $file = $('#inventoryFile');
+	var fileName = $file.val();
+	$('#inventoryFileName').html(fileName);
+}
+
+function uploadRows(){
+	
+	var json = JSON.stringify(fileData);
+    console.log(json);
+    let url = getInventoryUrl();
+	// Make ajax call
+	// $.ajax({
+	//    url: url+'/upload',
+	//    type: 'POST',
+	//    data: json,
+	//    headers: {
+    //    	'Content-Type': 'application/json'
+    //    },	   
+	//    success: function(response) {
+	//    		console.log("Susccessfully Uploaded",'INFO')  
+	//    },
+	//    error: function(error){
+    //        console.log(error);
+    //        toast(error.responseJSON.message,'WARN')
+	//    }
+	// });
+
+}
 
 
 //ACTIVE TAB
@@ -154,6 +190,8 @@ function init() {
     $('#editInventory').submit(updateInventory);
     $('#addInventoryModal').click(openModal);
     $('#addInventory').submit(addInventory);
+    $('#inventoryFile').on('change', updateFileName);
+    $('#upload-data').click(upload);
     $("#inventory-table").DataTable({
         data: [],
         info:false,

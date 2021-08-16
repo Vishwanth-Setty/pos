@@ -47,6 +47,10 @@ function getOrderUrl() {
     var baseUrl = $("meta[name=baseUrl]").attr("content")
     return baseUrl + "/api/order";
 }
+function getReportUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/report";
+}
 
 
 //validations
@@ -94,33 +98,7 @@ function readFileDataCallback(results){
 	uploadRows();
 }
 
-function uploadRows(){
-	
-	var json = JSON.stringify(fileData);
-    console.log(json);
-    let url = getBrandUrl();
-    switch(type){
-        case 'Brand':
-            url = getBrandUrl();
-    }
 
-	// Make ajax call
-	$.ajax({
-	   url: url+'/upload',
-	   type: 'POST',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },	   
-	   success: function(response) {
-	   		console.log("susccess")  
-	   },
-	   error: function(response){
-           console.log(response);
-	   }
-	});
-
-}
 
 function downloadErrors(){
 	writeFileData(errorData);

@@ -10,7 +10,13 @@
             <button type="button" class="btn btn-primary" id="addInventoryModal">Add Inventory</button>
         </div>
         <div class="col-2">
-            <button type="button" class="btn btn-primary" id="addBrand">Upload TSV</button>
+            <div class="inventory-file">
+                <input type="file" class="custom-file-input" id="inventoryFile"/>
+                <label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose file</label>
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" id="upload-data">Upload TSV</button>
         </div>
     </div>
     <table class="table table-striped table-bordered text-center" id="inventory-table">

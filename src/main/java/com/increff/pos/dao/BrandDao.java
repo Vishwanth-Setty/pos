@@ -16,7 +16,6 @@ public class BrandDao extends AbstractDao<BrandPojo> {
     @PersistenceContext
     private EntityManager em;
 
-    private static final String delete_id = "delete from BrandPojo p where id=:id";
     private static final String select_id = "select p from BrandPojo p where id=:id";
     private static final String select_all = "select p from BrandPojo p";
     private static final String select_name_category = "select p from BrandPojo p where brand=:brand and category=:category";

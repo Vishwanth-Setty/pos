@@ -23,7 +23,7 @@ public class AppRestControllerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ErrorData handle(Throwable e) {
 		ErrorData data = new ErrorData();
-		data.setMessage("An unknown error has occurred - " + e.getMessage());
+		data.setMessage("An unknown error has occurred - " + e);
 		return data;
 	}
 }

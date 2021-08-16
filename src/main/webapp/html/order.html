@@ -10,7 +10,7 @@
             <button type="button" class="btn btn-primary" id="createOrderModal">Create Order</button>
         </div>
     </div>
-    <table class="table" id="order-table">
+    <table class="table table-striped table-bordered text-center" id="order-table">
         <thead>
         <tr>
             <th scope="col">Id</th>
@@ -34,12 +34,26 @@
                 </div>
                 <div class="modal-body">
                     <form id="editInventory">
+                        <div class="form-group row">
+                            <label class="col-3 label">Barcode : </label>
+                            <input class="form-control form-control col-4" name="barcode" id="addItemBarcodeToUpdate" type="text">
+                            <lable class="error-message"></p>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 lable">Quantity : </label>
+                            <input class="form-control form-control col-4" name="quantity" id="addItemQuantityToUpdate" type="text">
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-primary col-4" style="margin: 10px;" id="addProductToUpdateOrder">Add Product</button>
+                        </div>
+
                         <table class="table" id="order-item-table">
                             <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Barcode</th>
                                 <th scope="col">Quantity</th>
+                                <th scope="col">OrderId</th>
+                                <th scope="col">Selling Price</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -57,7 +71,7 @@
     </div>
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="max-width: 65vw;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addModalLabel">Crete Order</h5>
@@ -68,23 +82,26 @@
                 <div class="modal-body">
                     <form id="createOrder">
                         <div class="form-group row">
-                            <label class="col-3 label">Barcode : </label>
-                            <input class="form-control form-control col-4" name="barcode" id="addBarcode" type="text">
-                            <lable class="errorForm">Invalid</p>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-3 lable">Quantity : </label>
+                            <label class="col-2 label">Barcode : </label>
+                            <input class="form-control form-control col-3" name="barcode" id="addBarcode" type="text">
+                            <label class="col-2 lable">Quantity : </label>
                             <input class="form-control form-control col-4" name="quantity" id="addQuantity" type="text">
                         </div>
+                        <div class="form-group row">
+                            <label class="col-2 label">Selling price </label>
+                            <input class="form-control form-control col-3" name="barcode" id="addSellingPrice" type="text">
+                            <button type="button" class="btn btn-primary col-4" style="margin-left: 90px;" id="addProduct">Add Product</button>
+                        </div>
                         <div class="row">
-                            <button type="button" class="btn btn-primary col-4" style="margin: 10px;" id="addProduct">Add Product</button>
                         </div>
                     </form>
-                    <table class="table" id="new-order-table">
+                    <button id="button">Delete selected row</button>
+                    <table class="table table-striped table-bordered text-center" id="new-order-table" style="width: 100vw;">
                         <thead>
                         <tr>
                             <th scope="col">Barcode</th>
                             <th scope="col">Quantity</th>
+                            <th scope="col">Selling Price</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>

@@ -10,8 +10,15 @@
             <button type="button" class="btn btn-primary" id="addProductModal">Add Product</button>
         </div>
         <div class="col-2">
-            <button type="button" class="btn btn-primary" id="addBrand">Upload TSV</button>
+            <div class="product-file">
+                <input type="file" class="custom-file-input" id="productFile"/>
+                <label class="custom-file-label" for="productFile" id="productFileName">Choose file</label>
+            </div>
         </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" id="upload-data">Upload TSV</button>
+        </div>
+        
     </div>
     <table class="table table-striped table-bordered text-center" cellspacing="0" id="product-table">
         <thead>

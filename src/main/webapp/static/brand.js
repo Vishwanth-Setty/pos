@@ -127,10 +127,85 @@ function updateBrand(e) {
     });
 }
 
+//Upload Data
+function upload(){
+    var $file = $('#brandFile')
+    processData($file);
+}
+
 function updateFileName(){
 	var $file = $('#brandFile');
 	var fileName = $file.val();
 	$('#brandFileName').html(fileName);
+}
+
+function uploadRows(){
+	
+	var json = JSON.stringify(fileData);
+    console.log(json);
+    let url = getBrandUrl();
+    switch(type){
+        case 'Brand':
+            url = getBrandUrl();
+    }
+
+	// Make ajax call
+	$.ajax({
+	   url: url+'/upload',
+	   type: 'POST',
+	   data: json,
+	   headers: {
+       	'Content-Type': 'application/json'
+       },	   
+	   success: function(response) {
+	   		console.log("Susccessfully Uploaded",'INFO')  
+	   },
+	   error: function(error){
+           console.log(error);
+           toast(error.responseJSON.message,'WARN')
+	   }
+	});
+
+}
+
+function download(){
+    let url = getReportUrl()+"/brand";
+    $.ajax({
+        url: url,
+        cache: false,
+        xhr: function () {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 2) {
+                    if (xhr.status == 200) {
+                        xhr.responseType = "blob";
+                    } else {
+                        xhr.responseType = "text";
+                    }
+                }
+            };
+            return xhr;
+        },
+        success: function (data) {
+            //Convert the Byte Data to BLOB object.
+            var blob = new Blob([data], { type: "application/octetstream" });
+
+            //Check the Browser type and download the File.
+            var isIE = false || !!document.documentMode;
+            if (isIE) {
+                window.navigator.msSaveBlob(blob, fileName);
+            } else {
+                var url = window.URL || window.webkitURL;
+                link = url.createObjectURL(blob);
+                var a = $("<a />");
+                a.attr("download", fileName);
+                a.attr("href", link);
+                $("body").append(a);
+                a[0].click();
+                $("body").remove(a);
+            }
+        }
+    });
 }
 
 //ACTIVE TAB
@@ -140,16 +215,14 @@ function activeTab() {
     $('#nav-inventory').removeClass('active');
     $('#nav-order').removeClass('active');
 }
-function upload(){
-    var $file = $('#brandFile')
-    processData($file);
-}
+
 
 function init() {
     $('#editBrand').submit(updateBrand);
     $('#addBrand').click(openCreateModal);
     $('#createBrand').submit(addBrand);
     $('#brandFile').on('change', updateFileName);
+    $('#download').click(download); 
     $('#upload-data').click(upload);
     $("#brand-table").DataTable({
         data: [],

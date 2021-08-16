@@ -26,4 +26,7 @@ public class OrderPojo {
     @Column(nullable = false)
     private ZonedDateTime orderTime;
 
+    @Column(nullable = false)
+    private boolean invoiceGenerated;
+
 }

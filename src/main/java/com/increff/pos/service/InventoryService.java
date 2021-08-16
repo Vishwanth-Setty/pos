@@ -5,8 +5,11 @@ import com.increff.pos.model.UploadErrorMessage;
 import com.increff.pos.model.data.InventoryData;
 import com.increff.pos.model.data.ProductData;
 import com.increff.pos.model.form.InventoryForm;
+import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.utils.ConvertUtil;
+import com.increff.pos.utils.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class InventoryService {
+public class InventoryService extends ErrorUtils {
 
     @Autowired
     InventoryDao inventoryDao;
@@ -26,32 +29,22 @@ public class InventoryService {
     ProductService productService;
 
     @Transactional
-    public List<InventoryData> getInventoryList(){
-        List<InventoryPojo> listInventoryPojo = inventoryDao.selectAll();
-        List<InventoryData> listInventoryData = new ArrayList<InventoryData>();
-        for(InventoryPojo inventoryPojo:listInventoryPojo){
-            ProductData productData = productService.getProduct(inventoryPojo.getProductId());
-            InventoryData tempInventoryData = new InventoryData();
-            tempInventoryData.setBarcode(productData.getBarcode());
-            tempInventoryData.setProductName(productData.getName());
-            tempInventoryData.setProductId(productData.getId());
-            tempInventoryData.setQuantity(inventoryPojo.getQuantity());
-            listInventoryData.add(tempInventoryData);
-        }
-        return listInventoryData;
+    public List<InventoryPojo> getInventoryList(){
+        return inventoryDao.selectAll();
     }
 
     @Transactional
-    public InventoryData getInventory(int id){
-        InventoryPojo inventoryPojo = inventoryDao.select(id);
-        ProductData productData = productService.getProduct(inventoryPojo.getProductId());
-        InventoryData inventoryData = new InventoryData();
-        inventoryData.setBarcode(productData.getBarcode());
-        inventoryData.setProductName(productData.getName());
-        inventoryData.setProductId(productData.getId());
-        inventoryData.setQuantity(inventoryPojo.getQuantity());
-        return inventoryData;
+    public InventoryPojo getInventory(int id){
+        return inventoryDao.select(id);
     }
+
+    @Transactional
+    public void addInventory(InventoryPojo inventoryPojo) throws ApiException{
+        InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
+        checkNotNull(exists,"Inventory exists for given barcode.");
+        inventoryDao.insert(inventoryPojo);
+    }
+
     @Transactional
     public void updateInventory(InventoryPojo inventoryPojo){
         InventoryPojo oldInventoryPojo = inventoryDao.select(inventoryPojo.getProductId());
@@ -59,65 +52,77 @@ public class InventoryService {
     }
 
     @Transactional
-    public void addInventory(InventoryPojo inventoryPojo) throws ApiException{
-        InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
-        if(exists != null){
-            throw new ApiException("Inventory exists for given barcode.");
-        }
-        inventoryDao.insert(inventoryPojo);
-    }
-
-    @Transactional
-    public List<UploadErrorMessage> upload(List<InventoryForm> inventoryFormList) throws  ApiException{
-        List<UploadErrorMessage> uploadErrorMessageList = checkData(inventoryFormList);
-        if(uploadErrorMessageList.size()!=0){
-            return uploadErrorMessageList;
+    public void  upload(List<InventoryForm> inventoryFormList) throws  ApiException{
+        String errorMessage = checkData(inventoryFormList);
+        if(!errorMessage.equals("")){
+            throw new ApiException(errorMessage);
         }
         for(InventoryForm inventoryForm : inventoryFormList){
-            String barcode = inventoryForm.getBarcode();
-            ProductPojo productPojo = productService.getProductByBarcode(barcode);
-            InventoryPojo inventoryPojo1 = inventoryDao.select(inventoryForm.getProductId());
-            if(inventoryPojo1 == null){
-                InventoryPojo inventoryPojo = new InventoryPojo();
-                inventoryPojo.setProductId(productPojo.getId());
-                inventoryPojo.setQuantity(inventoryForm.getQuantity());
+            InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm);
+            InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
+            if(exists == null){
                 addInventory(inventoryPojo);
             }
             else{
-                InventoryPojo inventoryPojo = new InventoryPojo();
-                inventoryPojo.setProductId(productPojo.getId());
-                inventoryPojo.setQuantity(inventoryForm.getQuantity());
                 updateInventory(inventoryPojo);
             }
         }
-        return null;
     }
 
-    @Transactional
-    private List<UploadErrorMessage> checkData(List<InventoryForm> inventoryFormList){
-        List<UploadErrorMessage> uploadErrorMessageList = new ArrayList<UploadErrorMessage>();
-        Set<String> hash_Set = new HashSet<String>();
-        int row = 0;
-        for(InventoryForm inventoryForm : inventoryFormList){
-            ++row;
+    private String checkData(List<InventoryForm> inventoryFormList) throws ApiException{
+        String errorMessage = "";
+        errorMessage = checkEmpty(inventoryFormList);
+        if(!errorMessage.equals("")){
+            return "Given rows have empty field "+errorMessage;
+        }
+        errorMessage = checkDuplicates(inventoryFormList);
+        if(!errorMessage.equals("")){
+            return "Given TSV have Duplicate field "+errorMessage;
+        }
+        return "";
+    }
+    private String checkEmpty(List<InventoryForm> inventoryFormList){
+        String errorMessage = "";
+        int i = 1;
+        for(InventoryForm inventoryForm: inventoryFormList){
+            ++i;
             String barcode = inventoryForm.getBarcode();
-            ProductPojo productPojo = productService.getProductByBarcode(barcode);
-            if(productPojo == null){
-                UploadErrorMessage uploadErrorMessage = new UploadErrorMessage();
-                uploadErrorMessage.setRowNumber(row);
-                uploadErrorMessage.setError("Invalid barcode");
-                uploadErrorMessageList.add(uploadErrorMessage);
-                continue;
+            int quantity = inventoryForm.getQuantity();
+            if (barcode.equals("") || quantity == 0) {
+                errorMessage += Integer.toString(i) ;
             }
-            if(hash_Set.contains(barcode)){
-                UploadErrorMessage uploadErrorMessage = new UploadErrorMessage();
-                uploadErrorMessage.setRowNumber(row);
-                uploadErrorMessage.setError("Barcode already exists in the TSV");
-                uploadErrorMessageList.add(uploadErrorMessage);
-                continue;
+        }
+        return errorMessage;
+
+    }
+
+    private  String checkDuplicates(List<InventoryForm> inventoryFormList){
+        Set<String> hash_Set = new HashSet<String>();
+        String errorMessage = "";
+        int i = 1;
+        for(InventoryForm inventoryForm:inventoryFormList){
+            ++i;
+            String barcode = inventoryForm.getBarcode();
+            if (hash_Set.contains(barcode)) {
+                errorMessage += Integer.toString(i) + " " + barcode ;
             }
             hash_Set.add(barcode);
         }
-        return uploadErrorMessageList;
+        return errorMessage;
     }
+
+//    private  String checkQuantity(List<InventoryForm> inventoryFormList){
+//        String errorMessage = "";
+//        int i = 1;
+//        for(InventoryForm inventoryForm:inventoryFormList){
+//            ++i;
+//            int quantity = inventoryForm.getQuantity();
+//            if (hash_Set.contains(barcode)) {
+//                errorMessage += Integer.toString(i) + " " + barcode ;
+//            }
+//            hash_Set.add(barcode);
+//        }
+//        return errorMessage;
+//    }
+
 }

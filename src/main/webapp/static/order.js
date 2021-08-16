@@ -59,13 +59,25 @@ function addOrder() {
 
 async function editOrder(id, quantity) {
     $('#editModal').modal('show');
-    quantity = new Number(quantity);
-    $('#quantity').val(quantity)
-    $('#productId').val(id)
+    let url = getOrderUrl();
+    let orders;
+    $.ajax({
+        url: url + '/' +id,
+        type: 'GET',
+        success: function (response) {
+            order = response;
+            console.log(order)
+            // displayOrderData(orders);
+        },
+        error: function (error) {
+            console.log(error)
+            //            alert(error+ "An error has occurred");
+        }
+    });
 }
 
-function updateInventory() {
-    var $form = $('#editInventory');
+function updateOrder() {
+    var $form = $('#editOrder');
     console.log($form)
     var id = $('#productId').val();
     var json = toJson($form);
@@ -88,6 +100,7 @@ function updateInventory() {
         }
     });
 }
+
 
 async function getProductByBarcode(barcode) {
     let url = getProductUrl() + "/barcode/" + barcode;
@@ -129,21 +142,28 @@ async function checkProduct(barcode){
 
 async function addProductToTable(){
     var validProduct = await checkProduct($('#addBarcode').val());
-    if(validProduct=="" ){
+    if(validProduct == "" ){
         console.log("invalid");
         return ;
     }
-    orderItems[validProduct.barcode] = $('#addQuantity').val()
+    // orderItems[validProduct.barcode] = $('#addQuantity').val()
     // var $tbody = $('#new-order-table').find('tbody');
     // var buttonHtml = '<span id="editButton" class="bi-pen" onclick="editInventory('+validProduct.barcode+')"></span>'
     // var row = '<tr>'
     // + '<td>' + validProduct.barcode + '</td>'
     // + '<td>' + $('#addQuantity').val() + '</td>'
+    // + '<td>' + $('#addSellingPrice').val() + '</td>'
     // + '<td>' + buttonHtml + '</td>'
     // + '</tr>';
     // $tbody.append(row);
     // console.log("Added");
-    console.log(orderItems);
+    // console.log(orderItems);
+    product = {};
+    product["barcode"] = validProduct.barcode
+    product["quantity"] = $('#addQuantity').val()
+    product["sellingPrice"] = $('#addSellingPrice').val()
+    var dataTable = $("#new-order-table").DataTable();
+    dataTable.row.add(product).draw(false);
     return false;
 }
 
@@ -155,18 +175,44 @@ function activeTab() {
     $('#nav-order').addClass('active');
 }
 
+//Deleted Product
+$('#new-order-table tbody').on( 'click', 'tr', function () {
+    var dataTable = $("#new-order-table").DataTable();
+
+    if ( $(this).hasClass('selected') ) {
+        $(this).removeClass('selected');
+    }
+    else {
+        dataTable.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+    }
+} );
+
+// $('#button').click( function () {
+//     var dataTable = $("#new-order-table").DataTable();
+
+//     dataTable.row('.selected').remove().draw( false );
+// } );
+
 function openModal() {
     $('#addModal').modal('show');
+}
+
+function deletedProductInCreate(id){
+    var dataTable = $("#new-order-table").DataTable();
+
+    dataTable.row('.selected').remove().draw( false );
 }
 
 function init() {
     activeTab();
     $('#createOrderModal').click(openModal);
     $('#addInventoryButton').click(addOrder);
+    $('#addProduct').click(addProductToTable);
     $("#order-table").DataTable({
         data: [],
         columns: [{
-                data: "id",
+                data: "orderId",
             },
             {
                 data: "orderTime",
@@ -177,7 +223,7 @@ function init() {
                 mRender: function (o) {
                     return (
                         '<span id="editButton" onclick="editOrder(' +
-                        o.id +
+                        o.orderId +
                         ')"><span class="material-icons md-24">edit</span></span>'
                     );
                 },
@@ -185,6 +231,34 @@ function init() {
         ],
     });
     
+    $("#new-order-table").DataTable({
+        data: [],
+        paging:   false,
+        ordering: false,
+        info:     false,
+        columns: [
+            {
+                data: "barcode",
+            },
+            {
+                data: "quantity",
+            },
+            {
+                data: "sellingPrice",
+            },
+            {
+                mData: null,
+                bSortable: false,
+                mRender: function (o) {
+                    return (
+                        '<span id="editButton" onclick="deletedProductInCreate(' +
+                        o.barcode +
+                        ')"><span class="material-icons md-24">delete_outline</span></span>'
+                    );
+                },
+            },
+        ],
+    });
 }
 
 $(document).ready(init);

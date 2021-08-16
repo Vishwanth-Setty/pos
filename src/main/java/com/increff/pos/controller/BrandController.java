@@ -24,14 +24,13 @@ public class BrandController {
     @Autowired
     private BrandService service;
 
-    private CommonUtils commonUtils;
-    private ConvertUtil convertUtil;
+
 
     @ApiOperation(value = "Creating new Brand")
     @RequestMapping(path = "",method = RequestMethod.POST)
     public void addBrand(@RequestBody BrandForm brandForm) throws ApiException {
-//        commonUtils.normalize(brandForm);                                                        // Passing reference or value
-        BrandPojo brandPojo = convertUtil.convert(brandForm);
+        CommonUtils.normalize(brandForm);                                                        // Passing reference or value
+        BrandPojo brandPojo = ConvertUtil.convert(brandForm);
         service.addBrand(brandPojo);
     }
 
@@ -39,9 +38,10 @@ public class BrandController {
     @RequestMapping(path = "",method = RequestMethod.GET)
     public List<BrandData> getAllBrands(){
         List<BrandPojo> listBrandPojo = service.getAllBrands();
-        List<BrandData> listBrandData = new ArrayList<BrandData>();
-        for( BrandPojo p : listBrandPojo){
-            listBrandData.add(convertUtil.convert(p));
+        List<BrandData> listBrandData = new ArrayList<>();
+        for( BrandPojo brandPojo : listBrandPojo){
+            BrandData brandData = ConvertUtil.convert(brandPojo);
+            listBrandData.add(brandData);
         }
         return listBrandData;
     }
@@ -49,27 +49,28 @@ public class BrandController {
     @ApiOperation(value = "Get Brand by Id")
     @RequestMapping(path = "/{id}",method = RequestMethod.GET)
     public BrandData getBrand(@PathVariable int id){
-        return convertUtil.convert(service.getBrandById(id));
+        return ConvertUtil.convert(service.getBrandById(id));
     }
 
 
     @ApiOperation(value = "Update Brand")
     @RequestMapping(path = "/{id}",method = RequestMethod.PUT)
     public void updateBrand(@PathVariable int id,@RequestBody BrandForm brandForm) throws ApiException{
-//        commonUtils.normalize(brandForm);
-        BrandPojo brandPojo = convertUtil.convert(brandForm);
+        CommonUtils.normalize(brandForm);
+        BrandPojo brandPojo = ConvertUtil.convert(brandForm);
         brandPojo.setId(id);
         service.updateBrand(brandPojo);
     }
 
     @ApiOperation(value = "Upload Brands")
-    @RequestMapping(path = "/upload",method = RequestMethod.POST)
-    public List<UploadErrorMessage> uploadData(@RequestBody List<BrandForm> brandFormList) throws ApiException{
+    @RequestMapping(path = "/list",method = RequestMethod.POST)
+    public void uploadData(@RequestBody List<BrandForm> brandFormList){
         List<BrandPojo> brandPojoList = new ArrayList<BrandPojo>();
         for(BrandForm brandForm : brandFormList){
-            brandPojoList.add(convertUtil.convert(brandForm));
+            CommonUtils.normalize(brandForm);
+            brandPojoList.add(ConvertUtil.convert(brandForm));
         }
-        return service.upload(brandPojoList);
+
     }
 
 

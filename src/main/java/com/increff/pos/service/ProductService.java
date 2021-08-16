@@ -1,14 +1,13 @@
 package com.increff.pos.service;
 
-import com.google.protobuf.Api;
-import com.increff.pos.dao.AbstractDao;
 import com.increff.pos.dao.ProductDao;
-import com.increff.pos.model.UploadErrorMessage;
-import com.increff.pos.model.data.ProductData;
 import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.utils.CommonUtils;
+import com.increff.pos.utils.ConvertUtil;
+import com.increff.pos.utils.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class ProductService {
+public class ProductService extends ErrorUtils {
     @Autowired
     private ProductDao productDao;
     @Autowired
@@ -27,28 +26,16 @@ public class ProductService {
 
     private CommonUtils commonUtils;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional
     public void addProduct(ProductPojo productPojo) throws ApiException {
         ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
-        if (exists != null) {
-            throw new ApiException("Product with that barcode exists");
-        }
+        checkNotNull(exists,"Product with that barcode exists");
         productDao.insert(productPojo);
     }
 
     @Transactional
-    public ProductData getProduct(int id) {
-        ProductPojo productPojo = productDao.select(id);
-        BrandPojo brandPojo = brandService.getBrandById(productPojo.getBrandId());
-        ProductData productData = new ProductData();
-        productData.setId(productPojo.getId());
-        productData.setBarcode(productPojo.getBarcode());
-        productData.setName(productPojo.getName());
-        productData.setMrp(productPojo.getMrp());
-        productData.setBrandId(productPojo.getBrandId());
-        productData.setBrand(brandPojo.getBrand());
-        productData.setCategory((brandPojo.getCategory()));
-        return productData;
+    public ProductPojo getProduct(int id) {
+        return productDao.select(id);
     }
 
     @Transactional
@@ -57,22 +44,8 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductData> getProductsList() {
-        List<ProductPojo> listProductPojo = productDao.selectAll();
-        List<ProductData> listProductData = new ArrayList<ProductData>();
-        for (ProductPojo p : listProductPojo) {
-            ProductData tempProductData = new ProductData();
-            BrandPojo brandPojo = brandService.getBrandById(p.getBrandId());
-            tempProductData.setId(p.getId());
-            tempProductData.setBarcode(p.getBarcode());
-            tempProductData.setName(p.getName());
-            tempProductData.setMrp(p.getMrp());
-            tempProductData.setBrandId(p.getBrandId());
-            tempProductData.setBrand(brandPojo.getBrand());
-            tempProductData.setCategory((brandPojo.getCategory()));
-            listProductData.add(tempProductData);
-        }
-        return listProductData;
+    public List<ProductPojo> getProductsList() {
+        return productDao.selectAll();
     }
 
     @Transactional
@@ -85,69 +58,138 @@ public class ProductService {
     }
 
     @Transactional
-    public List<UploadErrorMessage> upload(List<ProductForm> productFormList) throws ApiException {
-        List<UploadErrorMessage> uploadErrorMessageList = checkData(productFormList);
-        if (uploadErrorMessageList.size() != 0) {
-            return uploadErrorMessageList;
+    public void upload(List<ProductForm> productFormList) throws ApiException {
+        String errorMessage = checkData(productFormList);
+        if(!errorMessage.equals("")){
+            throw new ApiException(errorMessage);
         }
-        for (ProductForm productForm : productFormList) {
-            String brand = productForm.getBrand();
-            String category = productForm.getCategory();
-            BrandPojo brandPojo = brandService.getBrandByNameAndCategory(brand, category);
-            productForm.setBrandId(brandPojo.getId());
-            ProductPojo productPojo = convert(productForm);
+        for(ProductForm productForm : productFormList){
+            ProductPojo productPojo = ConvertUtil.convert(productForm);
             addProduct(productPojo);
         }
-        return null;
     }
 
-    @Transactional
-    private List<UploadErrorMessage> checkData(List<ProductForm> productFormList) throws ApiException {
-        List<UploadErrorMessage> uploadErrorMessageList = new ArrayList<UploadErrorMessage>();
-        Set<String> hash_Set = new HashSet<String>();
-        int row = 0;
-        for (ProductForm productForm : productFormList) {
-            row++;
-            ProductPojo productPojo = getProductByBarcode(productForm.getBarcode());
+    private String checkData(List<ProductForm> productFormList) throws ApiException{
+        String errorMessage = "";
+        errorMessage = checkEmpty(productFormList);
+        if(!errorMessage.equals("")){
+            return "Given rows have empty field "+errorMessage;
+        }
+        errorMessage = checkDuplicates(productFormList);
+        if(!errorMessage.equals("")){
+            return "Given TSV have Duplicate field "+errorMessage;
+        }
+        errorMessage = checkBrandAndCategory(productFormList);
+        if(!errorMessage.equals("")){
+            return "Given TSV have Invalid Brand and Category Combinations "+errorMessage;
+        }
+        errorMessage = checkDuplicatesInDatabase(productFormList);
+        if(!errorMessage.equals("")){
+            return "Given TSV have Duplicate field in Database "+errorMessage;
+        }
+        return "";
+    }
+
+    private  String checkEmpty(List<ProductForm> productFormList){
+        String errorMessage = "";
+        int i = 1;
+        for(ProductForm productForm: productFormList){
+            ++i;
             String barcode = productForm.getBarcode();
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
             double mrp = productForm.getMrp();
             if (barcode.equals("") || brand.equals("") || category.equals("") || mrp == 0) {
-                uploadErrorMessageList.add(commonUtils.setError(row, "Fields cant be empty"));
-                continue;
+                errorMessage += Integer.toString(i) ;
             }
-
-            BrandPojo brandPojo = brandService.getBrandByNameAndCategory(brand, category);
+        }
+        return errorMessage;
+    }
+    private  String checkDuplicates(List<ProductForm> productFormList){
+        Set<String> hash_Set = new HashSet<String>();
+        String errorMessage = "";
+        int i = 1;
+        for(ProductForm productForm: productFormList){
+            ++i;
+            String barcode = productForm.getBarcode();
+            String brand = productForm.getBrand();
+            String category = productForm.getCategory();
+            double mrp = productForm.getMrp();
             if (hash_Set.contains(barcode)) {
-                uploadErrorMessageList.add(commonUtils.setError(row, "Barcode already exists in the TSV"));
-                continue;
-            }
-            if (productPojo != null) {
-                uploadErrorMessageList.add(commonUtils.setError(row, "Barcode already exists in the Database"));
-                continue;
-            }
-
-            if (brandPojo != null) {
-                uploadErrorMessageList.add(commonUtils.setError(row, "Brand and Category doesn't exists"));
-                continue;
-            }
-            if (mrp < 0) {
-                uploadErrorMessageList.add(commonUtils.setError(row, "MRP should be Positive Value"));
-                continue;
+                errorMessage += Integer.toString(i) + " " + barcode ;
             }
             hash_Set.add(barcode);
         }
-
-        return uploadErrorMessageList;
+        return errorMessage;
     }
-
-    private static ProductPojo convert(ProductForm form) {
-        ProductPojo p = new ProductPojo();
-        p.setBarcode(form.getBarcode());
-        p.setBrandId(form.getBrandId());
-        p.setName(form.getName());
-        p.setMrp(form.getMrp());
-        return p;
+    private  String checkBrandAndCategory(List<ProductForm> productFormList) {
+        String errorMessage = "";
+        int i = 1;
+        for(ProductForm productForm: productFormList){
+            ++i;
+            String barcode = productForm.getBarcode();
+            String brand = productForm.getBrand();
+            String category = productForm.getCategory();
+            BrandPojo exists = brandService.getBrandByNameAndCategory(brand,category);
+            if (exists != null) {
+                errorMessage += Integer.toString(i) + " " + barcode;
+            }
+        }
+        return errorMessage;
     }
+    private  String checkDuplicatesInDatabase(List<ProductForm> productFormList){
+        String errorMessage = "";
+        int i = 1;
+        for(ProductForm productForm: productFormList){
+            ++i;
+            String barcode = productForm.getBarcode();
+            String brand = productForm.getBrand();
+            String category = productForm.getCategory();
+            ProductPojo exists = getProductByBarcode(barcode);
+            if (exists != null) {
+                errorMessage += Integer.toString(i) + " " + barcode;
+            }
+        }
+        return errorMessage;
+    }
+//    private List<UploadErrorMessage> checkData(List<ProductForm> productFormList) throws ApiException {
+//        List<UploadErrorMessage> uploadErrorMessageList = new ArrayList<UploadErrorMessage>();
+//        Set<String> hash_Set = new HashSet<String>();
+//        int row = 0;
+//        for (ProductForm productForm : productFormList) {
+//            row++;
+//            ProductPojo productPojo = getProductByBarcode(productForm.getBarcode());
+//            String barcode = productForm.getBarcode();
+//            String brand = productForm.getBrand();
+//            String category = productForm.getCategory();
+//            double mrp = productForm.getMrp();
+//            if (barcode.equals("") || brand.equals("") || category.equals("") || mrp == 0) {
+//                uploadErrorMessageList.add(commonUtils.setError(row, "Fields cant be empty"));
+//                continue;
+//            }
+//
+//            BrandPojo brandPojo = brandService.getBrandByNameAndCategory(brand, category);
+//            if (hash_Set.contains(barcode)) {
+//                uploadErrorMessageList.add(commonUtils.setError(row, "Barcode already exists in the TSV"));
+//                continue;
+//            }
+//            if (productPojo != null) {
+//                uploadErrorMessageList.add(commonUtils.setError(row, "Barcode already exists in the Database"));
+//                continue;
+//            }
+//
+//            if (brandPojo != null) {
+//                uploadErrorMessageList.add(commonUtils.setError(row, "Brand and Category doesn't exists"));
+//                continue;
+//            }
+//            if (mrp < 0) {
+//                uploadErrorMessageList.add(commonUtils.setError(row, "MRP should be Positive Value"));
+//                continue;
+//            }
+//            hash_Set.add(barcode);
+//        }
+//
+//        return uploadErrorMessageList;
+//    }
+
 }

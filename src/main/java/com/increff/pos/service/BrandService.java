@@ -21,9 +21,6 @@ public class BrandService extends ErrorUtils {
     @Autowired
     private BrandDao dao;
 
-    private CommonUtils commonUtils;
-    private ConvertUtil convertUtil;
-
     @Transactional
     public void addBrand(BrandPojo brandPojo) throws ApiException {
         BrandPojo exists = dao.selectByNameAndCategory(brandPojo.getBrand(),brandPojo.getCategory());
@@ -45,13 +42,9 @@ public class BrandService extends ErrorUtils {
     }
 
     @Transactional
-    public BrandPojo getBrandByNameAndCategory (String brand,String category) throws ApiException {
-        BrandPojo brandPojo = dao.selectByNameAndCategory(brand,category);
-        checkNull(brandPojo,"Brand doest exists with that combination");
-//        if(brandPojo == null){
-//            throw new ApiException("Brand doest exists with that combination");
-//        }
-        return brandPojo;
+    public BrandPojo getBrandByNameAndCategory (String brand,String category) {
+//        checkNull(brandPojo,"Brand doest exists with that combination");
+        return dao.selectByNameAndCategory(brand,category);
     }
 
     @Transactional
@@ -66,7 +59,7 @@ public class BrandService extends ErrorUtils {
         brandPojo.setCategory(p.getCategory());
     }
     @Transactional
-    public List<UploadErrorMessage> upload(List<BrandPojo> brandPojoList) throws ApiException{
+    public void upload(List<BrandPojo> brandPojoList) throws ApiException{
         String errorMessage = checkData(brandPojoList);
         if(errorMessage != ""){
             throw new ApiException(errorMessage);
@@ -74,12 +67,10 @@ public class BrandService extends ErrorUtils {
         for(BrandPojo brandPojo:brandPojoList){
             addBrand(brandPojo);
         }
-        return null;
     }
 
     @Transactional
     private String checkData(List<BrandPojo> brandPojoList){
-        Set<String> hash_Set = new HashSet<String>();
         String errorMessage = "";
         errorMessage = checkEmpty(brandPojoList);
         if(!errorMessage.equals("")){
@@ -129,7 +120,7 @@ public class BrandService extends ErrorUtils {
             String brand = brandPojo.getBrand();
             String category = brandPojo.getCategory();
             BrandPojo brandExists = dao.selectByNameAndCategory(brand,category);
-            if(brand.equals("") || category.equals("") ) {
+            if(brandExists!=null) {
                 errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
             }
         }

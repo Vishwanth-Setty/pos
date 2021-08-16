@@ -141,6 +141,43 @@ async function getProductById(id) {
     return product;
 }
 
+//Upload
+
+function upload(){
+    var $file = $('#productFile')
+    processData($file);
+}
+
+function updateFileName(){
+	var $file = $('#productFile');
+	var fileName = $file.val();
+	$('#productFileName').html(fileName);
+}
+
+function uploadRows(){
+	
+	var json = JSON.stringify(fileData);
+    console.log(json);
+    let url = getProductUrl();
+	// Make ajax call
+	// $.ajax({
+	//    url: url+'/upload',
+	//    type: 'POST',
+	//    data: json,
+	//    headers: {
+    //    	'Content-Type': 'application/json'
+    //    },	   
+	//    success: function(response) {
+	//    		console.log("Susccessfully Uploaded",'INFO')  
+	//    },
+	//    error: function(error){
+    //        console.log(error);
+    //        toast(error.responseJSON.message,'WARN')
+	//    }
+	// });
+
+}
+
 
 //ACTIVE TAB
 function activeTab() {
@@ -161,6 +198,8 @@ function init() {
     $("#editProduct").submit(updateProduct);
     $("#addProductModal").click(openModal);
     $("#addProduct").submit(addProduct);
+    $('#productFile').on('change', updateFileName);
+    $('#upload-data').click(upload);
     $("#product-table").DataTable({
         data: [],
         info: false,
