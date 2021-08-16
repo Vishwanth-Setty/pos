@@ -87,7 +87,7 @@ public class OrderService {
 //        List<OrderItemPojo> orderItemFormList = new ArrayList<OrderItemPojo>();
 //        for (OrderItemForm orderItemForm : orderForm.getOrderItemList()) {
 //            OrderItemPojo tempOrderItemPojo = new OrderItemPojo();
-//            int productId = productService.getProductByBarcode(orderItemForm.getBarcode()).getId();
+//            int productId = productService.getByBarcode(orderItemForm.getBarcode()).getId();
 //            tempOrderItemPojo.setProductId(productId);
 //            tempOrderItemPojo.setOrderId(orderForm.getId());
 //            tempOrderItemPojo.setQuantity(orderItemForm.getQuantity());

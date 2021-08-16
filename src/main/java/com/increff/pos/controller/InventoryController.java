@@ -1,13 +1,10 @@
 package com.increff.pos.controller;
 
-import com.increff.pos.model.UploadErrorMessage;
+import com.increff.pos.dto.InventoryDto;
 import com.increff.pos.model.data.InventoryData;
 import com.increff.pos.model.form.InventoryForm;
 import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
-import com.increff.pos.service.InventoryService;
-import com.increff.pos.service.ProductService;
 import com.increff.pos.utils.CommonUtils;
 import com.increff.pos.utils.ConvertUtil;
 import io.swagger.annotations.Api;
@@ -21,15 +18,8 @@ import java.util.List;
 @Api
 @RestController
 public class InventoryController {
-
     @Autowired
-    InventoryService inventoryService;
-
-    @Autowired
-    ProductService productService;
-
-    private CommonUtils commonUtils;
-
+    private InventoryDto inventoryDto;
 
     @ApiOperation(value = "Get all Inventories")
     @RequestMapping(path = "/api/inventory", method = RequestMethod.GET)
@@ -51,9 +41,7 @@ public class InventoryController {
     @ApiOperation(value = "Create Inventory of Product")
     @RequestMapping(path = "/api/inventory", method = RequestMethod.POST)
     public void createInventory(@RequestBody InventoryForm inventoryForm) throws ApiException {
-        CommonUtils.normalize(inventoryForm);
-        InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm);
-        inventoryService.addInventory(inventoryPojo);
+        inventoryDto.addInventory(inventoryForm);
     }
 
     @ApiOperation(value = "Update Inventory of Product")

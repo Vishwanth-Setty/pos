@@ -1,6 +1,5 @@
 package com.increff.pos.controller;
 
-import com.increff.pos.model.UploadErrorMessage;
 import com.increff.pos.model.data.ProductData;
 import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.BrandPojo;
@@ -61,7 +60,7 @@ public class ProductController {
     @ApiOperation(value = "Get Product by barcode")
     @RequestMapping(path = "/barcode/{barcode}",method = RequestMethod.GET)
     public ProductData getProductByBarcode(@PathVariable String barcode) throws ApiException{
-        ProductPojo productPojo = productService.getProductByBarcode((barcode));
+        ProductPojo productPojo = productService.getByBarcode((barcode));
         return ConvertUtil.convert(productPojo);
     }
 

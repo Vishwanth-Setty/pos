@@ -25,9 +25,6 @@ public class InventoryService extends ErrorUtils {
     @Autowired
     InventoryDao inventoryDao;
 
-    @Autowired
-    ProductService productService;
-
     @Transactional
     public List<InventoryPojo> getInventoryList(){
         return inventoryDao.selectAll();

@@ -24,8 +24,6 @@ public class BrandController {
     @Autowired
     private BrandService service;
 
-
-
     @ApiOperation(value = "Creating new Brand")
     @RequestMapping(path = "",method = RequestMethod.POST)
     public void addBrand(@RequestBody BrandForm brandForm) throws ApiException {

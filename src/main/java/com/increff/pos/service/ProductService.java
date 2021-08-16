@@ -3,7 +3,6 @@ package com.increff.pos.service;
 import com.increff.pos.dao.ProductDao;
 import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.utils.CommonUtils;
 import com.increff.pos.utils.ConvertUtil;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +37,16 @@ public class ProductService extends ErrorUtils {
     }
 
     @Transactional
-    public ProductPojo getProductByBarcode(String barcode) {
+    public ProductPojo getByBarcode(String barcode) {
         return productDao.selectByBarcode(barcode);
+    }
+
+    @Transactional
+    public ProductPojo getCheckByBarcode(String barcode) throws ApiException {
+        ProductPojo productPojo = productDao.selectByBarcode(barcode);
+        checkNotNull(productPojo, "Product with barcode "+ barcode +" doesn't exists");
+
+        return productPojo;
     }
 
     @Transactional
@@ -145,7 +151,7 @@ public class ProductService extends ErrorUtils {
             String barcode = productForm.getBarcode();
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
-            ProductPojo exists = getProductByBarcode(barcode);
+            ProductPojo exists = getByBarcode(barcode);
             if (exists != null) {
                 errorMessage += Integer.toString(i) + " " + barcode;
             }
@@ -158,7 +164,7 @@ public class ProductService extends ErrorUtils {
 //        int row = 0;
 //        for (ProductForm productForm : productFormList) {
 //            row++;
-//            ProductPojo productPojo = getProductByBarcode(productForm.getBarcode());
+//            ProductPojo productPojo = getByBarcode(productForm.getBarcode());
 //            String barcode = productForm.getBarcode();
 //            String brand = productForm.getBrand();
 //            String category = productForm.getCategory();

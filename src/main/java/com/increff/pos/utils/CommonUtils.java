@@ -34,7 +34,7 @@ public final class CommonUtils {
         productForm.setName(StringUtil.toLowerCase((productForm.getName())));
     }
     public static void normalize(InventoryForm inventoryForm){
-        inventoryForm.setBarcode(StringUtil.toLowerCase((inventoryForm.getBarcode())));
+        inventoryForm.setBarcode(StringUtil.toLowerCase((inventoryForm.getBarcode()).trim()));
     }
 
 }

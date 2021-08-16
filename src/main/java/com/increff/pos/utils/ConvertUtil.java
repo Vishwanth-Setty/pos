@@ -57,10 +57,9 @@ public class ConvertUtil {
         return inventoryData;
     }
 
-    public static InventoryPojo convert(InventoryForm inventoryForm){
-        ProductPojo productPojo = productService.getProductByBarcode(inventoryForm.getBarcode());
+    public static InventoryPojo convert(Integer productId, InventoryForm inventoryForm){
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setProductId(productPojo.getId());
+        inventoryPojo.setProductId(productId);
         inventoryPojo.setQuantity(inventoryPojo.getQuantity());
         return inventoryPojo;
     }
