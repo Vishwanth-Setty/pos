@@ -12,13 +12,13 @@ import java.util.Set;
 public class ValidateUtils<T> {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
-    public void checkNotNull(Object object,String message) throws ApiException{
-        if(object != null){
+    public void checkNull(Object object, String message) throws ApiException{
+        if(object == null){
             throw new ApiException(message);
         }
     }
-    public void checkNull(Object object,String message) throws ApiException{
-        if(object == null){
+    public void checkNotNull(Object object, String message) throws ApiException{
+        if(object != null){
             throw new ApiException(message);
         }
     }

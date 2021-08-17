@@ -18,7 +18,7 @@ public class BrandService extends ValidateUtils {
     @Transactional
     public void addBrand(BrandPojo brandPojo) throws ApiException {
         BrandPojo exists = dao.selectByNameAndCategory(brandPojo.getBrand(),brandPojo.getCategory());
-        checkNotNull(exists,"Brand and Category Exists");
+        checkNull(exists,"Brand and Category Exists");
 //        if(exists != null){
 //            throw new ApiException("Brand name with "+ brandPojo.getBrand() + " exists in " + brandPojo.getCategory());
 //        }
@@ -42,82 +42,80 @@ public class BrandService extends ValidateUtils {
     }
 
     @Transactional
-    public void updateBrand(BrandPojo p) throws ApiException {
+    public void updateBrand(BrandPojo p,int id) throws ApiException {
+        BrandPojo brandPojo = getBrandById(id);
+        checkNotNull(brandPojo,"Brand Id is invalid");
         BrandPojo checkBrandPojo = dao.selectByNameAndCategory(p.getBrand(),p.getCategory());
-        checkNotNull(checkBrandPojo,"Brand and Category Exists");
-//        if(checkBrandPojo != null){
-//            throw new ApiException("Brand name with "+ p.getBrand() + " exists in " + p.getCategory());
-//        }
-        BrandPojo brandPojo = dao.select(p.getId());
+        checkNull(checkBrandPojo,"Brand and Category Exists");
         brandPojo.setBrand(p.getBrand());
         brandPojo.setCategory(p.getCategory());
     }
-    @Transactional
-    public void upload(List<BrandPojo> brandPojoList) throws ApiException{
-        String errorMessage = checkData(brandPojoList);
-        if(errorMessage != ""){
-            throw new ApiException(errorMessage);
-        }
-        for(BrandPojo brandPojo:brandPojoList){
-            addBrand(brandPojo);
-        }
-    }
-
-    @Transactional
-    private String checkData(List<BrandPojo> brandPojoList){
-        String errorMessage = "";
-        errorMessage = checkEmpty(brandPojoList);
-        if(!errorMessage.equals("")){
-            return "Given rows have empty field "+errorMessage;
-        }
-        errorMessage = checkDuplicates(brandPojoList);
-        if(!errorMessage.equals("")){
-            return "Given TSV have Duplicate field "+errorMessage;
-        }
-        errorMessage = checkDuplicatesInDatabase(brandPojoList);
-        if(!errorMessage.equals("")){
-            return "Given TSV have Duplicate field in Database "+errorMessage;
-        }
-        return "";
-    }
-
-    private static String checkEmpty(List<BrandPojo> brandPojoList){
-        StringBuilder errors = new StringBuilder();
-        for(BrandPojo brandPojo:brandPojoList){
-            String brand = brandPojo.getBrand();
-            String category = brandPojo.getCategory();
-            if(brand.equals("") || category.equals("") ) {
-                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
-            }
-        }
-        return errors.toString();
-    }
-
-    private static String checkDuplicates(List<BrandPojo> brandPojoList){
-        StringBuilder errors = new StringBuilder();
-        Set<String> hash_Set = new HashSet<String>();
-        for(BrandPojo brandPojo:brandPojoList){
-            String brand = brandPojo.getBrand();
-            String category = brandPojo.getCategory();
-            String key = brand+'#'+category;
-            if(hash_Set.contains(key)){
-                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
-            }
-            hash_Set.add(key);
-        }
-        return errors.toString();
-    }
-
-    private String checkDuplicatesInDatabase(List<BrandPojo> brandPojoList){
-        StringBuilder errors = new StringBuilder();
-        for(BrandPojo brandPojo:brandPojoList){
-            String brand = brandPojo.getBrand();
-            String category = brandPojo.getCategory();
-            BrandPojo brandExists = dao.selectByNameAndCategory(brand,category);
-            if(brandExists!=null) {
-                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
-            }
-        }
-        return errors.toString();
-    }
+//    @Transactional
+//    public void upload(List<BrandPojo> brandPojoList) throws ApiException{
+//        String errorMessage = checkData(brandPojoList);
+//        if(errorMessage != ""){
+//            throw new ApiException(errorMessage);
+//        }
+//        for(BrandPojo brandPojo:brandPojoList){
+//            addBrand(brandPojo);
+//        }
+//    }
+//
+//    @Transactional
+//    private String checkData(List<BrandPojo> brandPojoList){
+//        String errorMessage = "";
+//        errorMessage = checkEmpty(brandPojoList);
+//        if(!errorMessage.equals("")){
+//            return "Given rows have empty field "+errorMessage;
+//        }
+//        errorMessage = checkDuplicates(brandPojoList);
+//        if(!errorMessage.equals("")){
+//            return "Given TSV have Duplicate field "+errorMessage;
+//        }
+//        errorMessage = checkDuplicatesInDatabase(brandPojoList);
+//        if(!errorMessage.equals("")){
+//            return "Given TSV have Duplicate field in Database "+errorMessage;
+//        }
+//        return "";
+//    }
+//
+//    private static String checkEmpty(List<BrandPojo> brandPojoList){
+//        StringBuilder errors = new StringBuilder();
+//        for(BrandPojo brandPojo:brandPojoList){
+//            String brand = brandPojo.getBrand();
+//            String category = brandPojo.getCategory();
+//            if(brand.equals("") || category.equals("") ) {
+//                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+//            }
+//        }
+//        return errors.toString();
+//    }
+//
+//    private static String checkDuplicates(List<BrandPojo> brandPojoList){
+//        StringBuilder errors = new StringBuilder();
+//        Set<String> hash_Set = new HashSet<String>();
+//        for(BrandPojo brandPojo:brandPojoList){
+//            String brand = brandPojo.getBrand();
+//            String category = brandPojo.getCategory();
+//            String key = brand+'#'+category;
+//            if(hash_Set.contains(key)){
+//                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+//            }
+//            hash_Set.add(key);
+//        }
+//        return errors.toString();
+//    }
+//
+//    private String checkDuplicatesInDatabase(List<BrandPojo> brandPojoList){
+//        StringBuilder errors = new StringBuilder();
+//        for(BrandPojo brandPojo:brandPojoList){
+//            String brand = brandPojo.getBrand();
+//            String category = brandPojo.getCategory();
+//            BrandPojo brandExists = dao.selectByNameAndCategory(brand,category);
+//            if(brandExists!=null) {
+//                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+//            }
+//        }
+//        return errors.toString();
+//    }
 }

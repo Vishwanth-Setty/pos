@@ -32,11 +32,11 @@ public class ProductDto extends ValidateUtils<ProductForm> {
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
-        productService.addProduct(productPojo);
+        productService.add(productPojo);
     }
     public List<ProductData> getAll() throws ApiException {
         List<ProductData> productDataList = new ArrayList<>();
-        List<ProductPojo> productPojoList = productService.getProductsList();
+        List<ProductPojo> productPojoList = productService.getAll();
         for(ProductPojo productPojo:productPojoList){
             BrandPojo brandPojo = brandService.getBrandById(productPojo.getBrandId());
             ProductData productData = ConvertUtil.convert(productPojo,brandPojo.getBrand(),brandPojo.getCategory());
@@ -46,13 +46,13 @@ public class ProductDto extends ValidateUtils<ProductForm> {
     }
 
     public ProductData getById(int id) throws ApiException{
-        ProductPojo productPojo = productService.getProduct(id);
+        ProductPojo productPojo = productService.getById(id);
         BrandPojo brandPojo = brandService.getBrandById(productPojo.getBrandId());
         return ConvertUtil.convert(productPojo,brandPojo.getBrand(),brandPojo.getCategory());
     }
 
     public ProductData getByBarcode(String barcode) throws ApiException {
-        ProductPojo productPojo = productService.getProductByBarcode(barcode);
+        ProductPojo productPojo = productService.getByBarcode(barcode);
         BrandPojo brandPojo = brandService.getBrandById(productPojo.getBrandId());
         return ConvertUtil.convert(productPojo,brandPojo.getBrand(),brandPojo.getCategory());
     }
@@ -62,7 +62,7 @@ public class ProductDto extends ValidateUtils<ProductForm> {
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
-        productService.updateProduct(productPojo,id);
+        productService.update(productPojo,id);
     }
 
     public void upload(List<ProductForm> productFormList) throws ApiException {
@@ -74,7 +74,7 @@ public class ProductDto extends ValidateUtils<ProductForm> {
         for(ProductForm productForm : productFormList){
             BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
             ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
-            productService.addProduct(productPojo);
+            productService.add(productPojo);
         }
     }
 
@@ -133,7 +133,7 @@ public class ProductDto extends ValidateUtils<ProductForm> {
             String barcode = productForm.getBarcode();
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
-            ProductPojo exists = productService.getProductByBarcode(barcode);
+            ProductPojo exists = productService.getByBarcode(barcode);
             if (exists != null) {
                 errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
             }

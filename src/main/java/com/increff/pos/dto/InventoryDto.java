@@ -28,32 +28,32 @@ public class InventoryDto extends ValidateUtils<InventoryForm> {
 
     public void add(InventoryForm inventoryForm) throws ApiException {
         checkValid(inventoryForm);
-        ProductPojo productPojo = productService.getProductByBarcode(inventoryForm.getBarcode());
+        ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
         CommonUtils.normalize(inventoryForm);
         InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());
-        inventoryService.addInventory(inventoryPojo);
+        inventoryService.add(inventoryPojo);
     }
     public List<InventoryData> getAll(){
-        List<InventoryPojo> inventoryPojoList = inventoryService.getInventoryList();
+        List<InventoryPojo> inventoryPojoList = inventoryService.getAll();
         List<InventoryData> inventoryDataList = new ArrayList<>();
         for(InventoryPojo inventoryPojo : inventoryPojoList){
-            ProductPojo productPojo = productService.getProduct(inventoryPojo.getProductId());
+            ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
             inventoryDataList.add(ConvertUtil.convert(inventoryPojo,productPojo.getBarcode(),productPojo.getName()));
         }
         return inventoryDataList;
     }
     public InventoryData get(String barcode){
-        ProductPojo productPojo = productService.getProductByBarcode(barcode);
-        return ConvertUtil.convert(inventoryService.getInventory(productPojo.getId()),
+        ProductPojo productPojo = productService.getByBarcode(barcode);
+        return ConvertUtil.convert(inventoryService.getById(productPojo.getId()),
                 productPojo.getBarcode(),productPojo.getName());
     }
 
     public void update(InventoryForm inventoryForm) throws ApiException {
         checkValid(inventoryForm);
-        ProductPojo productPojo = productService.getProductByBarcode(inventoryForm.getBarcode());
+        ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
         CommonUtils.normalize(inventoryForm);
         InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());                     //see this as case
-        inventoryService.updateInventory(inventoryPojo);
+        inventoryService.update(inventoryPojo);
     }
 
     public void upload(List<InventoryForm> inventoryFormList) throws ApiException {
@@ -63,14 +63,14 @@ public class InventoryDto extends ValidateUtils<InventoryForm> {
             throw new ApiException(errorMessage);
         }
         for(InventoryForm inventoryForm : inventoryFormList){
-            ProductPojo productPojo = productService.getProductByBarcode(inventoryForm.getBarcode());
+            ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
             InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());
-            InventoryPojo exists = inventoryService.getInventory(inventoryPojo.getProductId());
+            InventoryPojo exists = inventoryService.getById(inventoryPojo.getProductId());
             if(exists == null){
-                inventoryService.addInventory(inventoryPojo);
+                inventoryService.add(inventoryPojo);
             }
             else{
-                inventoryService.updateInventory(inventoryPojo);
+                inventoryService.update(inventoryPojo);
             }
         }
     }
@@ -108,7 +108,7 @@ public class InventoryDto extends ValidateUtils<InventoryForm> {
         for(InventoryForm inventoryForm:inventoryFormList){
             ++i;
             String barcode = inventoryForm.getBarcode();
-            ProductPojo productPojo = productService.getProductByBarcode(barcode);
+            ProductPojo productPojo = productService.getByBarcode(barcode);
             if (productPojo == null) {
                 errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
             }

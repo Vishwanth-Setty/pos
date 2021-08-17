@@ -1,19 +1,14 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.ProductDao;
-import com.increff.pos.model.form.ProductForm;
-import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.utils.CommonUtils;
-import com.increff.pos.utils.ConvertUtil;
 import com.increff.pos.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ProductService extends ValidateUtils {
@@ -25,31 +20,31 @@ public class ProductService extends ValidateUtils {
     private CommonUtils commonUtils;
 
     @Transactional
-    public void addProduct(ProductPojo productPojo) throws ApiException {
+    public void add(ProductPojo productPojo) throws ApiException {
         ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
-        checkNotNull(exists,"Product with that barcode exists");
+        checkNull(exists,"Product with that barcode exists");
         productDao.insert(productPojo);
     }
 
     @Transactional
-    public ProductPojo getProduct(int id) {
+    public ProductPojo getById(int id) {
         return productDao.select(id);
     }
 
     @Transactional
-    public ProductPojo getProductByBarcode(String barcode) {
+    public ProductPojo getByBarcode(String barcode) {
         return productDao.selectByBarcode(barcode);
     }
 
     @Transactional
-    public List<ProductPojo> getProductsList() {
+    public List<ProductPojo> getAll() {
         return productDao.selectAll();
     }
 
     @Transactional
-    public void updateProduct(ProductPojo newProductPojo,int id) throws ApiException {
+    public void update(ProductPojo newProductPojo, int id) throws ApiException {
         ProductPojo oldProductPojo = productDao.select(id);
-        checkNotNull(oldProductPojo,"Product Id is Invalid");
+        checkNull(oldProductPojo,"Product Id is Invalid");
         oldProductPojo.setBarcode(newProductPojo.getBarcode());
         oldProductPojo.setBrandId(newProductPojo.getBrandId());
         oldProductPojo.setName(newProductPojo.getName());

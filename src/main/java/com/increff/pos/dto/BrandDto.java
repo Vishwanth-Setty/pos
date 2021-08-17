@@ -46,8 +46,7 @@ public class BrandDto extends ValidateUtils<BrandForm> {
         checkValid(brandForm);
         CommonUtils.normalize(brandForm);
         BrandPojo brandPojo = ConvertUtil.convert(brandForm);
-        brandPojo.setId(id);
-        brandService.updateBrand(brandPojo);
+        brandService.updateBrand(brandPojo,id);
     }
 
     public void uploadList(List<BrandForm> brandFormList) throws ApiException {

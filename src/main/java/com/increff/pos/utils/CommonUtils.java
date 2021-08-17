@@ -16,25 +16,25 @@ public final class CommonUtils {
         return uploadErrorMessage;
     }
     public static void normalize(BrandPojo brandPojo) {
-        brandPojo.setBrand(StringUtil.toLowerCase(brandPojo.getBrand()));
-        brandPojo.setCategory(StringUtil.toLowerCase(brandPojo.getCategory()));
+        brandPojo.setBrand(StringUtil.toLowerCase(brandPojo.getBrand()).trim());
+        brandPojo.setCategory(StringUtil.toLowerCase(brandPojo.getCategory()).trim());
     }
     public static void normalize(BrandForm brandForm) {
-        brandForm.setBrand(StringUtil.toLowerCase(brandForm.getBrand()));
-        brandForm.setCategory(StringUtil.toLowerCase(brandForm.getCategory()));
+        brandForm.setBrand(StringUtil.toLowerCase(brandForm.getBrand()).trim());
+        brandForm.setCategory(StringUtil.toLowerCase(brandForm.getCategory()).trim());
     }
     public static void normalize(ProductPojo productPojo) {
-        productPojo.setName(StringUtil.toLowerCase(productPojo.getName()));
-        productPojo.setBarcode(StringUtil.toLowerCase(productPojo.getBarcode()));
+        productPojo.setName(StringUtil.toLowerCase(productPojo.getName()).trim());
+        productPojo.setBarcode(StringUtil.toLowerCase(productPojo.getBarcode()).trim());
     }
     public static void normalize(ProductForm productForm){
-        productForm.setBrand(StringUtil.toLowerCase((productForm.getBrand())));
-        productForm.setCategory(StringUtil.toLowerCase((productForm.getCategory())));
-        productForm.setBarcode(StringUtil.toLowerCase((productForm.getBarcode())));
-        productForm.setName(StringUtil.toLowerCase((productForm.getName())));
+        productForm.setBrand(StringUtil.toLowerCase((productForm.getBrand())).trim());
+        productForm.setCategory(StringUtil.toLowerCase((productForm.getCategory())).trim());
+        productForm.setBarcode(StringUtil.toLowerCase((productForm.getBarcode())).trim());
+        productForm.setName(StringUtil.toLowerCase((productForm.getName())).trim());
     }
     public static void normalize(InventoryForm inventoryForm){
-        inventoryForm.setBarcode(StringUtil.toLowerCase((inventoryForm.getBarcode())));
+        inventoryForm.setBarcode(StringUtil.toLowerCase((inventoryForm.getBarcode())).trim());
     }
 
 }

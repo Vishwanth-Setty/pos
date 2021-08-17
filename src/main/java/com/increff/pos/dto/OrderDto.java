@@ -11,6 +11,7 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.utils.ConvertUtil;
+import com.increff.pos.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class OrderDto {
         List<OrderItemPojo> orderItemPojoList = orderService.getById(id);
         List<OrderItemData> orderItemDataList = new ArrayList<>();
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
-            String barcode = productService.getProduct(orderItemPojo.getProductId()).getBarcode();
+            String barcode = productService.getById(orderItemPojo.getProductId()).getBarcode();
             OrderItemData orderItemData =ConvertUtil.convert(orderItemPojo);
             orderItemData.setBarcode(barcode);
             orderItemDataList.add(orderItemData);
@@ -48,7 +49,7 @@ public class OrderDto {
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for(OrderItemForm orderItemForm : orderItemFormList){
-            ProductPojo productPojo = productService.getProductByBarcode(orderItemForm.getBarcode());
+            ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
             orderItemPojoList.add(ConvertUtil.convert(orderItemForm,productPojo.getId()));
         }
         orderService.create(orderItemPojoList);
@@ -57,7 +58,7 @@ public class OrderDto {
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for(OrderItemForm orderItemForm : orderItemFormList){
-            ProductPojo productPojo = productService.getProductByBarcode(orderItemForm.getBarcode());
+            ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
             orderItemPojoList.add(ConvertUtil.convert(orderItemForm,productPojo.getId()));
         }
         orderService.update(orderItemPojoList);

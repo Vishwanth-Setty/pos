@@ -1,17 +1,13 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.InventoryDao;
-import com.increff.pos.model.form.InventoryForm;
 import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.utils.ConvertUtil;
 import com.increff.pos.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class InventoryService extends ValidateUtils {
@@ -19,28 +15,25 @@ public class InventoryService extends ValidateUtils {
     @Autowired
     InventoryDao inventoryDao;
 
-    @Autowired
-    ProductService productService;
-
     @Transactional
-    public List<InventoryPojo> getInventoryList(){
+    public List<InventoryPojo> getAll(){
         return inventoryDao.selectAll();
     }
 
     @Transactional
-    public InventoryPojo getInventory(int id){
+    public InventoryPojo getById(int id){
         return inventoryDao.select(id);
     }
 
     @Transactional
-    public void addInventory(InventoryPojo inventoryPojo) throws ApiException{
+    public void add(InventoryPojo inventoryPojo) throws ApiException{
         InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
-        checkNotNull(exists,"Inventory exists for given barcode.");
+        checkNull(exists,"Inventory exists for given barcode.");
         inventoryDao.insert(inventoryPojo);
     }
 
     @Transactional
-    public void updateInventory(InventoryPojo inventoryPojo){
+    public void update(InventoryPojo inventoryPojo){
         InventoryPojo oldInventoryPojo = inventoryDao.select(inventoryPojo.getProductId());
         oldInventoryPojo.setQuantity(inventoryPojo.getQuantity());
     }
