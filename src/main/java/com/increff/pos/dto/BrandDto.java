@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BrandDto extends ValidateUtils<BrandForm> {
@@ -48,7 +50,53 @@ public class BrandDto extends ValidateUtils<BrandForm> {
         brandService.updateBrand(brandPojo);
     }
 
-    public void uploadList(List<BrandForm> brandFormList){
+    public void uploadList(List<BrandForm> brandFormList) throws ApiException {
+        checkValidList(brandFormList);
+        String errorMessage = checkData(brandFormList);
+        if(!errorMessage.equals("")){
+            throw new ApiException(errorMessage);
+        }
+        for(BrandForm brandForm:brandFormList){
+            brandService.addBrand(ConvertUtil.convert(brandForm));
+        }
+    }
+    private String checkData(List<BrandForm> brandFormList){
+        String errorMessage = "";
+        errorMessage = checkDuplicates(brandFormList);
+        if(!errorMessage.equals("")){
+            return "Given TSV have Duplicate field "+errorMessage;
+        }
+        errorMessage = checkDuplicatesInDatabase(brandFormList);
+        if(!errorMessage.equals("")){
+            return "Given TSV have Duplicate field in Database "+errorMessage;
+        }
+        return "";
+    }
+    private static String checkDuplicates(List<BrandForm> brandFormList){
+        StringBuilder errors = new StringBuilder();
+        Set<String> hash_Set = new HashSet<String>();
+        for(BrandForm brandForm:brandFormList){
+            String brand = brandForm.getBrand();
+            String category = brandForm.getCategory();
+            String key = brand+'#'+category;
+            if(hash_Set.contains(key)){
+                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+            }
+            hash_Set.add(key);
+        }
+        return errors.toString();
+    }
 
+    private String checkDuplicatesInDatabase(List<BrandForm> brandFormList){
+        StringBuilder errors = new StringBuilder();
+        for(BrandForm brandForm:brandFormList){
+            String brand = brandForm.getBrand();
+            String category = brandForm.getCategory();
+            BrandPojo brandExists = brandService.getBrandByNameAndCategory(brand,category);
+            if(brandExists!=null) {
+                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+            }
+        }
+        return errors.toString();
     }
 }

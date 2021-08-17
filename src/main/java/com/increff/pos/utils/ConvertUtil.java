@@ -80,12 +80,11 @@ public class ConvertUtil {
         return orderItemData;
     }
 
-    public static OrderItemPojo convert(OrderItemForm orderItemForm) {
+    public static OrderItemPojo convert(OrderItemForm orderItemForm,int productId) {
         OrderItemPojo orderItemPojo = new OrderItemPojo();
-        ProductPojo productPojo = productService.getProductByBarcode(orderItemForm.getBarcode());
         orderItemPojo.setQuantity(orderItemForm.getQuantity());
         orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
-        orderItemPojo.setProductId(productPojo.getId());
+        orderItemPojo.setProductId(productId);
         orderItemPojo.setId(orderItemForm.getId());
         orderItemPojo.setOrderId(orderItemForm.getOrderId());
         return orderItemPojo;

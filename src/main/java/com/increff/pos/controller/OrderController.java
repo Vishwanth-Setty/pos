@@ -1,5 +1,6 @@
 package com.increff.pos.controller;
 
+import com.increff.pos.dto.OrderDto;
 import com.increff.pos.model.data.OrderData;
 import com.increff.pos.model.data.OrderItemData;
 import com.increff.pos.model.form.OrderForm;
@@ -24,56 +25,30 @@ import java.util.List;
 public class OrderController {
 
     @Autowired
-    OrderService orderService;
-
-    @Autowired
-    ProductService productService;
+    OrderDto orderDto;
 
     @ApiOperation(value = "Get all orders")
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<OrderData> getAllOrders() {
-        List<OrderData> orderDataList = new ArrayList<>();
-        List<OrderPojo> orderPojoList = orderService.getAll();
-        for(OrderPojo orderPojo: orderPojoList ){
-            orderDataList.add(ConvertUtil.convert(orderPojo));
-        }
-        return orderDataList;
+        return orderDto.getAll();
     }
 
     @ApiOperation(value = "Get Order by Id")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public List<OrderItemData> getOrderById(@PathVariable int id) {
-        List<OrderItemPojo> orderItemPojoList = orderService.getById(id);
-        List<OrderItemData> orderItemDataList = new ArrayList<>();
-        for(OrderItemPojo orderItemPojo : orderItemPojoList){
-            String barcode = productService.getProduct(orderItemPojo.getProductId()).getBarcode();
-            OrderItemData orderItemData =ConvertUtil.convert(orderItemPojo);
-            orderItemData.setBarcode(barcode);
-            orderItemDataList.add(orderItemData);
-        }
-        return orderItemDataList;
+       return orderDto.getById(id);
     }
 
     @ApiOperation(value = "Create Order")
     @RequestMapping(path = "", method = RequestMethod.POST)
     public void createOrder(@RequestBody OrderForm orderForm) throws ApiException {
-        List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
-        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
-        for(OrderItemForm orderItemForm : orderItemFormList){
-            orderItemPojoList.add(ConvertUtil.convert(orderItemForm));
-        }
-        orderService.create(orderItemPojoList);
+        orderDto.add(orderForm);
     }
 
     @ApiOperation(value = "Update Order")
     @RequestMapping(path = "", method = RequestMethod.PUT)
     public void updateOrder(@RequestBody OrderForm orderForm) throws ApiException {
-        List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
-        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
-        for(OrderItemForm orderItemForm : orderItemFormList){
-            orderItemPojoList.add(ConvertUtil.convert(orderItemForm));
-        }
-        orderService.update(orderItemPojoList);
+
     }
 
 

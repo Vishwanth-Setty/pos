@@ -51,13 +51,8 @@ public class BrandController {
 
     @ApiOperation(value = "Upload Brands")
     @RequestMapping(path = "/list",method = RequestMethod.POST)
-    public void uploadData(@RequestBody List<BrandForm> brandFormList){
-        List<BrandPojo> brandPojoList = new ArrayList<BrandPojo>();
-        for(BrandForm brandForm : brandFormList){
-            CommonUtils.normalize(brandForm);
-            brandPojoList.add(ConvertUtil.convert(brandForm));
-        }
-
+    public void uploadData(@RequestBody List<BrandForm> brandFormList) throws ApiException {
+        brandDto.uploadList(brandFormList);
     }
 
 

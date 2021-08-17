@@ -188,20 +188,13 @@ $('#new-order-table tbody').on( 'click', 'tr', function () {
     }
 } );
 
-// $('#button').click( function () {
-//     var dataTable = $("#new-order-table").DataTable();
-
-//     dataTable.row('.selected').remove().draw( false );
-// } );
+$('#new-order-table').on( 'click', 'tbody td.row-remove', function (e) {
+    var dataTable = $("#new-order-table").DataTable();
+    dataTable.row('.selected').remove().draw( false );
+} );
 
 function openModal() {
     $('#addModal').modal('show');
-}
-
-function deletedProductInCreate(id){
-    var dataTable = $("#new-order-table").DataTable();
-
-    dataTable.row('.selected').remove().draw( false );
 }
 
 function init() {
@@ -249,11 +242,10 @@ function init() {
             {
                 mData: null,
                 bSortable: false,
+                className: 'row-remove',
                 mRender: function (o) {
                     return (
-                        '<span id="editButton" onclick="deletedProductInCreate(' +
-                        o.barcode +
-                        ')"><span class="material-icons md-24">delete_outline</span></span>'
+                        '<span class="remove-row"><span class="material-icons md-24">delete_outline</span></span>'
                     );
                 },
             },

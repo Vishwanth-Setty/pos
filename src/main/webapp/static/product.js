@@ -204,9 +204,6 @@ function init() {
         data: [],
         info: false,
         columns: [{
-                data: "brandId",
-            },
-            {
                 data: "id",
             },
             {
