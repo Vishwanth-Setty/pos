@@ -1,14 +1,8 @@
 package com.increff.pos.service;
 
-import com.google.protobuf.Api;
-import com.increff.pos.dao.AbstractDao;
 import com.increff.pos.dao.BrandDao;
-import com.increff.pos.model.UploadErrorMessage;
-import com.increff.pos.model.form.BrandForm;
 import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.utils.CommonUtils;
-import com.increff.pos.utils.ConvertUtil;
-import com.increff.pos.utils.ErrorUtils;
+import com.increff.pos.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +10,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-public class BrandService extends ErrorUtils {
+public class BrandService extends ValidateUtils {
 
     @Autowired
     private BrandDao dao;

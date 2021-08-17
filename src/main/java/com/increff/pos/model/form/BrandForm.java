@@ -1,23 +1,20 @@
 package com.increff.pos.model.form;
 
+
+import com.sun.istack.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
+
+@Getter
+@Setter
 public class BrandForm {
 
+    @NotBlank(message = "Can not be blank")
     private String brand;
+
+    @NotBlank(message = "Can not be blank")
     private String category;
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 }
