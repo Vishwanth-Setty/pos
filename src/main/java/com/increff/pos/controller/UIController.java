@@ -36,6 +36,10 @@ public class UIController {
         return mav("order.html");
     }
 
+    @RequestMapping(value = "/ui/report")
+    public ModelAndView report() {
+        return mav("report.html");
+    }
 
     private ModelAndView mav(String page) {
         ModelAndView mav = new ModelAndView(page);

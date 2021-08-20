@@ -8,6 +8,13 @@ import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.ApiException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import static java.lang.Integer.parseInt;
+
 public class ConvertUtil {
 
 
@@ -57,7 +64,7 @@ public class ConvertUtil {
     public static InventoryPojo convert(InventoryForm inventoryForm, int id) {
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setProductId(id);
-        inventoryPojo.setQuantity(inventoryPojo.getQuantity());
+        inventoryPojo.setQuantity(inventoryForm.getQuantity());
         return inventoryPojo;
     }
 
@@ -65,15 +72,13 @@ public class ConvertUtil {
         OrderData orderData = new OrderData();
         orderData.setOrderId(orderPojo.getId());
         orderData.setOrderTime(orderPojo.getOrderTime());
-        orderData.setInvoiceGenerated(false);
+        orderData.setInvoiceGenerated(orderPojo.isInvoiceGenerated());
         return orderData;
     }
 
     public static OrderItemData convert(OrderItemPojo orderItemPojo) {
         OrderItemData orderItemData = new OrderItemData();
-//        String barcode = productService.getProduct(orderItemPojo.getProductId()).getBarcode();
         orderItemData.setOrderItemId(orderItemPojo.getId());
-//        orderItemData.setBarcode(barcode);
         orderItemData.setQuantity(orderItemPojo.getQuantity());
         orderItemData.setSellingPrice(orderItemPojo.getSellingPrice());
         orderItemData.setOrderId(orderItemPojo.getOrderId());
@@ -85,8 +90,18 @@ public class ConvertUtil {
         orderItemPojo.setQuantity(orderItemForm.getQuantity());
         orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
         orderItemPojo.setProductId(productId);
-        orderItemPojo.setId(orderItemForm.getId());
+        orderItemPojo.setId(orderItemForm.getOrderItemId());
         orderItemPojo.setOrderId(orderItemForm.getOrderId());
         return orderItemPojo;
+    }
+    public static ZonedDateTime convert(String[]  date,String type){
+        LocalDate localDate = LocalDate.of(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
+        LocalTime localTime = LocalTime.of(0,  0);
+        if(type.equals("start"))
+            localTime = LocalTime.of(0,  0);
+        if(type.equals("end"))
+            localTime = LocalTime.of(23,  59);
+        ZoneId zoneId = ZoneId.of("GMT+05:30");
+        return ZonedDateTime.of( localDate, localTime, zoneId );
     }
 }

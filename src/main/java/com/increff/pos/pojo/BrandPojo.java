@@ -18,9 +18,10 @@ public class BrandPojo {
     @TableGenerator(
             name = "brandGen",
             table = "seq_brand",
+            initialValue = 1,
             allocationSize = 1
     )
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String brand;

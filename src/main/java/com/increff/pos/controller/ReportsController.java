@@ -1,13 +1,15 @@
 package com.increff.pos.controller;
 
 
+import com.increff.pos.dto.ReportDto;
+import com.increff.pos.model.data.SalesReportData;
+import com.increff.pos.model.form.ReportForm;
 import com.increff.pos.pdfGenerator.PdfGenerator;
+import com.increff.pos.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.stream.StreamSource;
@@ -15,30 +17,19 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.List;
 
 @Api
 @RequestMapping(value="/api/report")
 @RestController
 public class ReportsController {
 
-    PdfGenerator pdfGenerator;
+    @Autowired
+    ReportDto reportDto;
 
-    @ApiOperation(value = "Creating new Product")
-    @RequestMapping(path = "/brand",method = RequestMethod.GET)
-    @ResponseBody
-    public void generateBrandReport(HttpServletResponse response) throws Exception {
-        File brandXML = new File("brand.xml");
-        File brandXSL = new File("brand.xsl");
-        System.out.println("getring dtaa");
-        StreamSource xslStreamSource = new StreamSource(brandXSL);
-        byte[] pdf = pdfGenerator.generatePDF(brandXML,xslStreamSource);
-        System.out.println("getring dtaa");
-        System.out.println(Arrays.toString(pdf));
-
-        DataOutputStream os = new DataOutputStream(response.getOutputStream());
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + "brand.pdf" + "\"");
-        byte[] buffer = new byte[1024];
-        os.write(pdf);
+    @ApiOperation(value = "Sales Report")
+    @RequestMapping(path = "/sales",method = RequestMethod.POST)
+    public List<SalesReportData> generateSalesReport(@RequestBody ReportForm reportForm) throws ApiException {
+        return reportDto.getSalesReport(reportForm);
     }
 }

@@ -5,38 +5,80 @@
 <nav th:replace="snippets.html :: name_navbar"></nav>
 <div th:replace="snippets.html :: toast-service"></div>
 <div class="container">
+    <h1 style="margin-top:65px">Brand</h1>
+    <hr/>
     <div class="row" style="margin:30px; margin-left:-15px">
-        <div class="col-2">
-            <button type="button" class="btn btn-primary" id="addBrand">Add Brand</button>
+        <div class="col-2" style="margin-right:0px;">
+            <button type="button" class="btn btn-large-text btn-primary" id="addBrand">Add</button>
         </div>
         <div class="col-2">
             <div class="brand-file">
-                <input type="file" class="custom-file-input" id="brandFile"/>
-                <label class="custom-file-label" for="brandFile" id="brandFileName">Choose file</label>
+                <button class="btn btn-large-text btn-primary " id="uploadModalButton" style="margin-left: -160px;">Upload</button>
             </div>
         </div>
         <div class="col-2">
             <div class="brand-file">
-                <button class="btn btn-primary" id="upload-data">Upload Data</button>
+                <button class="btn btn-large-text download-button btn-primary" id="downloadCSVButton" style="margin-left: -320px;">Download</button>
             </div>
         </div>
-        <div class="col-2">
+        <!-- <div class="col-2">
             <a id="download">download</a>
-        </div>
+        </div> -->
     </div>
-    <table class="table     console.log("deleting>")
-        " cellspacing="0"  id="brand-table">
+    <table class="table table-striped table-bordered text-center" cellspacing="0"  id="brand-table">
         <thead>
         <tr>
             <th scope="col">Brand</th>
             <th scope="col">Category</th>
-            <th scope="col">Action</th>
+            <th scope="col">Action(s)</th>
         </tr>
         </thead>
-<!--        <tbody>-->
+       <tbody>
 
-<!--        </tbody>-->
+       </tbody>
     </table>
+
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+         aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Brand</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-4 text-btn-align">
+                            <p>Upload File --> </p>
+                        </div>
+                        <div class="col-7">
+                            <div class="brand-file">
+                                <input type="file" class="custom-file-input" id="brandFile"/>
+                                <label class="custom-file-label" for="brandFile" id="brandFileName" style="margin-left:20px ;">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            
+                                <a th:href="@{/sample/brandSample.tsv}" target="_blank">
+                                    <button class="btn" style="background-color: rgb(255, 255, 102);border: 1px solid black;">
+                                        Download Sample
+                                    </button>
+                                </a>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="upload-data">Upload</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
          aria-hidden="true" data-keyboard="false" data-backdrop="static">

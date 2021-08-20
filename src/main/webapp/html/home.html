@@ -6,7 +6,36 @@
 <div th:replace="snippets.html :: toast-service"></div>
 
 <div class="container">
-    <button id="get-brands">Add Brand</button>
+        <div class="row" style="margin-top:100px ;">
+                <div class="col-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                <a class="nav-item nav-link" th:href="@{/ui/brand}" id="nav-brand">Brand</a>
+                        </button>
+                </div>
+                <div class="col-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                <a class="nav-item nav-link" th:href="@{/ui/product}" id="nav-product">Product</a>
+                        </button>
+                </div>
+                <div class="col-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-large  home-button">
+                                <a class="nav-item nav-link" th:href="@{/ui/inventory}" id="nav-inventory">Inventory</a>
+                        </button>
+                </div>
+                <div class="col-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                <a class="nav-item nav-link" th:href="@{/ui/order}" id="nav-order">Order</a>
+                        </button>
+                </div>
+                <div class="col-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                <a class="nav-item nav-link" th:href="@{/ui/report}" id="nav-order">Report</a>
+                        </button>
+                </div>
+        </div>
+        <div class="row">
+                
+        </div>
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

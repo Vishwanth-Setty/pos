@@ -91,3 +91,58 @@ body {
 .required{
 	color:red;
 }
+.nav-link{
+	color:white;
+}
+.home-button{
+	margin:5px;
+}
+.btn-large{
+	width: 150px;
+    height: 150px;
+    padding: 0px;
+    border-radius: 100%;
+    font-size: 24px;
+}
+.btn-large-text{
+	width: 115px;
+    height: 45px;
+    font-size: 20px;
+	border:1px solid rgba(255, 146, 21, 0.596)
+}
+.text-btn-align{
+	margin-top:7px;
+
+}
+
+.form-input{
+	height: 40px;
+}
+hr {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	border: 0;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+.invoice{
+	margin-right:10px;
+}
+.disable-edit{
+	cursor: not-allowed !important
+}
+.report-input{
+	border: 1px solid #ced4da;
+	border-radius: 5px;
+	width: 300px;
+	height: 45px;
+}
+.report-text{
+	font-size: 30px;
+}
+.download-button{
+	background-color: #96CC39;
+}
+.download-button:hover{
+	background-color: #adeb42;
+}

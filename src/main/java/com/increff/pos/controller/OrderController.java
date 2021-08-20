@@ -45,10 +45,16 @@ public class OrderController {
         orderDto.add(orderForm);
     }
 
+    @ApiOperation(value = "Generate Invoice")
+    @RequestMapping(path = "/invoice/{orderId}", method = RequestMethod.PUT)
+    public void generateInvoice(@PathVariable int orderId) throws ApiException {
+        orderDto.generateInvoice(orderId);
+    }
+
     @ApiOperation(value = "Update Order")
     @RequestMapping(path = "", method = RequestMethod.PUT)
     public void updateOrder(@RequestBody OrderForm orderForm) throws ApiException {
-
+        orderDto.update(orderForm);
     }
 
 

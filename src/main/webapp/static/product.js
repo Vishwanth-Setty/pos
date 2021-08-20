@@ -28,14 +28,6 @@ function addProduct(e) {
     var $form = $("#addProduct");
     var json = toJson($form);
     var url = getProductUrl();
-    if (!validateDouble(JSON.parse(json).mrp)) {
-        $("#mrpError").html("Should be Positive Number");
-        setTimeout(function () {
-            $("#mrpError").empty();
-        }, 10000);
-        return false;
-    }
-
     $.ajax({
         url: url,
         type: 'POST',
@@ -49,13 +41,13 @@ function addProduct(e) {
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
             $('#addModal').modal('hide');
-            toast('Successfully created a Brand','INFO');
+            toast('Success','INFO');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
-            $(':input', '#addProduct')
-                .not(':button, :submit, :reset, :hidden')
-                .val('')
+            // $(':input', '#addProduct')
+            //     .not(':button, :submit, :reset, :hidden')
+            //     .val('')
             toast(error.message,'WARN');
 
         }
@@ -80,13 +72,6 @@ function updateProduct(e) {
     var $form = $("#editProduct");
     var id = $("#productId").val();
     var json = toJson($form);
-    if (!validateDouble(JSON.parse(json).mrp)) {
-        $("#mrpEditError").html("Should be Positive Number");
-        setTimeout(function () {
-            $("#mrpEditError").empty();
-        }, 10000);
-        return false;
-    }
     var url = getProductUrl();
     console.log(json);
     $.ajax({
@@ -99,10 +84,11 @@ function updateProduct(e) {
         success: function (response) {
             getProducts();
             $("#editModal").modal("hide");
-            toast("Successful");
+            toast("Success");
         },
         error: function (error) {
-            toast("An error has occurred",'WARN');
+            error = JSON.parse(error.responseText);
+            toast(error.message,'WARN');
         },
     });
     return false;
@@ -144,37 +130,41 @@ async function getProductById(id) {
 //Upload
 
 function upload(){
-    var $file = $('#productFile')
+    var $file = $('#productFile');
+    
     processData($file);
 }
 
 function updateFileName(){
 	var $file = $('#productFile');
-	var fileName = $file.val();
+    var fileName = $file.val().replace(/^.*[\\\/]/, '');
 	$('#productFileName').html(fileName);
 }
 
 function uploadRows(){
-	
+	for(item in fileData){
+        fileData[item]["mrp"] = parseInt(fileData[item]["mrp"]);
+    }
 	var json = JSON.stringify(fileData);
     console.log(json);
     let url = getProductUrl();
 	// Make ajax call
-	// $.ajax({
-	//    url: url+'/upload',
-	//    type: 'POST',
-	//    data: json,
-	//    headers: {
-    //    	'Content-Type': 'application/json'
-    //    },	   
-	//    success: function(response) {
-	//    		console.log("Susccessfully Uploaded",'INFO')  
-	//    },
-	//    error: function(error){
-    //        console.log(error);
-    //        toast(error.responseJSON.message,'WARN')
-	//    }
-	// });
+	$.ajax({
+	   url: url+'/upload',
+	   type: 'POST',
+	   data: json,
+	   headers: {
+       	'Content-Type': 'application/json'
+       },	   
+	   success: function(response) {
+        toast("Susccessfull",'INFO');
+        getProducts(); 
+	   },
+	   error: function(error){
+           console.log(error);
+           toast(error.responseJSON.message,'WARN')
+	   }
+	});
 
 }
 
@@ -193,13 +183,21 @@ function openModal() {
     $("#addModal").modal("show");
 }
 
+//Validation
+
+
 function init() {
     activeTab();
+    
     $("#editProduct").submit(updateProduct);
     $("#addProductModal").click(openModal);
     $("#addProduct").submit(addProduct);
     $('#productFile').on('change', updateFileName);
     $('#upload-data').click(upload);
+    $('#uploadModalButton').click(function(){
+        $("#uploadModal").modal("show");
+    });
+
     $("#product-table").DataTable({
         data: [],
         info: false,

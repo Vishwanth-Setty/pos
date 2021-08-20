@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class ProductDto extends ValidateUtils<ProductForm> {
+public class ProductDto extends ValidateUtils {
 
     @Autowired
     ProductService productService;
@@ -61,6 +61,7 @@ public class ProductDto extends ValidateUtils<ProductForm> {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
+        checkNotNull(brandPojo,"Invalid Brand and Category");
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
         productService.update(productPojo,id);
     }
@@ -81,7 +82,7 @@ public class ProductDto extends ValidateUtils<ProductForm> {
 
     private String checkData(List<ProductForm> productFormList) throws ApiException{
         String errorMessage = "";
-        errorMessage = checkDuplicates(productFormList);
+        errorMessage = checkDuplicatesRecords(productFormList);
         if(!errorMessage.equals("")){
             return "Given TSV have Duplicate field "+errorMessage;
         }
@@ -89,14 +90,14 @@ public class ProductDto extends ValidateUtils<ProductForm> {
         if(!errorMessage.equals("")){
             return "Given TSV have Invalid Brand and Category Combinations "+errorMessage;
         }
-        errorMessage = checkDuplicatesInDatabase(productFormList);
+        errorMessage = productService.checkDuplicates(productFormList);
         if(!errorMessage.equals("")){
             return "Given TSV have Duplicate field in Database "+errorMessage;
         }
         return "";
     }
 
-    private  String checkDuplicates(List<ProductForm> productFormList){
+    private  String checkDuplicatesRecords(List<ProductForm> productFormList){
         Set<String> hash_Set = new HashSet<String>();
         StringBuilder errorMessage = new StringBuilder();
         int i = 1;
@@ -119,21 +120,6 @@ public class ProductDto extends ValidateUtils<ProductForm> {
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
             BrandPojo exists = brandService.getBrandByNameAndCategory(brand,category);
-            if (exists != null) {
-                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
-            }
-        }
-        return errorMessage.toString();
-    }
-    private  String checkDuplicatesInDatabase(List<ProductForm> productFormList){
-        StringBuilder errorMessage = new StringBuilder();
-        int i = 1;
-        for(ProductForm productForm: productFormList){
-            ++i;
-            String barcode = productForm.getBarcode();
-            String brand = productForm.getBrand();
-            String category = productForm.getCategory();
-            ProductPojo exists = productService.getByBarcode(barcode);
             if (exists != null) {
                 errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
             }

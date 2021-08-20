@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class BrandDto extends ValidateUtils<BrandForm> {
+public class BrandDto extends ValidateUtils {
     @Autowired
     BrandService brandService;
 
     public void add(BrandForm brandForm) throws ApiException {
         checkValid(brandForm);
-        CommonUtils.normalize(brandForm);                                                        // Passing reference or value
+        CommonUtils.normalize(brandForm);
         BrandPojo brandPojo = ConvertUtil.convert(brandForm);
         brandService.addBrand(brandPojo);
     }

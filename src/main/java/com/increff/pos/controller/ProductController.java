@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "UpLoad Product")
-    @RequestMapping(path = "/upload",method = RequestMethod.PUT)
+    @RequestMapping(path = "/upload",method = RequestMethod.POST)
     public void upload(@RequestBody List<ProductForm> productFormList) throws ApiException{
         productDto.upload(productFormList);
     }

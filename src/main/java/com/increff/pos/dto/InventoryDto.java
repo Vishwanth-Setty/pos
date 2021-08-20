@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class InventoryDto extends ValidateUtils<InventoryForm> {
+public class InventoryDto extends ValidateUtils {
     @Autowired
     InventoryService inventoryService;
 
@@ -51,8 +51,10 @@ public class InventoryDto extends ValidateUtils<InventoryForm> {
     public void update(InventoryForm inventoryForm) throws ApiException {
         checkValid(inventoryForm);
         ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
+        checkNotNull(productPojo,"Invalid barcode");
         CommonUtils.normalize(inventoryForm);
         InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());                     //see this as case
+        System.out.println(inventoryPojo.getQuantity());
         inventoryService.update(inventoryPojo);
     }
 
@@ -76,7 +78,7 @@ public class InventoryDto extends ValidateUtils<InventoryForm> {
     }
     private String checkData(List<InventoryForm> inventoryFormList) throws ApiException{
         String errorMessage = "";
-        errorMessage = checkDuplicates(inventoryFormList);
+        errorMessage = checkDuplicatesRecords(inventoryFormList);
         if(!errorMessage.equals("")){
             return "Given TSV have Duplicate field "+errorMessage;
         }
@@ -87,7 +89,7 @@ public class InventoryDto extends ValidateUtils<InventoryForm> {
         return "";
     }
 
-    private  String checkDuplicates(List<InventoryForm> inventoryFormList){
+    private  String checkDuplicatesRecords(List<InventoryForm> inventoryFormList){
         Set<String> hash_Set = new HashSet<String>();
         StringBuilder errorMessage = new StringBuilder();
         int i = 1;

@@ -1,5 +1,6 @@
 package com.increff.pos.model.form;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,6 @@ public class ProductForm {
     private String brand;
     @NotBlank
     private String category;
-    @NotBlank
+
     private double mrp;
 }

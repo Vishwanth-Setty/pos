@@ -73,6 +73,38 @@ function validateDouble(number){
     return false;
 }
 
+//JSON to CSV
+
+function jsonToCsv(json){
+    const items = json
+    const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
+    const header = Object.keys(items[0])
+    const csv = [
+    header.join('\t'), // header row first
+    ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join('\t'))
+    ].join('\r\n')
+
+    blob = new Blob([csv], { type: 'text/csv' });
+    var csvUrl = window.webkitURL.createObjectURL(blob);
+    ReportTitle = "report";
+    var filename =  (ReportTitle || 'UserExport') + '.csv';
+    //this trick will generate a temp "a" tag
+    var link = document.createElement("a");
+    link.id = "lnkDwnldLnk";
+
+    //this part will append the anchor tag and remove it after automatic click
+    document.body.appendChild(link);
+    $("#lnkDwnldLnk")
+        .attr({
+            'download': filename,
+            'href': csvUrl
+        });
+
+    $('#lnkDwnldLnk')[0].click();
+    document.body.removeChild(link);
+    console.log(csv)
+}
+
 // FILE UPLOAD METHODS
 var fileData = [];
 var errorData = [];

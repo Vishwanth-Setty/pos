@@ -5,33 +5,82 @@
 <nav th:replace="snippets.html :: name_navbar"></nav>
 <div th:replace="snippets.html :: toast-service"></div>
 <div class="container">
+    <h1 style="margin-top:65px">Inventory</h1>
+    <hr/>
     <div class="row" style="margin:30px;margin-left:-15px">
         <div class="col-2">
-            <button type="button" class="btn btn-primary" id="addInventoryModal">Add Inventory</button>
+            <button type="button" class="btn btn-large-text btn-primary" id="addInventoryModal">Add</button>
         </div>
         <div class="col-2">
             <div class="inventory-file">
-                <input type="file" class="custom-file-input" id="inventoryFile"/>
-                <label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose file</label>
+                <button class="btn btn-large-text btn-primary" id="uploadModalButton" style="margin-left: -160px;">Upload</button>
             </div>
         </div>
         <div class="col-2">
-            <button type="button" class="btn btn-primary" id="upload-data">Upload TSV</button>
+            <div class="inventory-file">
+                <button class="btn btn-large-text download-button btn-primary" id="downloadCSVButton" style="margin-left: -320px;">Download</button>
+            </div>
         </div>
     </div>
+
+
     <table class="table table-striped table-bordered text-center" id="inventory-table">
         <thead>
         <tr>
             <th scope="col">Barcode</th>
             <th scope="col">Name</th>
             <th scope="col">Quantity</th>
-            <th scope="col">Actions</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
 
         </tbody>
     </table>
+
+
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+         aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-4 text-btn-align">
+                            <p>Upload File --> </p>
+                        </div>
+                        <div class="col-7">
+                            <div class="inventory-file">
+                                <input type="file" class="custom-file-input" id="inventoryFile"/>
+                                <label class="custom-file-label" for="inventoryFile" id="inventoryFileName" style="margin-left:20px ;">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                                <a th:href="@{/sample/inventorySample.tsv}" target="_blank">
+                                    <button class="btn" style="background-color: rgb(255, 255, 102);border: 1px solid black;">
+                                        Download Sample
+                                    </button>
+                                </a>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="upload-data">Upload</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -45,13 +94,13 @@
                 <div class="modal-body">
                     <form id="editInventory">
                         <div class="form-group row">
-                            <input id="productId" type="hidden" name="productId">
+                            <label class="col-3 text-btn-align">Barcode<span class="required">*</span> </label>
+                            <input class="form-control form-control col-7" name="barcode" id="barcode" type="text" readonly required />
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Quantity<span class="required">*</span> </label>
-                            <input class="form-control form-control-lg col-4" name="quantity" id="quantity" type="text">
-                            <p id="quantityEditError" class="error-message col-4"></p>
-
+                            <label class="col-3 text-btn-align">Quantity<span class="required">*</span> </label>
+                            <input class="form-control form-control col-7" name="quantity" id="quantity" type="text"
+                            pattern="^[0-9]\d*$" title="Enter Only Non Negetive Integers" required />
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="update-inventory">Submit</button>
@@ -75,13 +124,13 @@
                 <div class="modal-body">
                     <form id="addInventory">
                         <div class="form-group row">
-                            <label class="col-3">Barcode<span class="required">*</span> </label>
-                            <input class="form-control form-control-lg col-4" name="barcode" id="addBarcode" type="text">
+                            <label class="col-3 text-btn-align">Barcode<span class="required">*</span> </label>
+                            <input class="form-control form-control col-7" name="barcode" id="addBarcode" type="text" required />
                         </div>
                         <div class="form-group row">
-                            <label class="col-3">Quantity<span class="required">*</span> </label>
-                            <input class="form-control form-control-lg col-4" name="quantity" id="addQuantity" type="text">
-                            <p id="quantityAddError" class="error-message col-4"></p>
+                            <label class="col-3 text-btn-align">Quantity<span class="required">*</span> </label>
+                            <input class="form-control form-control col-7" name="quantity" id="addQuantity" type="text" 
+                            pattern="^[0-9]\d*$" title="Enter Only Non Negetive Integers" required />
                         </div>
                         
                         <div class="modal-footer">

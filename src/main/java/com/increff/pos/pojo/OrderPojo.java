@@ -21,7 +21,7 @@ public class OrderPojo {
             initialValue = 1001,
             allocationSize = 1
     )
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private ZonedDateTime orderTime;

@@ -1,7 +1,14 @@
 package com.increff.pos.dao;
 
+import org.hibernate.type.EntityType;
+
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public abstract class AbstractDao<T> {
@@ -9,10 +16,20 @@ public abstract class AbstractDao<T> {
     @PersistenceContext
     private EntityManager em;
 
-    public void insert(T t){
+    public <T> void insert(T t){
         em.persist(t);
     }
-    public abstract List<T> selectAll();
-    public abstract T select(int id);
+//    public <T> List<T> selectAll(EntityType type){
+//        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type.getEntityClass());
+//        Root<T> root = criteriaQuery.from(T.class);
+//        criteriaQuery.select(root);
+//        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+//        return typedQuery.getResultList();
+//
+//    }
+//    public <T> T select(int id){
+//
+//    }
 
 }

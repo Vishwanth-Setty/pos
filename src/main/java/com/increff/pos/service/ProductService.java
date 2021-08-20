@@ -1,6 +1,7 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.ProductDao;
+import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.utils.CommonUtils;
 import com.increff.pos.utils.ValidateUtils;
@@ -14,11 +15,6 @@ import java.util.List;
 public class ProductService extends ValidateUtils {
     @Autowired
     private ProductDao productDao;
-    @Autowired
-    private BrandService brandService;
-
-    private CommonUtils commonUtils;
-
     @Transactional
     public void add(ProductPojo productPojo) throws ApiException {
         ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
@@ -42,13 +38,33 @@ public class ProductService extends ValidateUtils {
     }
 
     @Transactional
+    public List<ProductPojo> getByBrandId(int brandId){
+        return productDao.selectByBrandId(brandId);
+    }
+
+    @Transactional
     public void update(ProductPojo newProductPojo, int id) throws ApiException {
         ProductPojo oldProductPojo = productDao.select(id);
-        checkNull(oldProductPojo,"Product Id is Invalid");
+        checkNotNull(oldProductPojo,"Product Id is Invalid");
         oldProductPojo.setBarcode(newProductPojo.getBarcode());
         oldProductPojo.setBrandId(newProductPojo.getBrandId());
         oldProductPojo.setName(newProductPojo.getName());
         oldProductPojo.setMrp(newProductPojo.getMrp());
+    }
+
+    @Transactional
+    public String checkDuplicates(List<ProductForm> productFormList){
+        StringBuilder errorMessage = new StringBuilder();
+        int i = 1;
+        for(ProductForm productForm: productFormList){
+            ++i;
+            String barcode = productForm.getBarcode();
+            ProductPojo exists = getByBarcode(barcode);
+            if (exists != null) {
+                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
+            }
+        }
+        return errorMessage.toString();
     }
 
 //    @Transactional

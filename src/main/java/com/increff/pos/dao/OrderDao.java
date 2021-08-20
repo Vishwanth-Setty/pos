@@ -17,6 +17,9 @@ import java.util.List;
 public class OrderDao {
 
     private static final String SELECT_ALL = "select p from OrderPojo p";
+    private static final String SELECT = "select p from OrderPojo p where id=:id";
+    private static final String SELECT_BY_INVOICE = "select p from OrderPojo p where invoiceGenerated=:invoiceGenerated";
+
 
     @PersistenceContext
     private EntityManager em;
@@ -26,7 +29,6 @@ public class OrderDao {
 
     public int insert(OrderPojo orderPojo){
         em.persist(orderPojo);
-        em.flush();
         return orderPojo.getId();
     }
     public List<OrderPojo> selectAll(){
@@ -34,8 +36,19 @@ public class OrderDao {
         return query.getResultList();
     }
 
+    public OrderPojo selectById(int id){
+        TypedQuery<OrderPojo> query = getQuery(SELECT);
+        query.setParameter("id",id);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
     public List<OrderItemPojo> select(int id){
         return orderItemService.getByOrderId(id);
+    }
+
+    public List<OrderPojo> selectAllWithInvoiceGenerated(boolean invoiceGenerated){
+        TypedQuery<OrderPojo> query = getQuery(SELECT_BY_INVOICE);
+        query.setParameter("invoiceGenerated",invoiceGenerated);
+        return query.getResultList();
     }
 
     protected TypedQuery<OrderPojo> getQuery(String jpql) {

@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class OrderDto {
@@ -46,6 +48,7 @@ public class OrderDto {
         return orderItemDataList;
     }
     public void add(OrderForm orderForm) throws ApiException {
+        checkDuplicatesRecords(orderForm.getOrderItemList());
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for(OrderItemForm orderItemForm : orderItemFormList){
@@ -55,6 +58,10 @@ public class OrderDto {
         orderService.create(orderItemPojoList);
     }
     public void update(OrderForm orderForm) throws ApiException {
+        if(orderService.isInvoiceGenerated(orderForm.getId())){
+            throw new ApiException("Invoice already generated");
+        }
+        checkDuplicatesRecords(orderForm.getOrderItemList());
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         for(OrderItemForm orderItemForm : orderItemFormList){
@@ -62,5 +69,18 @@ public class OrderDto {
             orderItemPojoList.add(ConvertUtil.convert(orderItemForm,productPojo.getId()));
         }
         orderService.update(orderItemPojoList);
+    }
+
+    public void generateInvoice(int orderId) throws ApiException{
+        orderService.generateInvoice(orderId);
+    }
+    private void checkDuplicatesRecords(List<OrderItemForm> orderItemFormList) throws ApiException {
+        Set<String> hash_Set = new HashSet<String>();
+        for(OrderItemForm orderItemForm : orderItemFormList){
+            if(hash_Set.contains(orderItemForm.getBarcode())){
+                throw new ApiException("Found same product Barcode in multiple rows");
+            }
+            hash_Set.add(orderItemForm.getBarcode());
+        }
     }
 }

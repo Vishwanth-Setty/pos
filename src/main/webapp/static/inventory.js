@@ -1,7 +1,11 @@
+//Global var
+reportInventory = []
+
 function displayInventoryData(inventories) {
     var $tbody = $('#inventory-table').find('tbody');
     var dataTable = $('#inventory-table').DataTable()
-    dataTable.clear();
+    dataTable.clear().draw();
+    reportInventory = inventories;
     for(var i in inventories){
     		var e = inventories[i];
             // e["id"]=new Number(i)+1;
@@ -20,18 +24,12 @@ function displayInventoryData(inventories) {
     return false;
 }
 
-function addInventory() {
+function addInventory(e) {
     var $form = $('#addInventory');
     console.log($form)
+    e.preventDefault();
     var json = toJson($form);
     var url = getInventoryUrl();
-    if (!validateDouble(JSON.parse(json).quantity)) {
-        $("#quantityAddError").html("Should be Positive Number and Integer");
-        setTimeout(function () {
-          $("#quantityAddError").empty();
-        }, 10000);
-        return false;
-    }
     console.log(json);
     $.ajax({
         url: url,
@@ -60,26 +58,21 @@ function addInventory() {
 
 }
 
-async function editInventory(id,quantity) {
+async function editInventory(barcode,quantity) {
     $('#editModal').modal('show');
     quantity = new Number(quantity);
     $('#quantity').val(quantity)
-    $('#productId').val(id)
+    $('#barcode').val(barcode)
 }
 
-function updateInventory() {
+function updateInventory(e) {
+    e.preventDefault();
     var $form = $('#editInventory');
     console.log($form)
-    var id = $('#productId').val();
     var json = toJson($form);
-    if (!validateDouble(JSON.parse(json).quantity)) {
-        $("#quantityEditError").html("Should be Positive Number and Integer");
-        setTimeout(function () {
-          $("#quantityEditError").empty();
-        }, 4000);
-        return false;
-    }
-      
+    json = JSON.parse(json);
+    json.quantity = parseInt(json.quantity);
+    json = JSON.stringify(json);
     var url = getInventoryUrl();
     console.log(json);
     $.ajax({
@@ -94,8 +87,9 @@ function updateInventory() {
             $('#editModal').modal('hide');
             toast('Successful');
         },
-        error: function () {
-            alert("An error has occurred");
+        error: function (error) {
+            error = JSON.parse(error.responseText);
+            toast(error.message,'WARN');
         }
     });
 }
@@ -171,6 +165,12 @@ function uploadRows(){
 
 }
 
+// Download CSV
+function downloadCSV(){
+    jsonToCsv(reportInventory);
+}
+
+
 
 //ACTIVE TAB
 function activeTab() {
@@ -187,11 +187,15 @@ function openModal() {
 
 function init() {
     activeTab();
+    $('#downloadCSVButton').click(downloadCSV);
     $('#editInventory').submit(updateInventory);
     $('#addInventoryModal').click(openModal);
     $('#addInventory').submit(addInventory);
     $('#inventoryFile').on('change', updateFileName);
     $('#upload-data').click(upload);
+    $('#uploadModalButton').click(function(){
+        $("#uploadModal").modal("show");
+    });
     $("#inventory-table").DataTable({
         data: [],
         info:false,
@@ -210,8 +214,8 @@ function init() {
                 bSortable: false,
                 mRender: function (o) {
                     return (
-                        '<span id="editButton" onclick="editInventory(' +
-                        o.productId +","+o.quantity+
+                        "<span id='editButton' onclick="+'"editInventory(\'' +
+                        o.barcode +'\','+o.quantity+
                         ')"><span class="material-icons md-24">edit</span></span>'
                     );
                 },
