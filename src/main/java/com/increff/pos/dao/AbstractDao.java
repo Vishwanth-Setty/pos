@@ -1,7 +1,5 @@
 package com.increff.pos.dao;
 
-import com.increff.pos.pojo.BrandPojo;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +12,7 @@ import java.util.List;
 public abstract class AbstractDao<T> {
 
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
     public Class<T> clazz;
     AbstractDao(Class<T> clazz1){
@@ -42,5 +40,6 @@ public abstract class AbstractDao<T> {
         TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
         return typedQuery.getResultList().get(0);
     }
+
 
 }

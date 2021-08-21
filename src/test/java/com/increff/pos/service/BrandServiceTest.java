@@ -1,16 +1,18 @@
 package com.increff.pos.service;
 
+import com.increff.pos.AbstractUnitTest;
 import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.utils.CommonUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.increff.pos.utils.CommonUtils.normalize;
 import static org.junit.Assert.assertEquals;
 
-public class BrandServiceTest extends  AbstractUnitTest {
+public class BrandServiceTest extends AbstractUnitTest {
+
     @Autowired
-    BrandService brandService;
+    private BrandService brandService;
+
     @Test
     public void testAdd() {
         try{
@@ -60,5 +62,11 @@ public class BrandServiceTest extends  AbstractUnitTest {
         assertEquals("new", brandPojo.getBrand());
     }
 
+    public BrandPojo createBrand(String brand, String category){
+        BrandPojo brandPojo = new BrandPojo();
+        brandPojo.setBrand(brand);
+        brandPojo.setCategory(category);
+        return brandPojo;
+    }
 
 }

@@ -15,8 +15,6 @@ import java.util.List;
 @RestController
 public class InventoryController {
 
-
-
     @Autowired
     InventoryDto inventoryDto;
 
