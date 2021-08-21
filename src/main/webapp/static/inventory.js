@@ -137,7 +137,7 @@ function upload(){
 
 function updateFileName(){
 	var $file = $('#inventoryFile');
-	var fileName = $file.val();
+    var fileName = $file.val().replace(/^.*[\\\/]/, '');
 	$('#inventoryFileName').html(fileName);
 }
 
@@ -147,21 +147,22 @@ function uploadRows(){
     console.log(json);
     let url = getInventoryUrl();
 	// Make ajax call
-	// $.ajax({
-	//    url: url+'/upload',
-	//    type: 'POST',
-	//    data: json,
-	//    headers: {
-    //    	'Content-Type': 'application/json'
-    //    },	   
-	//    success: function(response) {
-	//    		console.log("Susccessfully Uploaded",'INFO')  
-	//    },
-	//    error: function(error){
-    //        console.log(error);
-    //        toast(error.responseJSON.message,'WARN')
-	//    }
-	// });
+	$.ajax({
+	   url: url+'/upload',
+	   type: 'POST',
+	   data: json,
+	   headers: {
+       	'Content-Type': 'application/json'
+       },	   
+	   success: function(response) {
+            toast("Susccessfully Uploaded",'INFO');
+            getInventories()
+            $("#uploadModal").modal("hide");
+	   },
+	   error: function(error){
+           toast(error.responseJSON.message,'WARN')
+	   }
+	});
 
 }
 
@@ -183,6 +184,7 @@ function activeTab() {
 function openModal() {
     $('#addInventory').trigger("reset");
     $('#addModal').modal('show');
+    $file.val("");
 }
 
 function init() {
@@ -195,6 +197,8 @@ function init() {
     $('#upload-data').click(upload);
     $('#uploadModalButton').click(function(){
         $("#uploadModal").modal("show");
+        $('#productFile').val("");
+        $('#productFileName').html("Choose file");
     });
     $("#inventory-table").DataTable({
         data: [],

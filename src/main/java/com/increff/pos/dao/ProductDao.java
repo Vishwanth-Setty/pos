@@ -19,9 +19,6 @@ public class ProductDao extends AbstractDao<ProductPojo> {
     private static String SELECT_BY_BARCODE = "select p from ProductPojo p where barcode=:barcode";
     private static String SELECT_All = "select p from ProductPojo p";
 
-    ProductDao(Class<ProductPojo> clazz1) {
-        super(clazz1);
-    }
 
 
     public List<ProductPojo> selectAll() {

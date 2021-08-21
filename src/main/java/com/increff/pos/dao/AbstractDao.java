@@ -17,30 +17,27 @@ public abstract class AbstractDao<T> {
     private EntityManager em;
 
     public Class<T> clazz;
-    AbstractDao(Class<T> clazz1){
-        clazz = clazz1;
-    }
 
     public  void insert(T t){
         em.persist(t);
     }
-    public  List<T> selectAll(){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
-        Root<T> root = criteriaQuery.from(clazz);
-        criteriaQuery.select(root);
-        System.out.println(criteriaQuery);
-        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
-        return typedQuery.getResultList();
-    }
-    public T select(int id){
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
-        Root<T> root = criteriaQuery.from(clazz);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id ));
-        criteriaQuery.select(root);
-        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
-        return typedQuery.getResultList().get(0);
-    }
+//    public  List<T> selectAll(){
+//        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
+//        Root<T> root = criteriaQuery.from(clazz);
+//        criteriaQuery.select(root);
+//        System.out.println(criteriaQuery);
+//        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+//        return typedQuery.getResultList();
+//    }
+//    public T select(int id){
+//        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
+//        Root<T> root = criteriaQuery.from(clazz);
+//        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id ));
+//        criteriaQuery.select(root);
+//        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+//        return typedQuery.getResultList().get(0);
+//    }
 
 }

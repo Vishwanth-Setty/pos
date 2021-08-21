@@ -159,9 +159,10 @@ function uploadRows(){
 	   success: function(response) {
         toast("Susccessfull",'INFO');
         getProducts(); 
+        $("#uploadModal").modal("hide");
+
 	   },
 	   error: function(error){
-           console.log(error);
            toast(error.responseJSON.message,'WARN')
 	   }
 	});
@@ -196,6 +197,8 @@ function init() {
     $('#upload-data').click(upload);
     $('#uploadModalButton').click(function(){
         $("#uploadModal").modal("show");
+        $('#inventoryFile').val("");
+        $('#inventoryFileName').html("Choose file");
     });
 
     $("#product-table").DataTable({

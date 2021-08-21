@@ -20,10 +20,6 @@ public class InventoryDao extends AbstractDao<InventoryPojo> {
     private static String select_id = "select p from InventoryPojo p where productId=:id";
     private static String select_all = "select p from InventoryPojo p";
 
-    InventoryDao(Class<InventoryPojo> clazz1) {
-        super(clazz1);
-    }
-
 
     public List<InventoryPojo> selectAll(){
         TypedQuery<InventoryPojo> query = getQuery(select_all);

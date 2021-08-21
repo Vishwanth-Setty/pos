@@ -171,9 +171,9 @@ function uploadRows(){
 	   success: function(response) {
 	   		toast("Susccessfull",'INFO');
             getBrands();
+            $("#uploadModal").modal("hide");
 	   },
 	   error: function(error){
-           console.log(error);
            toast(error.responseJSON.message,'WARN')
 	   }
 	});
@@ -244,6 +244,8 @@ function init() {
     $('#upload-data').click(upload);
     $('#uploadModalButton').click(function(){
         $('#uploadModal').modal('show');
+        $('#brandFile').val("");
+        $('#brandFileName').html("Choose file");
     });
 
     $("#brand-table").DataTable({

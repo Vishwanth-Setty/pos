@@ -31,6 +31,7 @@ public class ProductDto extends ValidateUtils {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
+        checkNotNull(brandPojo,"Brand and Category not Exists");
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
         productService.add(productPojo);
     }
@@ -69,11 +70,15 @@ public class ProductDto extends ValidateUtils {
     public void upload(List<ProductForm> productFormList) throws ApiException {
         checkValidList(productFormList);
         String errorMessage = checkData(productFormList);
+        System.out.println("30");
         if(!errorMessage.equals("")){
             throw new ApiException(errorMessage);
         }
+        System.out.println("30");
+
         for(ProductForm productForm : productFormList){
             BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
+            System.out.println(brandPojo.getId());
             ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
             productService.add(productPojo);
         }
@@ -120,7 +125,7 @@ public class ProductDto extends ValidateUtils {
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
             BrandPojo exists = brandService.getBrandByNameAndCategory(brand,category);
-            if (exists != null) {
+            if (exists == null) {
                 errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
             }
         }
