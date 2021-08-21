@@ -231,6 +231,9 @@ function init() {
                 },
             },
         ],
+        "columnDefs": [
+            { "width": "10px", "targets": -1 }
+        ],
     });
 }
 

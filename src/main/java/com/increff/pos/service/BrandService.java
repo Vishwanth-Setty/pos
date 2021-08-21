@@ -27,6 +27,7 @@ public class BrandService extends ValidateUtils {
 
     @Transactional
     public List<BrandPojo> getAllBrands() {
+        System.out.println(dao.selectAll().size());
         return dao.selectAll();
     }
 

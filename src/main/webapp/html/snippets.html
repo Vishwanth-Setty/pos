@@ -18,7 +18,7 @@
 
 </head>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 60px;" th:fragment="name_navbar">
+<nav class="navbar navbar-expand-lg navbar-light nav-bar-style" style="height: 60px;" th:fragment="name_navbar">
     <a class="navbar-brand" th:href="@{/ui/home}">POS</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,8 +36,10 @@
 </nav>
 
 <div th:fragment="toast-service" id="toast" class="toast">
+    <button type="button" class="close close-button" id="close-button">
+        <span aria-hidden="true">&times;</span>
+    </button>
     <div class="toast-body">
-        
     </div>
 </div>
 <footer th:fragment="footer">

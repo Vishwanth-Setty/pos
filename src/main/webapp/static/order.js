@@ -312,6 +312,9 @@ function init() {
                 },
             },
         ],
+        "columnDefs": [
+            { "width": "100px", "targets": -1 }
+        ]
     });
     
     $("#new-order-table").DataTable({
@@ -340,6 +343,9 @@ function init() {
                     );
                 },
             },
+        ],
+        "columnDefs": [
+            { "width": "15px", "targets": 1 }
         ],
     });
     $("#order-item-table").DataTable({

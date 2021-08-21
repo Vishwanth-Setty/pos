@@ -24,8 +24,6 @@ public class OrderService extends ValidateUtils {
     @Autowired
     InventoryService inventoryService;
 
-    CopyUtil copyUtil;
-
     @Transactional
     public List<OrderPojo> getAll() {
         return orderDao.selectAll();
@@ -70,10 +68,10 @@ public class OrderService extends ValidateUtils {
     }
 
     @Transactional
-    public boolean isInvoiceGenerated(int orderId) throws ApiException {
+    public Boolean isInvoiceGenerated(int orderId) throws ApiException {
         OrderPojo orderPojo = orderDao.selectById(orderId);
         checkNotNull(orderPojo,"Invalid Order Id");
-        return orderPojo.isInvoiceGenerated();
+        return orderPojo.getInvoiceGenerated();
     }
 
     @Transactional

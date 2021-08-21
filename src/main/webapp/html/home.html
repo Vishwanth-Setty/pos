@@ -1,56 +1,107 @@
 <!doctype html>
 <html lang="en">
+
 <head th:replace="snippets.html :: name_head"></head>
+
 <body>
-<nav th:replace="snippets.html :: name_navbar"></nav>
-<div th:replace="snippets.html :: toast-service"></div>
+        <nav th:replace="snippets.html :: name_navbar"></nav>
+        <div th:replace="snippets.html :: toast-service"></div>
 
-<div class="container">
-        <div class="row" style="margin-top:100px ;">
-                <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
-                                <a class="nav-item nav-link" th:href="@{/ui/brand}" id="nav-brand">Brand</a>
-                        </button>
+        <div class="container">
+                <!-- <div class="row" style="margin-top:100px ;">
+                        <div class="col-2">
+                                <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                        <a class="nav-item nav-link" th:href="@{/ui/brand}" id="nav-brand">Brand</a>
+                                </button>
+                        </div>
+                        <div class="col-2">
+                                <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                        <a class="nav-item nav-link" th:href="@{/ui/product}"
+                                                id="nav-product">Product</a>
+                                </button>
+                        </div>
+                        <div class="col-2">
+                                <button type="button" class="btn btn-primary btn-lg btn-large  home-button">
+                                        <a class="nav-item nav-link" th:href="@{/ui/inventory}"
+                                                id="nav-inventory">Inventory</a>
+                                </button>
+                        </div>
+                        <div class="col-2">
+                                <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                        <a class="nav-item nav-link" th:href="@{/ui/order}" id="nav-order">Order</a>
+                                </button>
+                        </div>
+                        <div class="col-2">
+                                <button type="button" class="btn btn-primary btn-lg btn-large home-button">
+                                        <a class="nav-item nav-link" th:href="@{/ui/report}" id="nav-order">Report</a>
+                                </button>
+                        </div>
+                </div> -->
+                <div class="row justify-content-md-center"  style="margin-top:100px ;">
+                        <div class="col-3">
+                              <a th:href="@{/ui/brand}">
+                                        <div class="card card-style">
+                                                <div class="card-body">
+                                                        Brand
+                                                </div>
+                                        </div>
+                              </a>  
+                        </div>
+                        <div class="col-3">
+                                <a th:href="@{/ui/product}">
+                                        <div class="card card-style">
+                                                <div class="card-body">
+                                                        Product
+                                                </div>
+                                        </div>
+                                </a>
+                        </div>
+                        <div class="col-3">
+                                <a th:href="@{/ui/inventory}">
+                                        <div class="card card-style">
+                                                <div class="card-body">
+                                                        Inventory
+                                                </div>
+                                        </div>
+                                </a>
+                        </div>              
+
                 </div>
-                <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
-                                <a class="nav-item nav-link" th:href="@{/ui/product}" id="nav-product">Product</a>
-                        </button>
-                </div>
-                <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-lg btn-large  home-button">
-                                <a class="nav-item nav-link" th:href="@{/ui/inventory}" id="nav-inventory">Inventory</a>
-                        </button>
-                </div>
-                <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
-                                <a class="nav-item nav-link" th:href="@{/ui/order}" id="nav-order">Order</a>
-                        </button>
-                </div>
-                <div class="col-2">
-                        <button type="button" class="btn btn-primary btn-lg btn-large home-button">
-                                <a class="nav-item nav-link" th:href="@{/ui/report}" id="nav-order">Report</a>
-                        </button>
+                <div class="row justify-content-md-center"  style="margin-top:100px ;">
+                        <div class="col-3">
+                                <a th:href="@{/ui/order}">
+                                        <div class="card card-style">
+                                                <div class="card-body">
+                                                        Order
+                                                </div>
+                                        </div>
+                                </a>
+                        </div>
+                        <div class="col-3">
+                                <a th:href="@{/ui/report}">
+                                        <div class="card card-style">
+                                                <div class="card-body">
+                                                        Report
+                                                </div>
+                                        </div>
+                                </a>
+                        </div>            
+
                 </div>
         </div>
-        <div class="row">
-                
-        </div>
-</div>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
-<script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-<script th:src="@{/static/app.js}"/>
-</script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+        <script th:src="@{/static/app.js}" />
+        </script>
 </body>
+
 </html>

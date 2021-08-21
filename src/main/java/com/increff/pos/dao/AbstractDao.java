@@ -1,8 +1,8 @@
 package com.increff.pos.dao;
 
-import org.hibernate.type.EntityType;
+import com.increff.pos.pojo.BrandPojo;
+import org.springframework.stereotype.Repository;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -16,20 +16,31 @@ public abstract class AbstractDao<T> {
     @PersistenceContext
     private EntityManager em;
 
-    public <T> void insert(T t){
+    public Class<T> clazz;
+    AbstractDao(Class<T> clazz1){
+        clazz = clazz1;
+    }
+
+    public  void insert(T t){
         em.persist(t);
     }
-//    public <T> List<T> selectAll(EntityType type){
-//        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type.getEntityClass());
-//        Root<T> root = criteriaQuery.from(T.class);
-//        criteriaQuery.select(root);
-//        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
-//        return typedQuery.getResultList();
-//
-//    }
-//    public <T> T select(int id){
-//
-//    }
+    public  List<T> selectAll(){
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
+        Root<T> root = criteriaQuery.from(clazz);
+        criteriaQuery.select(root);
+        System.out.println(criteriaQuery);
+        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+        return typedQuery.getResultList();
+    }
+    public T select(int id){
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
+        Root<T> root = criteriaQuery.from(clazz);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id ));
+        criteriaQuery.select(root);
+        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+        return typedQuery.getResultList().get(0);
+    }
 
 }

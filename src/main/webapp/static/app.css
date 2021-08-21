@@ -5,7 +5,7 @@ html {
 
 body {
 	margin-bottom: 60px;
-	/* Margin bottom by footer height */
+	overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
 
@@ -19,13 +19,16 @@ body {
 .toast{
 	opacity:0;
 	position: absolute;
-	padding: 30px;
+	padding: 10px;
 	top: 0;
 	right: 0;
 	border-radius: 10px;
 	transition: 1s;
 	margin: 20px;
 	z-index: 2000;
+}
+.toast-body{
+	padding: 25px;
 }
 
 .footer {
@@ -72,6 +75,7 @@ body {
 	color: red;
 }
 
+
 .lable {
 	padding-top: 5px;
 }
@@ -94,6 +98,23 @@ body {
 .nav-link{
 	color:white;
 }
+.nav-item{
+	color:white !important;
+}
+.nav-item:hover{
+	color:rgb(149, 255, 205) !important;
+}
+.nav-bar-style{
+	background-color: #5EAEC7 !important;
+}
+.active{
+	color:rgb(149, 255, 205) !important;
+}
+.navbar-brand{
+	font-size: 25px;
+	padding-left: 16px;
+}
+
 .home-button{
 	margin:5px;
 }
@@ -108,7 +129,19 @@ body {
 	width: 115px;
     height: 45px;
     font-size: 20px;
-	border:1px solid rgba(255, 146, 21, 0.596)
+	color:rgb(83, 83, 83);
+	border:2px solid #0069d9;
+	background-color: whitesmoke;
+	transition: 0.5s;
+	padding-left: 10px;
+}
+.btn-large-text:hover{
+	width: 115px;
+    height: 45px;
+    font-size: 20px;
+	color:whitesmoke;
+	border:2px solid #0069d9;
+	background-color: 0069d9;
 }
 .text-btn-align{
 	margin-top:7px;
@@ -141,8 +174,42 @@ hr {
 	font-size: 30px;
 }
 .download-button{
-	background-color: #96CC39;
+	width: 115px;
+    height: 45px;
+    font-size: 20px;
+	color:rgb(83, 83, 83);
+	border:2px solid #0069d9;
+	background-color: whitesmoke;
+	transition: 0.5s;
 }
 .download-button:hover{
-	background-color: #adeb42;
+	width: 115px;
+    height: 45px;
+    font-size: 20px;
+	color:whitesmoke;
+	border:2px solid #0069d9;
+	background-color: 0069d9;
+}
+
+div.card {
+	width: 250px;
+	box-shadow: 0 4px 8px 0 #c2e8ee8c;
+	text-align: center;
+	cursor: default;
+}
+
+.card-style{
+	font-size:20px;
+	background-color: #C2E8EE;
+	transition: 0.5s;
+}
+.card-style:hover{
+	background-color: #9ce7f3;
+	box-shadow: #39bbcfbd 0px 7px 29px 0px;
+}
+a{
+	color:black !important;
+}
+a:hover{
+	text-decoration: none;
 }

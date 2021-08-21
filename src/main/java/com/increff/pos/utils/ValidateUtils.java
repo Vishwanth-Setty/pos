@@ -21,6 +21,7 @@ public class ValidateUtils {
         if(object == null){
             throw new ApiException(message);
         }
+
     }
     public <T> void checkValid(T object) throws ApiException {
         Set<ConstraintViolation<T>> violations = validator.validate(object) ;

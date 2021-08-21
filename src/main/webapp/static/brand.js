@@ -263,6 +263,9 @@ function init() {
                     return '<span id="editButton" onclick="editBrand(' + o.id + ')"><span class="material-icons md-24">edit</span></span>';
                 }
             }
+        ],
+        "columnDefs": [
+            { "width": "10px", "targets": -1 }
         ]
     });
     
