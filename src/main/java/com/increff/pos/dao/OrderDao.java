@@ -14,7 +14,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class OrderDao {
+public class OrderDao extends AbstractDao<OrderPojo> {
 
     private static final String SELECT_ALL = "select p from OrderPojo p";
     private static final String SELECT = "select p from OrderPojo p where id=:id";
@@ -27,21 +27,25 @@ public class OrderDao {
     @Autowired
     OrderItemService orderItemService;
 
-    public int insert(OrderPojo orderPojo){
+    OrderDao() {
+        super(OrderPojo.class);
+    }
+
+    public int insertWithReturnId(OrderPojo orderPojo){
         em.persist(orderPojo);
         return orderPojo.getId();
     }
-    public List<OrderPojo> selectAll(){
-        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL);
-        return query.getResultList();
-    }
-
-    public OrderPojo selectById(int id){
-        TypedQuery<OrderPojo> query = getQuery(SELECT);
-        query.setParameter("id",id);
-        return query.getResultList().stream().findFirst().orElse(null);
-    }
-    public List<OrderItemPojo> select(int id){
+//    public List<OrderPojo> selectAll(){
+//        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL);
+//        return query.getResultList();
+//    }
+//
+//    public OrderPojo select(int id){
+//        TypedQuery<OrderPojo> query = getQuery(SELECT);
+//        query.setParameter("id",id);
+//        return query.getResultList().stream().findFirst().orElse(null);
+//    }
+    public List<OrderItemPojo> selectOrderDetails(int id){
         return orderItemService.getByOrderId(id);
     }
 

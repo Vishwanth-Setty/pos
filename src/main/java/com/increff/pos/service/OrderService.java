@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class OrderService extends ValidateUtils {
@@ -31,7 +29,7 @@ public class OrderService extends ValidateUtils {
 
     @Transactional
     public List<OrderItemPojo> getById(int id) {
-        return orderDao.select(id);
+        return orderDao.selectOrderDetails(id);
     }
 
     @Transactional
@@ -39,7 +37,7 @@ public class OrderService extends ValidateUtils {
         checkInventory(orderItemPojoList);
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setOrderTime(ZonedDateTime.now());
-        int orderId = orderDao.insert(orderPojo);
+        int orderId = orderDao.insertWithReturnId(orderPojo);
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             orderItemPojo.setOrderId(orderId);
             orderItemService.create(orderItemPojo);
@@ -69,19 +67,19 @@ public class OrderService extends ValidateUtils {
 
     @Transactional
     public Boolean isInvoiceGenerated(int orderId) throws ApiException {
-        OrderPojo orderPojo = orderDao.selectById(orderId);
+        OrderPojo orderPojo = orderDao.select(orderId);
         checkNotNull(orderPojo,"Invalid Order Id");
         return orderPojo.getInvoiceGenerated();
     }
 
     @Transactional
     public OrderPojo getOnlyOrderById(int orderId) {
-        return orderDao.selectById(orderId);
+        return orderDao.select(orderId);
     }
 
     @Transactional
     public void generateInvoice(int orderId) throws ApiException {
-        OrderPojo orderPojo = orderDao.selectById(orderId);
+        OrderPojo orderPojo = orderDao.select(orderId);
         checkNotNull(orderPojo,"Invalid Order Id");
         orderPojo.setInvoiceGenerated(true);
     }

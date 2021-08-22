@@ -19,18 +19,21 @@ public class ProductDao extends AbstractDao<ProductPojo> {
     private static String SELECT_BY_BARCODE = "select p from ProductPojo p where barcode=:barcode";
     private static String SELECT_All = "select p from ProductPojo p";
 
-
-
-    public List<ProductPojo> selectAll() {
-        TypedQuery<ProductPojo> query = getQuery(SELECT_All);
-        return query.getResultList();
+    ProductDao() {
+        super(ProductPojo.class);
     }
 
-    public ProductPojo select(int id) {
-        TypedQuery<ProductPojo> query = getQuery(SELECT_ID);
-        query.setParameter("id", id);
-        return query.getSingleResult();
-    }
+
+//    public List<ProductPojo> selectAll() {
+//        TypedQuery<ProductPojo> query = getQuery(SELECT_All);
+//        return query.getResultList();
+//    }
+//
+//    public ProductPojo select(int id) {
+//        TypedQuery<ProductPojo> query = getQuery(SELECT_ID);
+//        query.setParameter("id", id);
+//        return query.getSingleResult();
+//    }
 
     public ProductPojo selectByBarcode(String barcode){
         TypedQuery<ProductPojo> query = getQuery(SELECT_BY_BARCODE);
