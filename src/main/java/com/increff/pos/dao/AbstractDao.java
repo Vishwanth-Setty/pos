@@ -22,10 +22,13 @@ public abstract class AbstractDao<T> {
         clazz = clazz1;
     }
 
+    //TODO change it to persist
     public T insert(T t){
         em.persist(t);
         return t;
     }
+
+
     public  List<T> selectAll(){
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
@@ -44,4 +47,6 @@ public abstract class AbstractDao<T> {
         return typedQuery.getResultList().get(0);
     }
 
+
+    //TODO create a method for selectByMember variable
 }

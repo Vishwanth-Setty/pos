@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+//TODO remove comments
 @Service
 public class InventoryService extends ValidateUtils {
 
@@ -28,7 +29,7 @@ public class InventoryService extends ValidateUtils {
     @Transactional
     public InventoryPojo add(InventoryPojo inventoryPojo) throws ApiException{
         InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
-        checkNull(exists,"Inventory exists for given barcode.");
+        checkNull(exists,"Inventory already exists");
         return inventoryDao.insert(inventoryPojo);
     }
 

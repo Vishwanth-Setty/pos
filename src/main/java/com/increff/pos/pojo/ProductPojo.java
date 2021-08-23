@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+//TODO: Replace int to Integer
 @Entity
 @Getter
 @Setter

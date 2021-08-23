@@ -12,6 +12,7 @@ import com.increff.pos.utils.ConvertUtil;
 import com.increff.pos.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,9 +31,11 @@ public class ProductDto extends ValidateUtils {
     public void add(ProductForm productForm) throws ApiException {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
+
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
-        checkNotNull(brandPojo,"Brand and Category not Exists");
+        checkNotNull(brandPojo,"Brand and Category do not exist");
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
+
         productService.add(productPojo);
     }
     public List<ProductData> getAll() throws ApiException {
@@ -58,11 +61,12 @@ public class ProductDto extends ValidateUtils {
         return ConvertUtil.convert(productPojo,brandPojo.getBrand(),brandPojo.getCategory());
     }
 
-    public void update(ProductForm productForm,int id) throws ApiException {
+    public void update(ProductForm productForm, int id) throws ApiException {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
-        checkNotNull(brandPojo,"Invalid Brand and Category");
+        checkNotNull(brandPojo,"Product does not exist");
+
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
         productService.update(productPojo,id);
     }
@@ -85,16 +89,23 @@ public class ProductDto extends ValidateUtils {
     }
 
 
+    //TODO rename to validate
     private String checkData(List<ProductForm> productFormList) throws ApiException{
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(productFormList);
-        if(!errorMessage.equals("")){
+        //TODO rename message to Duplicate records exists for brand-category: [Brand1:Catrogry1, Brand2:Category2]
+        if(!StringUtils.isEmpty(errorMessage)){
             return "Given TSV have Duplicate field "+errorMessage;
         }
+
+        //TODO rename message to Invalid brand and category combinations for brand-category: [Brand1:Catrogry1, Brand2:Category2]
+
         errorMessage = checkBrandAndCategory(productFormList);
         if(!errorMessage.equals("")){
             return "Given TSV have Invalid Brand and Category Combinations "+errorMessage;
         }
+
+        //TODO rename to B
         errorMessage = productService.checkDuplicates(productFormList);
         if(!errorMessage.equals("")){
             return "Given TSV have Duplicate field in Database "+errorMessage;

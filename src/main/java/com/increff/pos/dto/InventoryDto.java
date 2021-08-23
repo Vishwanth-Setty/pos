@@ -76,6 +76,8 @@ public class InventoryDto extends ValidateUtils {
             }
         }
     }
+
+    //TODO rename error messages accroding to review commnets given in productDto
     private String checkData(List<InventoryForm> inventoryFormList) throws ApiException{
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(inventoryFormList);

@@ -19,6 +19,7 @@ import java.util.*;
 
 import static com.increff.pos.utils.ConvertUtil.convert;
 
+//TODO remove all service autowiring from this layer
 @Service
 public class ReportService extends ValidateUtils {
 
@@ -31,6 +32,9 @@ public class ReportService extends ValidateUtils {
     @Autowired
     OrderService orderService;
 
+    //TODO to refactor this enitre part!!!
+    //TODO methods in this class will be static
+    //TODO rename this class to ReportHelper if required
     @Transactional(readOnly = true)
     public List<SalesReportData> getSalesReport(ReportForm reportForm) throws ApiException {
         checkValid(reportForm);

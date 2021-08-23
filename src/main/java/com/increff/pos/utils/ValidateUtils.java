@@ -9,6 +9,7 @@ import javax.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 
+//TODO rename to AbstractApi
 public class ValidateUtils {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
@@ -23,6 +24,8 @@ public class ValidateUtils {
         }
 
     }
+
+    //TODO set the violations in the error message
     public <T> void checkValid(T object) throws ApiException {
         Set<ConstraintViolation<T>> violations = validator.validate(object) ;
         if(violations.size()>0){

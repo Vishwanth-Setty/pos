@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+//TODO Remove this, Autowire  orderItemDao to orderService
 @Service
 public class OrderItemService {
     @Autowired

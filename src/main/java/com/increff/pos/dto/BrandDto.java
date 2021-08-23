@@ -60,6 +60,8 @@ public class BrandDto extends ValidateUtils {
             brandService.addBrand(ConvertUtil.convert(brandForm));
         }
     }
+
+    //TODO rename to validate
     private String checkData(List<BrandForm> brandFormList){
         String errorMessage = "";
         errorMessage = checkDuplicates(brandFormList);
@@ -72,6 +74,8 @@ public class BrandDto extends ValidateUtils {
         }
         return "";
     }
+
+    //TODO renmae to checkDuplicateRecords
     private static String checkDuplicates(List<BrandForm> brandFormList){
         StringBuilder errors = new StringBuilder();
         Set<String> hash_Set = new HashSet<String>();
@@ -87,6 +91,7 @@ public class BrandDto extends ValidateUtils {
         return errors.toString();
     }
 
+    //TODO renmae method to checkExists
     private String checkDuplicatesInDatabase(List<BrandForm> brandFormList){
         StringBuilder errors = new StringBuilder();
         for(BrandForm brandForm:brandFormList){

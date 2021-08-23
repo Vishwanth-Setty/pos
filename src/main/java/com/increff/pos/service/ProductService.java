@@ -12,9 +12,12 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+//TODO add transactional at class level
+
 public class ProductService extends ValidateUtils {
     @Autowired
     private ProductDao productDao;
+
     @Transactional
     public ProductPojo add(ProductPojo productPojo) throws ApiException {
         ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
@@ -52,9 +55,13 @@ public class ProductService extends ValidateUtils {
         oldProductPojo.setMrp(newProductPojo.getMrp());
     }
 
+    //TODO the method should be moved to DTO
     @Transactional
     public String checkDuplicates(List<ProductForm> productFormList){
         StringBuilder errorMessage = new StringBuilder();
+
+        //TODO instad of making multiple get calls, use streams to collect all barCode.
+        // Use an in query to fetch Product pojo for all barcode in (), and then from the result set extract barcode and set error message accrodingly
         int i = 1;
         for(ProductForm productForm: productFormList){
             ++i;
