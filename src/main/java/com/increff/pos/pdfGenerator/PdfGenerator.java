@@ -19,10 +19,12 @@ import java.io.File;
 
 public class PdfGenerator {
 
-    public byte[] generatePDF(File xml_file, StreamSource xsl_source) throws Exception {
+    public static byte[]  generatePDF(File xml_file, StreamSource xsl_source) throws Exception {
         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
         // Setup a buffer to obtain the content length
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.out.println("1");
+
         // Setup FOP
         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
         TransformerFactory factory = TransformerFactory.newInstance();

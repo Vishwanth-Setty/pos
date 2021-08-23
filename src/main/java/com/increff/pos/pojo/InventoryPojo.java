@@ -12,9 +12,9 @@ import javax.persistence.*;
 public class InventoryPojo {
 
     @Id
-    private Integer productId;
+    private int productId;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
 
 }

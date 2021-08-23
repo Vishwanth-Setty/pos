@@ -34,6 +34,7 @@ public class ReportService extends ValidateUtils {
     @Transactional(readOnly = true)
     public List<SalesReportData> getSalesReport(ReportForm reportForm) throws ApiException {
         checkValid(reportForm);
+
         LocalDate localDate = LocalDate.of(2019, 03, 12);
         LocalTime localTime = LocalTime.of(12,  44);
         ZoneId zoneId = ZoneId.of("GMT+05:30");
@@ -43,7 +44,6 @@ public class ReportService extends ValidateUtils {
             throw new ApiException("Check Dates");
         }
         ZonedDateTime timeStamp = ZonedDateTime.of( localDate, localTime, zoneId );
-        checkValid(reportForm);
 
         List<BrandPojo> brandPojoList = brandService.getAllBrands();
         HashMap<Integer,String> brandIdToNameAndCategory=new HashMap<>();
@@ -51,8 +51,6 @@ public class ReportService extends ValidateUtils {
 
         String filterBrand = reportForm.getBrand();
         String filterCategory =  reportForm.getCategory();
-//        BrandPojo brandPojo = brandService.getBrandByNameAndCategory(filterBrand,filterCategory);
-//        checkNotNull(brandPojo,"Invalid Brand and Category");
 
         List<ProductPojo> productPojoList = productService.getAll();
         HashMap<Integer,String> mapProductIdWithBrand=new HashMap<Integer,String>();

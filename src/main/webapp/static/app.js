@@ -8,12 +8,12 @@ function toast(message,type){
             setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0"})}, 3000);
             break;
         case 'WARN':
-            $('#toast').css({"background": "#ff0000", "opacity": "1"});
+            $('#toast').css({"background": "#e65e3f", "opacity": "1", "color": "white"});
             break;
         default :
             $('#toast').css({"background": "#9affa2", "opacity": "1"});
             $('#toast').css('opacity', '1');
-            setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0"})}, 3000);
+            setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0", "color": "black"})}, 3000);
             break;
     };
     
@@ -136,11 +136,20 @@ function readFileDataCallback(results){
 	uploadRows();
 }
 
+const downloadFile = (blob, fileName) => {
+    const link = document.createElement('a');
+    // create a blobURI pointing to our Blob
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    // some browser needs the anchor to be in the doc
+    document.body.append(link);
+    link.click();
+    link.remove();
+    // in case the Blob uses a lot of memory
+    setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+  };
+  
 
-
-function downloadErrors(){
-	writeFileData(errorData);
-}
 
 function readFileData(file, callback){
 	var config = {

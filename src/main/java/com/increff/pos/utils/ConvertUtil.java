@@ -72,7 +72,7 @@ public class ConvertUtil {
         OrderData orderData = new OrderData();
         orderData.setOrderId(orderPojo.getId());
         orderData.setOrderTime(orderPojo.getOrderTime());
-        orderData.setInvoiceGenerated(orderPojo.getInvoiceGenerated());
+        orderData.setInvoiceGenerated(orderPojo.isInvoiceGenerated());
         return orderData;
     }
 

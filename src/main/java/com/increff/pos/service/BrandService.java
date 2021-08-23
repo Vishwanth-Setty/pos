@@ -16,13 +16,11 @@ public class BrandService extends ValidateUtils {
     private BrandDao dao;
 
     @Transactional
-    public void addBrand(BrandPojo brandPojo) throws ApiException {
+    public BrandPojo addBrand(BrandPojo brandPojo) throws ApiException {
         BrandPojo exists = dao.selectByNameAndCategory(brandPojo.getBrand(),brandPojo.getCategory());
         checkNull(exists,"Brand and Category Exists");
-//        if(exists != null){
-//            throw new ApiException("Brand name with "+ brandPojo.getBrand() + " exists in " + brandPojo.getCategory());
-//        }
-        dao.insert(brandPojo);
+        brandPojo = dao.insert(brandPojo);
+        return brandPojo;
     }
 
     @Transactional

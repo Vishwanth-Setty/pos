@@ -70,10 +70,6 @@ function addOrder() {
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
-            $(':input', '#addInventory')
-                .not(':button, :submit, :reset, :hidden')
-                .val('')
-            $('#addModal').modal('hide');
             toast(error.message, 'WARN');
         }
     });
@@ -131,8 +127,8 @@ function updateOrder() {
             toast('Successful');
         },
         error: function (error) {
-            console.log(error);
-            alert("An error has occurred");
+            error = JSON.parse(error.responseText);
+            toast(error.message, 'WARN');
         }
     });
 }
@@ -179,21 +175,29 @@ function addProductToTable(e){
     
 }
 
-async function addProductToTableToUpdateOrderItem(){
-    var validProduct = await checkProduct($('#addItemBarcodeToUpdate').val());
-    if(validProduct == "" ){
-        console.log("invalid");
-        return ;
-    }
-    product = {};
-    product["orderItemId"] = 0
-    product["barcode"] = validProduct.barcode
-    product["quantity"] = $('#addItemQuantityToUpdate').val()
-    product["sellingPrice"] = $('#addItemSellingPriceToUpdate').val()
-    product["orderId"] = $('#orderId').val()
-    var dataTable = $("#order-item-table").DataTable();
-    dataTable.row.add(product).draw(false);
-    return false;
+async function addProductToTableToUpdateOrderItem(e){
+    e.preventDefault();
+    let url = getProductUrl() + "/barcode/" + $('#addItemBarcodeToUpdate').val();
+    let product = {};
+    $.ajax({
+      url: url,
+      type: "GET",
+      success: function (validProduct) {
+        product = {};
+        product["orderItemId"] = 0
+        product["barcode"] = validProduct.barcode
+        product["quantity"] = $('#addItemQuantityToUpdate').val()
+        product["sellingPrice"] = $('#addItemSellingPriceToUpdate').val()
+        product["orderId"] = $('#orderId').val()
+        var dataTable = $("#order-item-table").DataTable();
+        dataTable.row.add(product).draw(false);
+
+      },
+      error: function (error) {
+          console.log("error");
+          toast("Invalid Barcode",'WARN');
+    },
+    });
 }
 
 function editOrderItem(barcode,quantity,sellingPrice){
@@ -247,18 +251,24 @@ $('#new-order-table').on( 'click', 'tbody td.row-remove', function (e) {
 
 
 //GenerateInvoice
-function generateInvoice(orderId){
-    orderId = parseInt(orderId);
+function generateInvoice(){
+    orderId = parseInt($('#orderIdForInvoice').val());
     var url = getOrderUrl()+"/invoice/"+orderId;
     $.ajax({
         url: url,
+        responseType: Blob,
         type: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/pdf'
         },
         success: function (response) {
             getOrders();
             toast('Successfull');
+            var blob = new Blob([response])
+            console.log(response);
+            downloadFile(blob, "test.pdf");
+            $('#downloadInvoiceModal').modal('hide');
+
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -267,7 +277,15 @@ function generateInvoice(orderId){
     });
 }
 function openModal() {
+    console.log("asdfas");
+    $('#createOrder').trigger('reset');
+    $('#new-order-table').DataTable().clear().draw();
     $('#addModal').modal('show');
+}
+
+function openModalForInvoice(orderId){
+    $('#orderIdForInvoice').val(orderId);
+    $('#downloadInvoiceModal').modal('show');
 }
 
 function init() {
@@ -278,6 +296,7 @@ function init() {
     $('#editItemSubmit').click(changeEditOrderItemData);
     $('#update-order').click(updateOrder);
     $('#addProductToUpdateOrder').click(addProductToTableToUpdateOrderItem);
+    $('#downloadInvoice').click(generateInvoice);
 
     
     $("#order-table").DataTable({
@@ -296,7 +315,7 @@ function init() {
                 mData: null,
                 bSortable: false,
                 mRender: function (o) {
-                    var html = '<span class="invoice" onclick="generateInvoice(' +
+                    var html = '<span class="invoice" onclick="openModalForInvoice(' +
                     o.orderId +
                     ')"><span data-toggle="tooltip" data-placement="top" title="Generate Invoice" class="material-icons md-24">receipt</span></span>'
                     if(!o.invoiceGenerated){
@@ -323,6 +342,7 @@ function init() {
         ordering: false,
         info:     false,
         searching: false,
+        bAutoWidth: false,
         columns: [
             {
                 data: "barcode",
@@ -354,6 +374,7 @@ function init() {
         ordering: false,
         info:     false,
         searching: false,
+        bAutoWidth: false,
         columns: [
             {
                 data: "barcode",

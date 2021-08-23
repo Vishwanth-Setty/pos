@@ -36,6 +36,7 @@ public class BrandDto extends ValidateUtils {
             listBrandData.add(brandData);
         }
         return listBrandData;
+
     }
 
     public BrandData getById(int id){

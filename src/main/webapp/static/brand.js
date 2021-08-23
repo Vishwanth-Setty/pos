@@ -140,7 +140,11 @@ function updateBrand(e) {
 
 //Upload Data
 function upload(){
-    var $file = $('#brandFile')
+    var $file = $('#brandFile');
+    if($file.val() == ''){
+        toast("Select File","WARN");
+        return ;
+    }
     processData($file);
 }
 

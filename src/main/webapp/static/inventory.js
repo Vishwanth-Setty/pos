@@ -1,6 +1,8 @@
 //Global var
 reportInventory = []
 
+prevValue = {};
+
 function displayInventoryData(inventories) {
     var $tbody = $('#inventory-table').find('tbody');
     var dataTable = $('#inventory-table').DataTable()
@@ -63,6 +65,8 @@ async function editInventory(barcode,quantity) {
     quantity = new Number(quantity);
     $('#quantity').val(quantity)
     $('#barcode').val(barcode)
+    prevValue["quantity"] = parseInt($('#quantity').val());
+    console.log(prevValue);
 }
 
 function updateInventory(e) {
@@ -132,6 +136,11 @@ async function getInventoryById(id) {
 
 function upload(){
     var $file = $('#inventoryFile')
+    console.log($file);
+    if($file.val() == ''){
+        toast("Select File","WARN");
+        return ;
+    }
     processData($file);
 }
 
@@ -228,6 +237,16 @@ function init() {
         "columnDefs": [
             { "width": "10px", "targets": -1 }
         ],
+    });
+    $('#editInventory :input').keyup(function () {
+        let quantity = parseInt($('#quantity').val());
+        console.log(prevValue);
+        console.log(quantity);
+        if (quantity == (prevValue["quantity"])) {
+            $('#update-inventory').prop('disabled', true);
+            return;
+        }
+        $('#update-inventory').prop('disabled', false);
     });
 }
 

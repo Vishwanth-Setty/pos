@@ -21,7 +21,7 @@ public class BrandPojo {
             initialValue = 1,
             allocationSize = 1
     )
-    private Integer id;
+    private int id;
 
     @Column(nullable = false)
     private String brand;

@@ -31,10 +31,6 @@ public class OrderDao extends AbstractDao<OrderPojo> {
         super(OrderPojo.class);
     }
 
-    public int insertWithReturnId(OrderPojo orderPojo){
-        em.persist(orderPojo);
-        return orderPojo.getId();
-    }
 //    public List<OrderPojo> selectAll(){
 //        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL);
 //        return query.getResultList();

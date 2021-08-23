@@ -22,8 +22,9 @@ public abstract class AbstractDao<T> {
         clazz = clazz1;
     }
 
-    public void insert(T t){
+    public T insert(T t){
         em.persist(t);
+        return t;
     }
     public  List<T> selectAll(){
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();

@@ -60,7 +60,7 @@ public class BrandServiceTest extends AbstractUnitTest {
         assertEquals("new", brandPojo.getBrand());
     }
 
-    private BrandPojo create(String brand, String category){
+    public BrandPojo create(String brand, String category){
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand(brand);
         brandPojo.setCategory(category);

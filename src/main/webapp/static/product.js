@@ -1,3 +1,5 @@
+let prevValue = {};
+
 function displayProductData(products) {
     console.log(products);
     var $tbody = $("#product-table").find("tbody");
@@ -65,6 +67,9 @@ async function editProduct(id) {
     $("#categoryName").val(product.category);
     $("#name").val(product.name);
     $("#mrp").val(product.mrp);
+
+    prevValue["name"] = product.name;
+    prevValue["mrp"] = product.mrp;
 }
 
 function updateProduct(e) {
@@ -131,7 +136,10 @@ async function getProductById(id) {
 
 function upload(){
     var $file = $('#productFile');
-    
+    if($file.val() == ''){
+        toast("Select File","WARN");
+        return ;
+    }
     processData($file);
 }
 
@@ -237,6 +245,18 @@ function init() {
         "columnDefs": [
             { "width": "10px", "targets": -1 }
         ],
+    });
+
+    $('#editProduct :input').keyup(function () {
+        let name = $('#name').val();
+        let mrp = $('#mrp').val();
+        console.log(prevValue);
+        console.log(name,mrp);
+        if (name == prevValue["name"] && mrp == prevValue["mrp"]) {
+            $('#update-product').prop('disabled', true);
+            return;
+        }
+        $('#update-product').prop('disabled', false);
     });
 }
 

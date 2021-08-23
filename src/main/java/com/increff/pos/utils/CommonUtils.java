@@ -9,12 +9,6 @@ import com.increff.pos.pojo.ProductPojo;
 
 public final class CommonUtils {
 
-    public static UploadErrorMessage setError(int row, String message){
-        UploadErrorMessage uploadErrorMessage = new UploadErrorMessage();
-        uploadErrorMessage.setRowNumber(row);
-        uploadErrorMessage.setError(message);
-        return uploadErrorMessage;
-    }
     public static void normalize(BrandPojo brandPojo) {
         brandPojo.setBrand(StringUtil.toLowerCase(brandPojo.getBrand()).trim());
         brandPojo.setCategory(StringUtil.toLowerCase(brandPojo.getCategory()).trim());

@@ -21,16 +21,16 @@ public class OrderItemPojo {
             initialValue = 1,
             allocationSize = 1
     )
-    private Integer id;
+    private int id;
 
     @Column(nullable = false)
-    private Integer orderId;
+    private int orderId;
 
     @Column(nullable = false)
-    private Integer productId;
+    private int productId;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
 
     @Column(nullable = false)
     private double sellingPrice;

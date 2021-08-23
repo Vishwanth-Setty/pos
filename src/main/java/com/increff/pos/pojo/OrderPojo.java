@@ -21,12 +21,12 @@ public class OrderPojo {
             initialValue = 1001,
             allocationSize = 1
     )
-    private Integer id;
+    private int id;
 
     @Column(nullable = false)
     private ZonedDateTime orderTime;
 
     @Column(nullable = false)
-    private Boolean invoiceGenerated;
+    private boolean invoiceGenerated;
 
 }

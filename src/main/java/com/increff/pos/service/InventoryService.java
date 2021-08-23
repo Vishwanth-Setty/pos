@@ -26,10 +26,10 @@ public class InventoryService extends ValidateUtils {
     }
 
     @Transactional
-    public void add(InventoryPojo inventoryPojo) throws ApiException{
+    public InventoryPojo add(InventoryPojo inventoryPojo) throws ApiException{
         InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
         checkNull(exists,"Inventory exists for given barcode.");
-        inventoryDao.insert(inventoryPojo);
+        return inventoryDao.insert(inventoryPojo);
     }
 
     @Transactional
