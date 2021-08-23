@@ -1,16 +1,21 @@
 package com.increff.pos.controller;
 
+import com.increff.pos.dto.InvoiceHelper;
 import com.increff.pos.dto.OrderDto;
 import com.increff.pos.model.data.OrderData;
 import com.increff.pos.model.data.OrderItemData;
+import com.increff.pos.model.data.OrderItemDatas;
+import com.increff.pos.model.data.OrderItemXml;
 import com.increff.pos.model.form.OrderForm;
 import com.increff.pos.model.form.OrderItemForm;
 import com.increff.pos.pdfGenerator.PdfGenerator;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
+import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
+import com.increff.pos.service.ReportService;
 import com.increff.pos.utils.ConvertUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +31,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -38,6 +49,8 @@ public class OrderController {
 
     @Autowired
     OrderDto orderDto;
+    @Autowired
+    InvoiceHelper invoiceHelper;
 
     @ApiOperation(value = "Get all orders")
     @RequestMapping(path = "", method = RequestMethod.GET)
@@ -59,24 +72,11 @@ public class OrderController {
 
     @ApiOperation(value = "Generate Invoice")
     @RequestMapping(path = "/invoice/{orderId}", method = RequestMethod.PUT)
-    public void generateInvoice(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("xml");
-        File xml = new File("./src/main/java/com/increff/pos/pdfGenerator/brand.xml");
-        File xsl = new File("./src/main/java/com/increff/pos/pdfGenerator/brand.xsl");
-        StreamSource streamSource = new StreamSource(xsl);
-        System.out.println(xml.exists());
-        System.out.println(xsl.exists());
-
-        byte[] bis = PdfGenerator.generatePDF(xml,streamSource);
-        System.out.println(bis);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Content-Disposition", "inline; filename=report.pdf");
-
+    public String generateInvoice(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/pdf");
-        response.getOutputStream().write(bis);
-//        return ok(bis);
 
 //        orderDto.generateInvoice(orderId);
+        return invoiceHelper.downloadInvoice(orderId);
     }
 
     @ApiOperation(value = "Update Order")

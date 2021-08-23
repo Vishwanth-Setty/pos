@@ -46,7 +46,7 @@ function addInventory(e) {
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
             $('#addModal').modal('hide');
-            toast('Successfully created a Brand');
+            toast('Success');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -89,7 +89,7 @@ function updateInventory(e) {
         success: function (response) {
             getInventories();
             $('#editModal').modal('hide');
-            toast('Successful');
+            toast('Success');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);

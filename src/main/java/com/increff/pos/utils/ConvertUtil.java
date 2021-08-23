@@ -85,7 +85,7 @@ public class ConvertUtil {
         return orderItemData;
     }
 
-    public static OrderItemPojo convert(OrderItemForm orderItemForm,int productId) {
+    public static OrderItemPojo convert(OrderItemForm orderItemForm, int productId) {
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setQuantity(orderItemForm.getQuantity());
         orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
@@ -94,14 +94,26 @@ public class ConvertUtil {
         orderItemPojo.setOrderId(orderItemForm.getOrderId());
         return orderItemPojo;
     }
-    public static ZonedDateTime convert(String[]  date,String type){
-        LocalDate localDate = LocalDate.of(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
-        LocalTime localTime = LocalTime.of(0,  0);
-        if(type.equals("start"))
-            localTime = LocalTime.of(0,  0);
-        if(type.equals("end"))
-            localTime = LocalTime.of(23,  59);
-        ZoneId zoneId = ZoneId.of("GMT+05:30");
-        return ZonedDateTime.of( localDate, localTime, zoneId );
+
+    public static OrderItemXml covert(OrderItemData orderItemData, Double mrp) {
+        OrderItemXml orderItemXml = new OrderItemXml();
+        orderItemXml.setBarcode(orderItemData.getBarcode());
+        orderItemXml.setMrp(mrp);
+        orderItemXml.setQuantity(orderItemData.getQuantity());
+        orderItemXml.setPerUnitSellingPrice(orderItemData.getSellingPrice());
+        orderItemXml.setTotalSellingPrice(orderItemData.getQuantity()*orderItemData.getSellingPrice());
+        return orderItemXml;
     }
+
+    public static ZonedDateTime convert(String[] date, String type) {
+        LocalDate localDate = LocalDate.of(parseInt(date[2]), parseInt(date[1]), parseInt(date[0]));
+        LocalTime localTime = LocalTime.of(0, 0);
+        if (type.equals("start"))
+            localTime = LocalTime.of(0, 0);
+        if (type.equals("end"))
+            localTime = LocalTime.of(23, 59);
+        ZoneId zoneId = ZoneId.of("GMT+05:30");
+        return ZonedDateTime.of(localDate, localTime, zoneId);
+    }
+
 }

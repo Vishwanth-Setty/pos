@@ -256,17 +256,21 @@ function generateInvoice(){
     var url = getOrderUrl()+"/invoice/"+orderId;
     $.ajax({
         url: url,
-        responseType: Blob,
+        responseType: 'blob',
         type: 'PUT',
         headers: {
             'Content-Type': 'application/pdf'
         },
         success: function (response) {
             getOrders();
-            toast('Successfull');
-            var blob = new Blob([response])
+            toast('Success');
+            // var blob = new Blob([response], {type: "application/pdf"})
             console.log(response);
-            downloadFile(blob, "test.pdf");
+            var file = b64toBlob(response);
+            console.log(file);
+            var fileURL = URL.createObjectURL(file);
+            // window.open(fileURL);
+            downloadFile(file, "test.pdf");
             $('#downloadInvoiceModal').modal('hide');
 
         },

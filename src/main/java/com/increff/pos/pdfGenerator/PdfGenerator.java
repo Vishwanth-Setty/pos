@@ -1,6 +1,8 @@
 package com.increff.pos.pdfGenerator;
 
 
+import com.increff.pos.model.data.OrderItemDatas;
+import com.increff.pos.pojo.OrderItemPojo;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -48,11 +50,14 @@ public class PdfGenerator {
     }
 
     //Generate XML
-    public static void generateXml(File file,Object list,Class<?> class_type) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(class_type);
+    public static void generateXml(File file,Object list) throws JAXBException {
+
+        JAXBContext context = JAXBContext.newInstance(OrderItemDatas.class);
+        System.out.println("1");
         Marshaller m = context.createMarshaller();
-        // for pretty-print XML in JAXB
+        System.out.println("1");
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        System.out.println("1");
         m.marshal(list, file);
     }
 

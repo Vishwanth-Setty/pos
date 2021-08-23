@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OrderItemData>
+    <OrderItem>
+        <barcode>1e3et34</barcode>
+        <orderId>1002</orderId>
+        <orderItemId>13</orderItemId>
+        <quantity>10</quantity>
+        <sellingPrice>123.0</sellingPrice>
+    </OrderItem>
+    <OrderItem>
+        <barcode>123wde</barcode>
+        <orderId>1002</orderId>
+        <orderItemId>12</orderItemId>
+        <quantity>4</quantity>
+        <sellingPrice>123.0</sellingPrice>
+    </OrderItem>
+    <OrderItem>
+        <barcode>y7u8i9</barcode>
+        <orderId>1002</orderId>
+        <orderItemId>14</orderItemId>
+        <quantity>1</quantity>
+        <sellingPrice>123.0</sellingPrice>
+    </OrderItem>
+</OrderItemData>

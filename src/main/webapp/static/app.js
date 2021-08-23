@@ -93,7 +93,7 @@ function jsonToCsv(json){
     blob = new Blob([csv], { type: 'text/csv' });
     var csvUrl = window.webkitURL.createObjectURL(blob);
     ReportTitle = "report";
-    var filename =  (ReportTitle || 'UserExport') + '.csv';
+    var filename =  (ReportTitle || 'UserExport') + '.tsv';
     //this trick will generate a temp "a" tag
     var link = document.createElement("a");
     link.id = "lnkDwnldLnk";
@@ -139,7 +139,9 @@ function readFileDataCallback(results){
 const downloadFile = (blob, fileName) => {
     const link = document.createElement('a');
     // create a blobURI pointing to our Blob
+    console.log(blob);
     link.href = URL.createObjectURL(blob);
+    console.log(link.href);
     link.download = fileName;
     // some browser needs the anchor to be in the doc
     document.body.append(link);
@@ -148,6 +150,26 @@ const downloadFile = (blob, fileName) => {
     // in case the Blob uses a lot of memory
     setTimeout(() => URL.revokeObjectURL(link.href), 7000);
   };
+
+  function b64toBlob (b64Data, contentType='', sliceSize=512) {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
   
 
 

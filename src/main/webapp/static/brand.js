@@ -49,7 +49,7 @@ function getBrands() {
             displayBrandData(brands);
         },
         error: function () {
-            alert("Could not Retrive Data From Server");
+            alert("Could not Retrive Information");
         }
     });
 }
@@ -82,7 +82,7 @@ function addBrand(e) {
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
             $('#addModal').modal('hide');
-            toast('Successfully created a Brand');
+            toast('Success');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -107,7 +107,7 @@ function editBrand(e) {
             prevValue["category"] = response.category;
         },
         error: function () {
-            toast("Error while Retriving Data");        }
+            toast("Error while Retriving Information");        }
     });
 }
 
@@ -128,7 +128,7 @@ function updateBrand(e) {
         success: function (response) {
             getBrands();
             $('#editModal').modal('hide');
-            toast('Successfully created', 'INFO');
+            toast('Success', 'INFO');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);

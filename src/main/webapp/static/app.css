@@ -213,3 +213,8 @@ a{
 a:hover{
 	text-decoration: none;
 }
+.download-sample{
+	background-color: #0069d9;
+	color:white;
+	border: 1px solid whitesmoke;
+}
