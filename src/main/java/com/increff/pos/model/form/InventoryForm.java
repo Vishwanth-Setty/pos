@@ -11,5 +11,6 @@ public class InventoryForm {
     @NotBlank
     private String barcode;
 
-    private int quantity;
+    @NotBlank
+    private Integer quantity;
 }

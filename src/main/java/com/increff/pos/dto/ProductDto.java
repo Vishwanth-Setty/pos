@@ -31,7 +31,7 @@ public class ProductDto extends ValidateUtils {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
-        checkNotNull(brandPojo,"Brand and Category not Exists");
+        checkNotNull(brandPojo,"Brand and Category not exists");
         ProductPojo productPojo = ConvertUtil.convert(productForm,brandPojo.getId());
         productService.add(productPojo);
     }
@@ -70,11 +70,10 @@ public class ProductDto extends ValidateUtils {
     public void upload(List<ProductForm> productFormList) throws ApiException {
         checkValidList(productFormList);
         String errorMessage = checkData(productFormList);
-        System.out.println("30");
+
         if(!errorMessage.equals("")){
             throw new ApiException(errorMessage);
         }
-        System.out.println("30");
 
         for(ProductForm productForm : productFormList){
             BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
@@ -89,15 +88,15 @@ public class ProductDto extends ValidateUtils {
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(productFormList);
         if(!errorMessage.equals("")){
-            return "Given TSV have Duplicate field "+errorMessage;
+            return "Found duplicate barcodes "+errorMessage;
         }
         errorMessage = checkBrandAndCategory(productFormList);
         if(!errorMessage.equals("")){
-            return "Given TSV have Invalid Brand and Category Combinations "+errorMessage;
+            return "Invalid Brand and Category pairs  "+errorMessage;
         }
         errorMessage = productService.checkDuplicates(productFormList);
         if(!errorMessage.equals("")){
-            return "Given TSV have Duplicate field in Database "+errorMessage;
+            return "Barcode already exists  "+errorMessage;
         }
         return "";
     }
@@ -110,7 +109,7 @@ public class ProductDto extends ValidateUtils {
             ++i;
             String barcode = productForm.getBarcode();
             if (hash_Set.contains(barcode)) {
-                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
+                errorMessage.append(" (").append(barcode).append(") ");
             }
             hash_Set.add(barcode);
         }
@@ -126,7 +125,7 @@ public class ProductDto extends ValidateUtils {
             String category = productForm.getCategory();
             BrandPojo exists = brandService.getBrandByNameAndCategory(brand,category);
             if (exists == null) {
-                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
+                errorMessage.append(" ").append(barcode).append(") ");
             }
         }
         return errorMessage.toString();

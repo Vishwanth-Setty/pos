@@ -80,11 +80,11 @@ public class InventoryDto extends ValidateUtils {
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(inventoryFormList);
         if(!errorMessage.equals("")){
-            return "Given TSV have Duplicate field "+errorMessage;
+            return "Found duplicate barcodes "+errorMessage;
         }
         errorMessage = checkBarcode(inventoryFormList);
         if(!errorMessage.equals("")){
-            return "Given TSV have Invalid Barcode field in "+errorMessage;
+            return "Invalid Barcodes "+errorMessage;
         }
         return "";
     }
@@ -97,7 +97,7 @@ public class InventoryDto extends ValidateUtils {
             ++i;
             String barcode = inventoryForm.getBarcode();
             if (hash_Set.contains(barcode)) {
-                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
+                errorMessage.append(" (").append(barcode).append(") ");
             }
             hash_Set.add(barcode);
         }
@@ -112,7 +112,7 @@ public class InventoryDto extends ValidateUtils {
             String barcode = inventoryForm.getBarcode();
             ProductPojo productPojo = productService.getByBarcode(barcode);
             if (productPojo == null) {
-                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
+                errorMessage.append(" (").append(barcode).append(") ");
             }
         }
         return errorMessage.toString();

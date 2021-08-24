@@ -54,19 +54,19 @@ public class OrderController {
 
     @ApiOperation(value = "Get all orders")
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<OrderData> getAllOrders() {
+    public List<OrderData> getAll() {
         return orderDto.getAll();
     }
 
     @ApiOperation(value = "Get Order by Id")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public List<OrderItemData> getOrderById(@PathVariable int id) {
+    public List<OrderItemData> getById(@PathVariable int id) {
        return orderDto.getById(id);
     }
 
     @ApiOperation(value = "Create Order")
     @RequestMapping(path = "", method = RequestMethod.POST)
-    public void createOrder(@RequestBody OrderForm orderForm) throws ApiException {
+    public void create(@RequestBody OrderForm orderForm) throws ApiException {
         orderDto.add(orderForm);
     }
 
@@ -74,14 +74,13 @@ public class OrderController {
     @RequestMapping(path = "/invoice/{orderId}", method = RequestMethod.PUT)
     public String generateInvoice(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/pdf");
-
-//        orderDto.generateInvoice(orderId);
+        orderDto.generateInvoice(orderId);
         return invoiceHelper.downloadInvoice(orderId);
     }
 
     @ApiOperation(value = "Update Order")
     @RequestMapping(path = "", method = RequestMethod.PUT)
-    public void updateOrder(@RequestBody OrderForm orderForm) throws ApiException {
+    public void update(@RequestBody OrderForm orderForm) throws ApiException {
         orderDto.update(orderForm);
     }
 

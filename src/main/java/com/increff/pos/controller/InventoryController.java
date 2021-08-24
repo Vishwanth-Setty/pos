@@ -16,15 +16,12 @@ import java.util.List;
 @RestController
 public class InventoryController {
 
-
-
     @Autowired
     InventoryDto inventoryDto;
 
-
     @ApiOperation(value = "Get all Inventories")
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<InventoryData> getInventoryList() {
+    public List<InventoryData> getList() {
         return inventoryDto.getAll();
     }
 
@@ -36,13 +33,13 @@ public class InventoryController {
 
     @ApiOperation(value = "Create Inventory of Product")
     @RequestMapping(path = "", method = RequestMethod.POST)
-    public void createInventory(@RequestBody InventoryForm inventoryForm) throws ApiException {
+    public void create(@RequestBody InventoryForm inventoryForm) throws ApiException {
         inventoryDto.add(inventoryForm);
     }
 
     @ApiOperation(value = "Update Inventory of Product")
     @RequestMapping(path = "", method = RequestMethod.PUT)
-    public void updateInventory(@RequestBody InventoryForm inventoryForm) throws ApiException {
+    public void update(@RequestBody InventoryForm inventoryForm) throws ApiException {
         inventoryDto.update(inventoryForm);
     }
 

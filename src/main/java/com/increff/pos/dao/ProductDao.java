@@ -15,29 +15,16 @@ public class ProductDao extends AbstractDao<ProductPojo> {
     private EntityManager em;
 
     private static String SELECT_BRAND_ID = "select p from ProductPojo p where brandId=:brandId";
-    private static String SELECT_ID = "select p from ProductPojo p where id=:id";
     private static String SELECT_BY_BARCODE = "select p from ProductPojo p where barcode=:barcode";
-    private static String SELECT_All = "select p from ProductPojo p";
 
     ProductDao() {
         super(ProductPojo.class);
     }
 
-
-//    public List<ProductPojo> selectAll() {
-//        TypedQuery<ProductPojo> query = getQuery(SELECT_All);
-//        return query.getResultList();
-//    }
-//
-//    public ProductPojo select(int id) {
-//        TypedQuery<ProductPojo> query = getQuery(SELECT_ID);
-//        query.setParameter("id", id);
-//        return query.getSingleResult();
-//    }
-
     public ProductPojo selectByBarcode(String barcode){
         TypedQuery<ProductPojo> query = getQuery(SELECT_BY_BARCODE);
         query.setParameter("barcode", barcode);
+
         return query.getResultList()
                 .stream().findFirst().orElse(null);
     }
@@ -45,11 +32,12 @@ public class ProductDao extends AbstractDao<ProductPojo> {
     public List<ProductPojo> selectByBrandId(int brandId) {
         TypedQuery<ProductPojo> query = getQuery(SELECT_BRAND_ID);
         query.setParameter("brandId", brandId);
+
         return query.getResultList();
     }
 
-    TypedQuery<ProductPojo> getQuery(String jpql) {
-        return em.createQuery(jpql, ProductPojo.class);
-    }
+//    TypedQuery<ProductPojo> getQuery(String jpql) {
+//        return em.createQuery(jpql, ProductPojo.class);
+//    }
 
 }

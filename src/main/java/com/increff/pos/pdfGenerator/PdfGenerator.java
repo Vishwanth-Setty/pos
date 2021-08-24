@@ -23,14 +23,15 @@ public class PdfGenerator {
 
     public static byte[]  generatePDF(File xml_file, StreamSource xsl_source) throws Exception {
         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+
         // Setup a buffer to obtain the content length
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.out.println("1");
 
         // Setup FOP
         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer(xsl_source);
+
         // Make sure the XSL transformation's result is piped through to FOP
         Result res = new SAXResult(fop.getDefaultHandler());
 
@@ -53,11 +54,8 @@ public class PdfGenerator {
     public static void generateXml(File file,Object list) throws JAXBException {
 
         JAXBContext context = JAXBContext.newInstance(OrderItemDatas.class);
-        System.out.println("1");
         Marshaller m = context.createMarshaller();
-        System.out.println("1");
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        System.out.println("1");
         m.marshal(list, file);
     }
 

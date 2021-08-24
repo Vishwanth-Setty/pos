@@ -9,7 +9,7 @@ import javax.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 
-public class ValidateUtils {
+public abstract class ValidateUtils {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
     public void checkNull(Object object, String message) throws ApiException{

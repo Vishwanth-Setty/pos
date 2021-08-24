@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class SalesReportData {
     private String category;
-    private int quantity;
-    private double revenue;
+    private Integer quantity;
+    private Double revenue;
 }

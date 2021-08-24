@@ -9,10 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Getter
 @Setter
 public class OrderItemData {
-    private int orderItemId;
-    private int orderId;
+    private Integer orderItemId;
+    private Integer orderId;
     private String barcode;
-    private int quantity;
-    private double sellingPrice;
+    private Integer quantity;
+    private Double sellingPrice;
 
 }

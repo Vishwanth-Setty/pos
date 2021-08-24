@@ -82,7 +82,7 @@ public class ConvertUtilTest extends AbstractUnitTest {
         InventoryPojo inventoryPojo = createInventoryPojo(productPojo.getId(),100);
         productPojo = productService.getById(inventoryPojo.getProductId());
         InventoryData inventoryData = ConvertUtil.convert(inventoryPojo,productPojo.getBarcode(),productPojo.getName());
-        assertEquals(inventoryData.getQuantity(),inventoryPojo.getQuantity());
+        assertEquals(inventoryData.getQuantity().intValue(),inventoryPojo.getQuantity().intValue());
     }
 
     @Test
@@ -94,16 +94,16 @@ public class ConvertUtilTest extends AbstractUnitTest {
         InventoryForm inventoryForm = createInventoryForm(productPojo.getBarcode(),100);
         productPojo = productService.getByBarcode(inventoryForm.getBarcode());
         InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());
-        assertEquals(inventoryPojo.getQuantity(),inventoryForm.getQuantity());
+        assertEquals(inventoryPojo.getQuantity().intValue(),inventoryForm.getQuantity().intValue());
     }
 
     @Test
     public void testOrderPojoToOrderForm(){
         OrderPojo orderPojo = createOrderPojo();
         OrderData orderData = ConvertUtil.convert(orderPojo);
-        assertEquals(orderData.getOrderId(),orderPojo.getId());
+        assertEquals((orderData.getOrderId()),orderPojo.getId());
         assertEquals(orderData.getOrderTime(),orderPojo.getOrderTime());
-        assertEquals(orderData.isInvoiceGenerated(),orderPojo.isInvoiceGenerated());
+        assertEquals(orderData.getInvoiceGenerated(),orderPojo.getInvoiceGenerated());
     }
 
     @Test
@@ -115,13 +115,13 @@ public class ConvertUtilTest extends AbstractUnitTest {
         InventoryPojo inventoryPojo = createInventoryPojo(productPojo.getId(),100);
         inventoryPojo = inventoryService.add(inventoryPojo);
         OrderPojo orderPojo = createOrderPojo();
-        OrderItemPojo orderItemPojo = createOrderItemPojo(0,100,10, productPojo.getId());
+        OrderItemPojo orderItemPojo = createOrderItemPojo(0,100.00,10, productPojo.getId());
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         orderItemPojoList.add(orderItemPojo);
         orderPojo = orderService.create(orderItemPojoList);
         OrderItemData orderItemData = ConvertUtil.convert(orderItemPojo);
-        assertEquals(orderItemData.getOrderId(),orderItemPojo.getOrderId());
-        assertEquals(orderItemData.getQuantity(),orderItemPojo.getQuantity());
+        assertEquals(orderItemData.getOrderId().intValue(),orderItemPojo.getOrderId().intValue());
+        assertEquals(orderItemData.getQuantity().intValue(),orderItemPojo.getQuantity().intValue());
         assertEquals(orderItemData.getSellingPrice(),orderItemPojo.getSellingPrice(),DELTA);
     }
 
@@ -134,15 +134,15 @@ public class ConvertUtilTest extends AbstractUnitTest {
         InventoryPojo inventoryPojo = createInventoryPojo(productPojo.getId(),100);
         inventoryPojo = inventoryService.add(inventoryPojo);
         OrderPojo orderPojo = createOrderPojo();
-        OrderItemPojo orderItemPojo = createOrderItemPojo(0,100,10, productPojo.getId());
+        OrderItemPojo orderItemPojo = createOrderItemPojo(0,100.00,10, productPojo.getId());
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
         orderItemPojoList.add(orderItemPojo);
         orderPojo = orderService.create(orderItemPojoList);
-        OrderItemForm orderItemForm = createOrderItemForm(orderPojo.getId(),100,10,productPojo.getBarcode());
+        OrderItemForm orderItemForm = createOrderItemForm(orderPojo.getId(),100.00,10,productPojo.getBarcode());
         productPojo = productService.getByBarcode(orderItemForm.getBarcode());
         orderItemPojo = ConvertUtil.convert(orderItemForm,productPojo.getId());
-        assertEquals(orderItemForm.getOrderId(),orderItemPojo.getOrderId());
-        assertEquals(orderItemForm.getQuantity(),orderItemPojo.getQuantity());
+        assertEquals((orderItemForm.getOrderId().intValue()),orderItemPojo.getOrderId().intValue());
+        assertEquals((orderItemForm.getQuantity().intValue()),orderItemPojo.getQuantity().intValue());
         assertEquals(orderItemForm.getBarcode(),orderItemForm.getBarcode());
     }
 
@@ -201,7 +201,7 @@ public class ConvertUtilTest extends AbstractUnitTest {
         return orderPojo;
     }
 
-    private OrderItemPojo createOrderItemPojo(int orderId,int sellingPrice,int quantity,int productId){
+    private OrderItemPojo createOrderItemPojo(int orderId,Double sellingPrice,int quantity,int productId){
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(orderId);
         orderItemPojo.setSellingPrice(sellingPrice);
@@ -209,7 +209,7 @@ public class ConvertUtilTest extends AbstractUnitTest {
         orderItemPojo.setProductId(productId);
         return orderItemPojo;
     }
-    private OrderItemForm createOrderItemForm(int orderId,int sellingPrice,int quantity,String barcode ){
+    private OrderItemForm createOrderItemForm(int orderId,Double sellingPrice,int quantity,String barcode ){
         OrderItemForm orderItemForm = new OrderItemForm();
         orderItemForm.setOrderId(orderId);
         orderItemForm.setSellingPrice(sellingPrice);

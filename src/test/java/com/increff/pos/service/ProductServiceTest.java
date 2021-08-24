@@ -31,7 +31,7 @@ public class ProductServiceTest extends AbstractUnitTest {
             productService.add(productPojo);
 
         } catch (ApiException apiException) {
-            assertEquals("Product with that barcode exists",apiException.getMessage());
+            assertEquals("Barcode exists",apiException.getMessage());
         }
     }
 
@@ -79,7 +79,7 @@ public class ProductServiceTest extends AbstractUnitTest {
         productService.add(productPojo);
         productPojo = productService.getByBarcode(productPojo.getBarcode());
         productPojo.setName("name2");
-        productPojo.setMrp(123);
+        productPojo.setMrp(123.00);
         productService.update(productPojo, productPojo.getId());
         ProductPojo updatedProductPojo = productService.getByBarcode(productPojo.getBarcode());
         assertEquals(productPojo.getName(),updatedProductPojo.getName());

@@ -23,16 +23,15 @@ public class BrandController {
     @Autowired
     private BrandDto brandDto;
 
-
     @ApiOperation(value = "Creating new Brand")
     @RequestMapping(path = "",method = RequestMethod.POST)
-    public void addBrand(@RequestBody BrandForm brandForm) throws ApiException {
+    public void add(@RequestBody BrandForm brandForm) throws ApiException {
         brandDto.add(brandForm);
     }
 
     @ApiOperation(value = "Get all Brand")
     @RequestMapping(path = "",method = RequestMethod.GET)
-    public List<BrandData> getAllBrands() {
+    public List<BrandData> getAll() {
         return brandDto.getAll();
     }
 
@@ -42,10 +41,9 @@ public class BrandController {
         return brandDto.getById(id);
     }
 
-
     @ApiOperation(value = "Update Brand")
     @RequestMapping(path = "/{id}",method = RequestMethod.PUT)
-    public void updateBrand(@PathVariable int id,@RequestBody BrandForm brandForm) throws ApiException{
+    public void update(@PathVariable int id,@RequestBody BrandForm brandForm) throws ApiException{
         brandDto.update(id,brandForm);
     }
 
@@ -54,6 +52,5 @@ public class BrandController {
     public void uploadData(@RequestBody List<BrandForm> brandFormList) throws ApiException {
         brandDto.uploadList(brandFormList);
     }
-
 
 }

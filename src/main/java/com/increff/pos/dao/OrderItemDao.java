@@ -13,7 +13,6 @@ import java.util.List;
 public class OrderItemDao extends AbstractDao<OrderItemPojo> {
 
     private static final String SELECT_BY_ORDER = "select p from OrderItemPojo p where orderId=:orderId";
-    private static final String SELECT = "select p from OrderItemPojo p where id=:id";
 
 
     @PersistenceContext
@@ -26,20 +25,12 @@ public class OrderItemDao extends AbstractDao<OrderItemPojo> {
     public List<OrderItemPojo> getAllByOrderId(int orderId){
         TypedQuery<OrderItemPojo> query = getQuery(SELECT_BY_ORDER);
         query.setParameter("orderId",orderId);
+
         return query.getResultList();
     }
-//    public void insert(OrderItemPojo orderItemPojo){
-//        em.persist(orderItemPojo);
-//    }
-//    public OrderItemPojo select(int id){
-//        TypedQuery<OrderItemPojo> query = getQuery(SELECT);
-//        query.setParameter("id",id);
-//        return query.getResultList()
-//                .stream().findFirst().orElse(null);
-//    }
 
-    protected TypedQuery<OrderItemPojo> getQuery(String jpql) {
-        return em.createQuery(jpql, OrderItemPojo.class);
-    }
+//    protected TypedQuery<OrderItemPojo> getQuery(String jpql) {
+//        return em.createQuery(jpql, OrderItemPojo.class);
+//    }
 
 }

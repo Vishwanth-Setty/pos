@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderData {
-    private int orderId;
+    private Integer orderId;
     private ZonedDateTime orderTime;
-    private boolean invoiceGenerated;
+    private Boolean invoiceGenerated;
 }

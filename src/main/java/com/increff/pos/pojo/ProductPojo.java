@@ -21,18 +21,18 @@ public class ProductPojo {
             initialValue = 1,
             allocationSize = 1
     )
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String barcode;
 
     @Column(nullable = false)
-    private int brandId;
+    private Integer brandId;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private double mrp;
+    private Double mrp;
 
 }

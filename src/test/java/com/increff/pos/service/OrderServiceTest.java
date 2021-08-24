@@ -66,7 +66,7 @@ public class OrderServiceTest extends AbstractUnitTest {
         orderItemPojoList.add(create(productPojo.getId(),100,100.00));
         OrderPojo orderPojo = orderService.create(orderItemPojoList);
         List<OrderPojo> orderPojoList = orderService.getAll();
-        assertEquals(orderPojoList.get(0).isInvoiceGenerated(),orderService.isInvoiceGenerated(orderPojo.getId()));
+        assertEquals(orderPojoList.get(0).getInvoiceGenerated(),orderService.isInvoiceGenerated(orderPojo.getId()));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class OrderServiceTest extends AbstractUnitTest {
         OrderPojo orderPojo = orderService.create(orderItemPojoList);
         orderService.generateInvoice(orderPojo.getId());
         OrderPojo orderPojo1 = orderService.getOnlyOrderById(orderPojo.getId());
-        assertTrue(orderPojo1.isInvoiceGenerated());
+        assertTrue(orderPojo1.getInvoiceGenerated());
     }
 
     @Test

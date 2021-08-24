@@ -78,7 +78,7 @@ public class OrderDto {
         Set<String> hash_Set = new HashSet<String>();
         for(OrderItemForm orderItemForm : orderItemFormList){
             if(hash_Set.contains(orderItemForm.getBarcode())){
-                throw new ApiException("Found same product Barcode in multiple rows");
+                throw new ApiException("Found same barcode in multiple rows");
             }
             hash_Set.add(orderItemForm.getBarcode());
         }

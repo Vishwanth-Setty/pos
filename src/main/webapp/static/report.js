@@ -37,14 +37,17 @@ function getReport() {
             if(response.length==0){
                 toast("Not Report", 'WARN');
                 displaySalesReport([]);
+            $('#downloadCSVButton').removeClass('btn-large-text');;
                 $('#downloadCSVButton').attr('disabled', true);   
             }
             else{
-                    $('#downloadCSVButton').attr('disabled', false);   
+                $('#downloadCSVButton').addClass("btn-large-text"); 
+                $('#downloadCSVButton').attr('disabled', false);   
             }
         },
         error: function (error) {
-            error = error.responseJSON
+            error = error.responseJSON;
+            $('#downloadCSVButton').removeClass('btn-large-text');
             $('#downloadCSVButton').attr('disabled', true);   
             toast(error.message, 'WARN');
         },
@@ -103,9 +106,11 @@ $(document).ready(init);
 $(document).ready(function(){
     if(reportData.length==0){
         $('#downloadCSVButton').attr('disabled', true);
+        $('#downloadCSVButton').removeClass('btn-large-text');;
     }
     else{
-        $('#downloadCSVButton').attr('disabled', false);   
+        $('#downloadCSVButton').addClass("btn-large-text");
+        $('#downloadCSVButton').attr('disabled', false); 
     }
 });
 $(document).ready(activeTab);

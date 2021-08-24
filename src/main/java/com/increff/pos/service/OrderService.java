@@ -39,9 +39,12 @@ public class OrderService extends ValidateUtils {
     public OrderPojo create(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         checkInventory(orderItemPojoList);
         checkSellingPrice(orderItemPojoList);
+
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setOrderTime(ZonedDateTime.now());
+        orderPojo.setInvoiceGenerated(false);
         orderPojo = orderDao.insert(orderPojo);
+
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             orderItemPojo.setOrderId(orderPojo.getId());
             orderItemService.create(orderItemPojo);
@@ -77,7 +80,7 @@ public class OrderService extends ValidateUtils {
     public Boolean isInvoiceGenerated(int orderId) throws ApiException {
         OrderPojo orderPojo = orderDao.select(orderId);
         checkNotNull(orderPojo,"Invalid Order Id");
-        return orderPojo.isInvoiceGenerated();
+        return orderPojo.getInvoiceGenerated();
     }
 
     @Transactional
@@ -103,7 +106,7 @@ public class OrderService extends ValidateUtils {
             int reqQuantity = orderItemPojo.getQuantity();
             if (inventoryPojo.getQuantity() < reqQuantity) {
                 ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-                throw new ApiException("Not enough "+productPojo.getName()+" is available in inventory");
+                throw new ApiException("insufficient inventory for "+productPojo.getBarcode());
             }
         }
     }
@@ -114,7 +117,7 @@ public class OrderService extends ValidateUtils {
 
         if(quantity<0){
             ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-            throw new ApiException("Not enough "+productPojo.getName()+" is available in inventory");
+            throw new ApiException("insufficient inventory for "+productPojo.getBarcode());
         }
         inventoryPojo.setQuantity(quantity);
         inventoryService.update(inventoryPojo);
@@ -125,8 +128,7 @@ public class OrderService extends ValidateUtils {
         int quantity = inventoryPojo.getQuantity() + orderItemPojo.getQuantity() - newOrderItemPojo.getQuantity();
         if(quantity<0){
             ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-            throw new ApiException("Not enough "+productPojo.getName()+" is available in inventory");
-
+            throw new ApiException("insufficient inventory for "+productPojo.getBarcode());
         }
         inventoryPojo.setQuantity(quantity);
         inventoryService.update(inventoryPojo);
@@ -134,13 +136,13 @@ public class OrderService extends ValidateUtils {
 
     private boolean checkInvoice(int orderId){
         OrderPojo orderPojo = getOnlyOrderById(orderId);
-        return orderPojo.isInvoiceGenerated();
+        return orderPojo.getInvoiceGenerated();
     }
     private void checkSellingPrice(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             ProductPojo productPojo = productService.getById(orderItemPojo.getProductId());
             if(productPojo.getMrp()<orderItemPojo.getSellingPrice()){
-                throw new ApiException("Selling Price cant exceed MRP for Product -"+productPojo.getBarcode());
+                throw new ApiException("Selling price can't exceed MRP for Product -"+productPojo.getBarcode());
             }
         }
     }

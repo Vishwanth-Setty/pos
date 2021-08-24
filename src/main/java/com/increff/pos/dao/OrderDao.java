@@ -27,20 +27,12 @@ public class OrderDao extends AbstractDao<OrderPojo> {
     @Autowired
     OrderItemService orderItemService;
 
+    //TODO change to Service
+
     OrderDao() {
         super(OrderPojo.class);
     }
 
-//    public List<OrderPojo> selectAll(){
-//        TypedQuery<OrderPojo> query = getQuery(SELECT_ALL);
-//        return query.getResultList();
-//    }
-//
-//    public OrderPojo select(int id){
-//        TypedQuery<OrderPojo> query = getQuery(SELECT);
-//        query.setParameter("id",id);
-//        return query.getResultList().stream().findFirst().orElse(null);
-//    }
     public List<OrderItemPojo> selectOrderDetails(int id){
         return orderItemService.getByOrderId(id);
     }
@@ -48,11 +40,12 @@ public class OrderDao extends AbstractDao<OrderPojo> {
     public List<OrderPojo> selectAllWithInvoiceGenerated(boolean invoiceGenerated){
         TypedQuery<OrderPojo> query = getQuery(SELECT_BY_INVOICE);
         query.setParameter("invoiceGenerated",invoiceGenerated);
+
         return query.getResultList();
     }
 
-    protected TypedQuery<OrderPojo> getQuery(String jpql) {
-        return em.createQuery(jpql, OrderPojo.class);
-    }
+//    protected TypedQuery<OrderPojo> getQuery(String jpql) {
+//        return em.createQuery(jpql, OrderPojo.class);
+//    }
 
 }

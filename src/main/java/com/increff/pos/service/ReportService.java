@@ -98,6 +98,8 @@ public class ReportService extends ValidateUtils {
         List<SalesReportData> salesReportDataList = new ArrayList<>();
         for (Map.Entry<String,List<OrderItemPojo>> entry : uniqueCategories.entrySet()){
             SalesReportData salesReportData = new SalesReportData();
+            salesReportData.setRevenue(0.00);
+            salesReportData.setQuantity(0);
             salesReportData.setCategory(entry.getKey());
             for(OrderItemPojo orderItemPojo:entry.getValue()){
                 salesReportData.setQuantity(salesReportData.getQuantity()+orderItemPojo.getQuantity());

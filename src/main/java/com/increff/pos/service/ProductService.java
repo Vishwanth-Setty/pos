@@ -18,7 +18,7 @@ public class ProductService extends ValidateUtils {
     @Transactional
     public ProductPojo add(ProductPojo productPojo) throws ApiException {
         ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
-        checkNull(exists,"Product with that barcode exists");
+        checkNull(exists,"Barcode exists");
         return productDao.insert(productPojo);
     }
 
@@ -45,7 +45,7 @@ public class ProductService extends ValidateUtils {
     @Transactional
     public void update(ProductPojo newProductPojo, int id) throws ApiException {
         ProductPojo oldProductPojo = productDao.select(id);
-        checkNotNull(oldProductPojo,"Product Id is Invalid");
+        checkNotNull(oldProductPojo,"Invalid Product Id");
         oldProductPojo.setBarcode(newProductPojo.getBarcode());
         oldProductPojo.setBrandId(newProductPojo.getBrandId());
         oldProductPojo.setName(newProductPojo.getName());
@@ -61,7 +61,7 @@ public class ProductService extends ValidateUtils {
             String barcode = productForm.getBarcode();
             ProductPojo exists = getByBarcode(barcode);
             if (exists != null) {
-                errorMessage.append(Integer.toString(i)).append(" ").append(barcode);
+                errorMessage.append(" ").append(barcode).append(") ");
             }
         }
         return errorMessage.toString();

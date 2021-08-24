@@ -106,6 +106,7 @@ body {
 }
 .nav-bar-style{
 	background-color: #5EAEC7 !important;
+	padding-left:42px;
 }
 .active{
 	color:rgb(149, 255, 205) !important;
@@ -171,7 +172,7 @@ hr {
 	height: 45px;
 }
 .report-text{
-	font-size: 30px;
+	font-size: 22px;
 }
 .download-button{
 	width: 115px;

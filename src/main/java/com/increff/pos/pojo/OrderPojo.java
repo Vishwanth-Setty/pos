@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Entity
 @Table
@@ -21,12 +19,12 @@ public class OrderPojo {
             initialValue = 1001,
             allocationSize = 1
     )
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private ZonedDateTime orderTime;
 
     @Column(nullable = false)
-    private boolean invoiceGenerated;
+    private Boolean invoiceGenerated;
 
 }

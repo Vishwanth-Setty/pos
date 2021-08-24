@@ -3,12 +3,18 @@ package com.increff.pos.model.form;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 public class OrderItemForm {
-    private int orderItemId;
-    private int orderId;
+    private Integer orderItemId;
+    @NotBlank
+    private Integer orderId;
+    @NotBlank
     private String barcode;
-    private int quantity;
-    private double sellingPrice;
+    @NotBlank
+    private Integer quantity;
+    @NotBlank
+    private Double sellingPrice;
 }

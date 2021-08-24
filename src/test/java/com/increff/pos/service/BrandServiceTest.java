@@ -20,7 +20,7 @@ public class BrandServiceTest extends AbstractUnitTest {
             brandService.addBrand(brandPojo1);
         }
         catch (ApiException apiException){
-            assertEquals("Brand and Category Exists",apiException.getMessage());
+            assertEquals("Brand and Category already exists",apiException.getMessage());
         }
 
     }
