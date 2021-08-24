@@ -5,14 +5,24 @@ import com.increff.pos.pojo.BrandPojo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.increff.pos.utils.CommonUtils.normalize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class BrandServiceTest extends AbstractUnitTest {
     @Autowired
     BrandService brandService;
+
     @Test
-    public void testAdd() {
+    public void testAdd() throws ApiException {
+
+        BrandPojo brandPojo = create("new","cat");
+        brandService.addBrand(brandPojo);
+        BrandPojo brandPojo1 = brandService.getBrandByNameAndCategory("new","cat");
+        assertNotEquals(null, brandPojo1);
+    }
+
+    @Test
+    public void testDuplicateAdds() {
         try{
             BrandPojo brandPojo = create("new","cat");
             brandService.addBrand(brandPojo);
@@ -22,10 +32,16 @@ public class BrandServiceTest extends AbstractUnitTest {
         catch (ApiException apiException){
             assertEquals("Brand and Category already exists",apiException.getMessage());
         }
-
     }
     @Test
     public void testUpdate() throws ApiException {
+        BrandPojo brandPojo = create("new","cat");
+        brandService.addBrand(brandPojo);
+        BrandPojo brandPojoNew = brandService.getBrandByNameAndCategory("new","cat");
+        assertNotEquals(null,brandPojoNew);
+    }
+
+    public void testDuplicateUpdate() throws ApiException {
         BrandPojo brandPojo = create("new","cat");
         brandService.addBrand(brandPojo);
         Integer id = brandPojo.getId();
@@ -53,14 +69,7 @@ public class BrandServiceTest extends AbstractUnitTest {
         assertEquals(brandPojo,exists);
     }
 
-    @Test
-    public void testNormalize() {
-        BrandPojo brandPojo = create(" new ","cat");
-        normalize(brandPojo);
-        assertEquals("new", brandPojo.getBrand());
-    }
-
-    public BrandPojo create(String brand, String category){
+    private BrandPojo create(String brand, String category){
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand(brand);
         brandPojo.setCategory(category);

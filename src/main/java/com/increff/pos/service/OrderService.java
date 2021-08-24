@@ -1,6 +1,7 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.OrderDao;
+import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
@@ -14,28 +15,28 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
+
 public class OrderService extends AbstractApi {
 
     @Autowired
     OrderDao orderDao;
     @Autowired
-    OrderItemService orderItemService;
+    OrderItemDao orderItemDao;
     @Autowired
     InventoryService inventoryService;
 
     @Autowired
     ProductService productService;
-    @Transactional
+
     public List<OrderPojo> getAll() {
         return orderDao.selectAll();
     }
 
-    @Transactional
     public List<OrderItemPojo> getById(int id) {
         return orderDao.selectOrderDetails(id);
     }
 
-    @Transactional
     public OrderPojo create(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         checkInventory(orderItemPojoList);
         checkSellingPrice(orderItemPojoList);
@@ -47,13 +48,12 @@ public class OrderService extends AbstractApi {
 
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             orderItemPojo.setOrderId(orderPojo.getId());
-            orderItemService.create(orderItemPojo);
+            orderItemDao.persist(orderItemPojo);
             updateInventory(orderItemPojo);
         }
         return orderPojo;
     }
 
-    @Transactional
     public void update(List<OrderItemPojo> orderItemPojoList) throws ApiException {
 
         if(checkInvoice(orderItemPojoList.get(0).getOrderId())){
@@ -62,42 +62,36 @@ public class OrderService extends AbstractApi {
         checkSellingPrice(orderItemPojoList);
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
             if (orderItemPojo.getId() == 0) {
-                orderItemService.create(orderItemPojo);
+                orderItemDao.persist(orderItemPojo);
                 updateInventory(orderItemPojo);
+
             } else {
-                OrderItemPojo orderItemPojoOld = orderItemService.selectById(orderItemPojo.getId());
+                OrderItemPojo orderItemPojoOld = orderItemDao.select(orderItemPojo.getId());
                 updateInventory(orderItemPojoOld, orderItemPojo);
                 orderItemPojoOld.setQuantity(orderItemPojo.getQuantity());
                 orderItemPojoOld.setSellingPrice(orderItemPojo.getSellingPrice());
-                if (orderItemPojo.getQuantity() == 0) {
-                    orderItemPojoOld.setOrderId(0);
-                }
             }
         }
     }
 
-    @Transactional
     public Boolean isInvoiceGenerated(int orderId) throws ApiException {
         OrderPojo orderPojo = orderDao.select(orderId);
         checkNotNull(orderPojo,"Invalid Order Id");
         return orderPojo.getInvoiceGenerated();
     }
 
-    @Transactional
     public OrderPojo getOnlyOrderById(int orderId) {
         return orderDao.select(orderId);
     }
 
-    @Transactional
     public void generateInvoice(int orderId) throws ApiException {
         OrderPojo orderPojo = orderDao.select(orderId);
         checkNotNull(orderPojo,"Invalid Order Id");
         orderPojo.setInvoiceGenerated(true);
     }
 
-    @Transactional
     public List<OrderPojo> getAllInvoiceGeneratedOrder(boolean invoiceGenerated){
-        return orderDao.selectAllWithInvoiceGenerated(invoiceGenerated);
+        return orderDao.selectByMethod("invoiceGenerated",invoiceGenerated);
     }
 
     private void checkInventory(List<OrderItemPojo> orderItemPojoList) throws ApiException {
@@ -106,7 +100,7 @@ public class OrderService extends AbstractApi {
             int reqQuantity = orderItemPojo.getQuantity();
             if (inventoryPojo.getQuantity() < reqQuantity) {
                 ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-                throw new ApiException("insufficient inventory for "+productPojo.getBarcode());
+                throw new ApiException("Insufficient inventory for barcode "+productPojo.getBarcode());
             }
         }
     }
@@ -117,7 +111,7 @@ public class OrderService extends AbstractApi {
 
         if(quantity<0){
             ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-            throw new ApiException("insufficient inventory for "+productPojo.getBarcode());
+            throw new ApiException("Insufficient inventory for barcode "+productPojo.getBarcode());
         }
         inventoryPojo.setQuantity(quantity);
         inventoryService.update(inventoryPojo);
@@ -128,7 +122,7 @@ public class OrderService extends AbstractApi {
         int quantity = inventoryPojo.getQuantity() + orderItemPojo.getQuantity() - newOrderItemPojo.getQuantity();
         if(quantity<0){
             ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-            throw new ApiException("insufficient inventory for "+productPojo.getBarcode());
+            throw new ApiException("Insufficient inventory for barcode "+productPojo.getBarcode());
         }
         inventoryPojo.setQuantity(quantity);
         inventoryService.update(inventoryPojo);
@@ -142,7 +136,7 @@ public class OrderService extends AbstractApi {
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             ProductPojo productPojo = productService.getById(orderItemPojo.getProductId());
             if(productPojo.getMrp()<orderItemPojo.getSellingPrice()){
-                throw new ApiException("Selling price can't exceed MRP for Product -"+productPojo.getBarcode());
+                throw new ApiException("Selling price can't exceed MRP for barcode -"+productPojo.getBarcode());
             }
         }
     }

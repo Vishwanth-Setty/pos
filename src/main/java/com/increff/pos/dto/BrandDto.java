@@ -26,7 +26,6 @@ public class BrandDto extends AbstractApi {
         checkValid(brandForm);
         CommonUtils.normalize(brandForm);
         BrandPojo brandPojo = ConvertUtil.convert(brandForm);
-
         brandService.addBrand(brandPojo);
     }
 
@@ -105,16 +104,18 @@ public class BrandDto extends AbstractApi {
 
     private String checkExists(List<BrandForm> brandFormList) {
         StringBuilder errors = new StringBuilder();
-
+        Set<String> brandAndCategory = new HashSet<>();
+        List<BrandPojo> brandPojoList = brandService.getAllBrands();
+        brandPojoList.forEach(value->{
+            brandAndCategory.add(value.getBrand()+'#'+value.getCategory());
+        });
         for (BrandForm brandForm : brandFormList) {
             String brand = brandForm.getBrand();
             String category = brandForm.getCategory();
-            BrandPojo brandExists = brandService.getBrandByNameAndCategory(brand, category);
-
-            if (brandExists != null) {
+            String key = brand+'#'+category;
+            if (brandAndCategory.contains(key)) {
                 errors.append(" ").append(brand).append(":").append(category).append(", ");
             }
-
         }
         return errors.toString();
     }

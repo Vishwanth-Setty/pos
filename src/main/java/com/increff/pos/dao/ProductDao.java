@@ -21,19 +21,4 @@ public class ProductDao extends AbstractDao<ProductPojo> {
         super(ProductPojo.class);
     }
 
-    public ProductPojo selectByBarcode(String barcode){
-        TypedQuery<ProductPojo> query = getQuery(SELECT_BY_BARCODE);
-        query.setParameter("barcode", barcode);
-
-        return query.getResultList()
-                .stream().findFirst().orElse(null);
-    }
-
-    public List<ProductPojo> selectByBrandId(int brandId) {
-        TypedQuery<ProductPojo> query = getQuery(SELECT_BRAND_ID);
-        query.setParameter("brandId", brandId);
-
-        return query.getResultList();
-    }
-
 }

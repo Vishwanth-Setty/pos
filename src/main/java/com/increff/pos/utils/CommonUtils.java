@@ -1,6 +1,5 @@
 package com.increff.pos.utils;
 
-import com.increff.pos.model.UploadErrorMessage;
 import com.increff.pos.model.form.BrandForm;
 import com.increff.pos.model.form.InventoryForm;
 import com.increff.pos.model.form.ProductForm;

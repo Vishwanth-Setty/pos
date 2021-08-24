@@ -214,9 +214,9 @@ function init() {
                 bSortable: false,
                 mRender: function (o) {
                     return (
-                        "<span id='editButton' onclick="+'"editInventory(\'' +
+                        "<span  id='editButton' onclick="+'"editInventory(\'' +
                         o.barcode +'\','+o.quantity+
-                        ')"><span class="material-icons md-24">edit</span></span>'
+                        ')"><span data-toggle="tooltip" data-placement="top" title="Edit" class="material-icons md-24">edit</span></span>'
                     );
                 },
             },

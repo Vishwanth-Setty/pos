@@ -10,31 +10,28 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class InventoryService extends AbstractApi {
 
     @Autowired
     InventoryDao inventoryDao;
 
-    @Transactional
-    public List<InventoryPojo> getAll(){
+    public List<InventoryPojo> getAll() {
         return inventoryDao.selectAll();
     }
 
-    @Transactional
-    public InventoryPojo getById(int id){
-        return inventoryDao.select(id);
+    public InventoryPojo getById(int id) {
+        return inventoryDao.selectOneByMethod("productId", id);
     }
 
-    @Transactional
-    public InventoryPojo add(InventoryPojo inventoryPojo) throws ApiException{
-        InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
-        checkNull(exists,"Inventory exists");
+    public InventoryPojo add(InventoryPojo inventoryPojo) throws ApiException {
+        InventoryPojo exists = inventoryDao.selectOneByMethod("productId", inventoryPojo.getProductId());
+        checkNull(exists, "Inventory already exists");
         return inventoryDao.persist(inventoryPojo);
     }
 
-    @Transactional
-    public void update(InventoryPojo inventoryPojo){
-        InventoryPojo oldInventoryPojo = inventoryDao.select(inventoryPojo.getProductId());
+    public void update(InventoryPojo inventoryPojo) {
+        InventoryPojo oldInventoryPojo = inventoryDao.selectOneByMethod("productId", inventoryPojo.getProductId());
         oldInventoryPojo.setQuantity(inventoryPojo.getQuantity());
     }
 

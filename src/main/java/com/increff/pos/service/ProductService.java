@@ -10,37 +10,34 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
+
 public class ProductService extends AbstractApi {
     @Autowired
     private ProductDao productDao;
-    @Transactional
+
     public ProductPojo add(ProductPojo productPojo) throws ApiException {
-        ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
+        ProductPojo exists = productDao.selectOneByMethod("barcode",productPojo.getBarcode());
         checkNull(exists,"Barcode exists");
         return productDao.persist(productPojo);
     }
 
-    @Transactional
     public ProductPojo getById(int id) {
         return productDao.select(id);
     }
 
-    @Transactional
     public ProductPojo getByBarcode(String barcode) {
-        return productDao.selectByBarcode(barcode);
+        return productDao.selectOneByMethod("barcode",barcode);
     }
 
-    @Transactional
     public List<ProductPojo> getAll() {
         return productDao.selectAll();
     }
 
-    @Transactional
     public List<ProductPojo> getByBrandId(int brandId){
-        return productDao.selectByBrandId(brandId);
+        return productDao.selectByMethod("brandId",brandId);
     }
 
-    @Transactional
     public void update(ProductPojo newProductPojo, int id) throws ApiException {
         ProductPojo oldProductPojo = productDao.select(id);
         checkNotNull(oldProductPojo,"Invalid Product Id");

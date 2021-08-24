@@ -89,7 +89,7 @@ public class InventoryDto extends AbstractApi {
     }
 
     private  String checkDuplicatesRecords(List<InventoryForm> inventoryFormList){
-        Set<String> hash_Set = new HashSet<String>();
+        Set<String> hash_Set = new HashSet<>();
         StringBuilder errorMessage = new StringBuilder();
         int i = 1;
         for(InventoryForm inventoryForm:inventoryFormList){
@@ -108,10 +108,16 @@ public class InventoryDto extends AbstractApi {
         int i = 1;
         for(InventoryForm inventoryForm:inventoryFormList){
             ++i;
+
+            List<ProductPojo> productPojoList = productService.getAll();
+            HashSet<String> barcodes = new HashSet<>();
+            productPojoList.forEach(productPojo -> {
+                barcodes.add(productPojo.getBarcode());
+            });
+
             String barcode = inventoryForm.getBarcode();
-            ProductPojo productPojo = productService.getByBarcode(barcode);
-            if (productPojo == null) {
-                errorMessage.append("").append(barcode).append(", ");
+            if (!barcodes.contains(barcode)) {
+                errorMessage.append(barcode).append(", ");
             }
         }
         return errorMessage.toString();

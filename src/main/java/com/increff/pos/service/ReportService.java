@@ -20,6 +20,7 @@ import java.util.*;
 import static com.increff.pos.utils.ConvertUtil.convert;
 
 @Service
+@Transactional(rollbackFor = ApiException.class)
 public class ReportService extends AbstractApi {
 
     @Autowired
@@ -31,7 +32,6 @@ public class ReportService extends AbstractApi {
     @Autowired
     OrderService orderService;
 
-    @Transactional(readOnly = true)
     public List<SalesReportData> getSalesReport(ReportForm reportForm) throws ApiException {
         checkValid(reportForm);
 
@@ -41,7 +41,7 @@ public class ReportService extends AbstractApi {
         ZonedDateTime startDate = convert((reportForm.getStartDate().split("/")),"start");
         ZonedDateTime endDate = convert(reportForm.getEndDate().split("/"),"end");
         if(startDate.isAfter(endDate)){
-            throw new ApiException("Check Dates");
+            throw new ApiException("Invalid date range selected");
         }
         ZonedDateTime timeStamp = ZonedDateTime.of( localDate, localTime, zoneId );
 

@@ -1,7 +1,7 @@
 package com.increff.pos.dto;
 
 import com.increff.pos.model.data.OrderItemData;
-import com.increff.pos.model.data.OrderItemDatas;
+import com.increff.pos.model.data.OrderItemXMLs;
 import com.increff.pos.model.data.OrderItemXml;
 import com.increff.pos.pdfGenerator.PdfGenerator;
 import com.increff.pos.pojo.OrderPojo;
@@ -12,7 +12,6 @@ import com.increff.pos.utils.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -42,26 +41,27 @@ public class InvoiceHelper {
             OrderItemXml orderItemXml = ConvertUtil.covert(orderItemData,productPojo.getMrp());
             orderItemXmlList.add(orderItemXml);
         }
+
         OrderPojo orderPojo = orderService.getOnlyOrderById(orderId);
-        OrderItemDatas orderItemDatas = new OrderItemDatas();
-        orderItemDatas.setOrderItemXmlList(orderItemXmlList);
+        OrderItemXMLs orderItemsXMLs = new OrderItemXMLs();
+        orderItemsXMLs.setOrderItemXmlList(orderItemXmlList);
         Integer totalQuantity = 0;
         Double totalAmount = 0.00;
         for(OrderItemXml orderItemXml : orderItemXmlList){
             totalQuantity+=orderItemXml.getQuantity();
             totalAmount+=orderItemXml.getTotalSellingPrice();
         }
-        orderItemDatas.setTotalAmount(totalAmount);
-        orderItemDatas.setTotalQuantity(totalQuantity);
+        orderItemsXMLs.setTotalAmount(totalAmount);
+        orderItemsXMLs.setTotalQuantity(totalQuantity);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime dateTime = orderPojo.getOrderTime().toLocalDateTime();
         String formattedDateTime = dateTime.format(formatter);
 
 
-        orderItemDatas.setOrderId(orderId);
-        orderItemDatas.setDate(formattedDateTime);
-        PdfGenerator.generateXml(myObj,orderItemDatas);
+        orderItemsXMLs.setOrderId(orderId);
+        orderItemsXMLs.setDate(formattedDateTime);
+        PdfGenerator.generateXml(myObj,orderItemsXMLs,OrderItemXMLs.class);
 
         File xml = new File("./src/main/java/com/increff/pos/pdfGenerator/invoice.xml");
         File xsl = new File("./src/main/java/com/increff/pos/pdfGenerator/invoice.xsl");

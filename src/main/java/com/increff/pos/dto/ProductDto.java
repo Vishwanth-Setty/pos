@@ -32,7 +32,7 @@ public class ProductDto extends AbstractApi {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(), productForm.getCategory());
-        checkNotNull(brandPojo, "Brand and Category not exists");
+        checkNotNull(brandPojo, "Invalid Brand and Category");
         ProductPojo productPojo = ConvertUtil.convert(productForm, brandPojo.getId());
         productService.add(productPojo);
     }
@@ -122,11 +122,18 @@ public class ProductDto extends AbstractApi {
         int i = 1;
         for (ProductForm productForm : productFormList) {
             ++i;
-            String barcode = productForm.getBarcode();
+            Set<String> brandAndCategory = new HashSet<>();
+            List<BrandPojo> brandPojoList = brandService.getAllBrands();
+            brandPojoList.forEach(value->{
+                brandAndCategory.add(value.getBrand()+'#'+value.getCategory());
+            });
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
-            BrandPojo exists = brandService.getBrandByNameAndCategory(brand, category);
-            if (exists == null) {
+            String key = brand+'#'+category;
+
+            String barcode = productForm.getBarcode();
+
+            if (!brandAndCategory.contains(key)) {
                 errorMessage.append(" ").append(barcode).append(", ");
             }
         }
@@ -137,11 +144,15 @@ public class ProductDto extends AbstractApi {
     public String checkExists(List<ProductForm> productFormList){
         StringBuilder errorMessage = new StringBuilder();
         int i = 1;
+        List<ProductPojo> productPojoList = productService.getAll();
+        HashSet<String> barcodes = new HashSet<>();
+        productPojoList.forEach(productPojo -> {
+            barcodes.add(productPojo.getBarcode());
+        });
         for(ProductForm productForm: productFormList){
             ++i;
             String barcode = productForm.getBarcode();
-            ProductPojo exists = productService.getByBarcode(barcode);
-            if (exists != null) {
+            if (barcodes.contains(barcode)) {
                 errorMessage.append("").append(barcode).append(", ");
             }
         }

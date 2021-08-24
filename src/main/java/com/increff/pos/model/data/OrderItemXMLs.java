@@ -13,7 +13,8 @@ import java.util.List;
 @Setter
 @XmlRootElement(name = "OrderItemData")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OrderItemDatas {
+public class OrderItemXMLs {
+
     @XmlElement(name = "OrderItem")
     private List<OrderItemXml> orderItemXmlList = null;
     @XmlElement(name = "date")
@@ -25,11 +26,4 @@ public class OrderItemDatas {
     @XmlElement(name = "totalAmount")
     private Double totalAmount;
 
-//    public List<OrderItemData> getEmployees() {
-//        return orderItemDataList;
-//    }
-//
-//    public void setEmployees(List<OrderItemData> employees) {
-//        this.orderItemDataList = employees;
-//    }
 }

@@ -25,7 +25,7 @@ public class OrderDao extends AbstractDao<OrderPojo> {
     private EntityManager em;
 
     @Autowired
-    OrderItemService orderItemService;
+    OrderItemDao orderItemDao;
 
     //TODO change to Service
 
@@ -34,15 +34,7 @@ public class OrderDao extends AbstractDao<OrderPojo> {
     }
 
     public List<OrderItemPojo> selectOrderDetails(int id){
-        return orderItemService.getByOrderId(id);
+        return orderItemDao.selectByMethod("orderId",id);
     }
-
-    public List<OrderPojo> selectAllWithInvoiceGenerated(boolean invoiceGenerated){
-        TypedQuery<OrderPojo> query = getQuery(SELECT_BY_INVOICE);
-        query.setParameter("invoiceGenerated",invoiceGenerated);
-
-        return query.getResultList();
-    }
-
 
 }

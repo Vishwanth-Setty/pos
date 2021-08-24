@@ -46,7 +46,30 @@ public abstract class AbstractDao<T> {
 
         TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
 
-        return typedQuery.getResultList().get(0);
+        return typedQuery.getResultList().stream().findFirst().orElse(null);
+    }
+
+    public <Z> T selectOneByMethod(String method, Z value) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
+        Root<T> root = criteriaQuery.from(clazz);
+        criteriaQuery.where(criteriaBuilder.equal(root.get(method), value));
+        criteriaQuery.select(root);
+
+        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+        return typedQuery.getResultList().stream().findFirst().orElse(null);
+
+    }
+    public <Z> List<T> selectByMethod(String method, Z value) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
+        Root<T> root = criteriaQuery.from(clazz);
+        criteriaQuery.where(criteriaBuilder.equal(root.get(method), value));
+        criteriaQuery.select(root);
+
+        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+
+        return typedQuery.getResultList();
     }
 
     protected TypedQuery<T> getQuery(String jpql) {

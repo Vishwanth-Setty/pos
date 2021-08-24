@@ -227,7 +227,7 @@ function init() {
                     return (
                         '<span id="editButton" onclick="editProduct(' +
                         o.id +
-                        ')"><span class="material-icons md-24">edit</span></span>'
+                        ')"><span data-toggle="tooltip" data-placement="top" title="Edit" class="material-icons md-24">edit</span></span>'
                     );
                 },
             },

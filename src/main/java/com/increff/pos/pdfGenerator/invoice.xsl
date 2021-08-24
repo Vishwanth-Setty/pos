@@ -75,7 +75,7 @@
 									</fo:table-cell>
 									<fo:table-cell xsl:use-attribute-sets="tableBorder">
 										<fo:block>
-											<fo:inline font-weight="normal"><xsl:value-of select="totalQuantity"/></fo:inline>
+											<fo:inline font-weight="bold"><xsl:value-of select="totalQuantity"/></fo:inline>
 										</fo:block>
 									</fo:table-cell>
 									<fo:table-cell xsl:use-attribute-sets="tableBorder">
@@ -90,7 +90,7 @@
 									</fo:table-cell>
 									<fo:table-cell xsl:use-attribute-sets="tableBorder">
 										<fo:block>
-											<fo:inline font-weight="normal"><xsl:value-of select="totalAmount"/></fo:inline>
+											<fo:inline font-weight="bold"><xsl:value-of select="totalAmount"/></fo:inline>
 										</fo:block>
 									</fo:table-cell>
 								</fo:table-row>

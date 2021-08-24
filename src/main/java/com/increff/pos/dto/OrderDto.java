@@ -46,7 +46,7 @@ public class OrderDto {
         }
         return orderItemDataList;
     }
-    public void add(OrderForm orderForm) throws ApiException {
+    public OrderData add(OrderForm orderForm) throws ApiException {
         checkDuplicatesRecords(orderForm.getOrderItemList());
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
@@ -54,7 +54,8 @@ public class OrderDto {
             ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
             orderItemPojoList.add(ConvertUtil.convert(orderItemForm,productPojo.getId()));
         }
-        orderService.create(orderItemPojoList);
+        OrderData orderData = ConvertUtil.convert(orderService.create(orderItemPojoList));
+        return orderData;
     }
     public void update(OrderForm orderForm) throws ApiException {
         if(orderService.isInvoiceGenerated(orderForm.getId())){

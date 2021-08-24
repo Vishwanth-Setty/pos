@@ -10,41 +10,37 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class BrandService extends AbstractApi {
 
     @Autowired
     private BrandDao dao;
 
-    @Transactional
     public BrandPojo addBrand(BrandPojo brandPojo) throws ApiException {
-        BrandPojo exists = dao.selectByNameAndCategory(brandPojo.getBrand(),brandPojo.getCategory());
-        checkNull(exists,"Brand and Category already exists");
+        BrandPojo exists = dao.selectByNameAndCategory(brandPojo.getBrand(), brandPojo.getCategory());
+        checkNull(exists, "Brand and Category already exists");
         brandPojo = dao.persist(brandPojo);
         return brandPojo;
     }
 
-    @Transactional
     public List<BrandPojo> getAllBrands() {
         return dao.selectAll();
     }
 
-    @Transactional
-    public BrandPojo getBrandById(int id)    {
+    public BrandPojo getBrandById(int id) {
         return dao.select(id);
     }
 
-    @Transactional
-    public BrandPojo getBrandByNameAndCategory (String brand,String category) {
-        return dao.selectByNameAndCategory(brand,category);
+    public BrandPojo getBrandByNameAndCategory(String brand, String category) {
+        return dao.selectByNameAndCategory(brand, category);
     }
 
-    @Transactional
-    public void updateBrand(BrandPojo p,int id) throws ApiException {
+    public void updateBrand(BrandPojo p, int id) throws ApiException {
         BrandPojo brandPojo = getBrandById(id);
-        checkNotNull(brandPojo,"Invalid Brand Id");
+        checkNotNull(brandPojo, "Invalid Brand Id");
 
-        BrandPojo checkBrandPojo = dao.selectByNameAndCategory(p.getBrand(),p.getCategory());
-        checkNull(checkBrandPojo,"Brand and Category already exists");
+        BrandPojo checkBrandPojo = dao.selectByNameAndCategory(p.getBrand(), p.getCategory());
+        checkNull(checkBrandPojo, "Brand and Category already exists");
 
         brandPojo.setBrand(p.getBrand());
         brandPojo.setCategory(p.getCategory());

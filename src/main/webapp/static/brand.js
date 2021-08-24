@@ -217,7 +217,8 @@ function init() {
                 "mData": null,
                 "bSortable": false,
                 "mRender": function (o) {
-                    return '<span id="editButton" onclick="editBrand(' + o.id + ')"><span class="material-icons md-24">edit</span></span>';
+                    return '<span id="editButton" onclick="editBrand(' + o.id +
+                     ')"><span data-toggle="tooltip" data-placement="top" title="Edit" class="material-icons md-24">edit</span></span>';
                 }
             }
         ],

@@ -36,7 +36,7 @@
                     </div>
                     <div class="modal-body">
                         <form>
-                            <input type="hidden" id = "orderIdForInvoice"/>
+                            <input type="hidden" id="orderIdForInvoice" />
                             <p style="font-size: 20px;">Once Invoice is Downloaded you can't edit the Order</p>
                             <div class="modal-footer" style="padding-bottom: 0px;">
                                 <button type="button" class="btn btn-primary" id="downloadInvoice">Download</button>
@@ -50,7 +50,7 @@
 
         <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
             data-keyboard="false" data-backdrop="static" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="max-width: 45vw;">
+            <div class="modal-dialog" role="document" style="max-width: 45vw;overflow: hidden;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2 class="modal-title" id="editModalLabel">Edit Order</h2>
@@ -70,7 +70,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-3 text-btn-align">Quantity </label>
-                                        <input class="form-control form-control col-7" name="quantity"
+                                        <input class="form-control col-7" name="quantity"
                                             id="addItemQuantityToUpdate" type="text" pattern="^[0-9]\d*$"
                                             title="Enter Only Non Negetive Integers">
                                     </div>
@@ -87,19 +87,19 @@
                                 </div>
                             </div>
                             <hr />
-
                             <div class="row">
                                 <div class="col">
                                     <h4>Order Items</h4>
                                     <hr />
-                                    <table class="table" id="order-item-table" style="width: 45vw;">
+                                    <table class="table table-striped table-bordered text-center" id="order-item-table"
+                                        style="width: 45vw;">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Barcode</th>
                                                 <th scope="col">Quantity</th>
                                                 <th scope="col">OrderId</th>
                                                 <th scope="col">Selling Price</th>
-                                                <th scope="col">Actions</th>
+                                                <!-- <th scope="col">Actions</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -108,11 +108,11 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" id="update-order">Submit</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </form>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="update-order">Submit</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
                     </div>
                 </div>
             </div>
