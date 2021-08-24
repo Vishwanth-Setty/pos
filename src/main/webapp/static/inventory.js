@@ -4,23 +4,12 @@ reportInventory = []
 prevValue = {};
 
 function displayInventoryData(inventories) {
-    var $tbody = $('#inventory-table').find('tbody');
     var dataTable = $('#inventory-table').DataTable()
     dataTable.clear().draw();
     reportInventory = inventories;
     for(var i in inventories){
     		var e = inventories[i];
-            // e["id"]=new Number(i)+1;
             dataTable.row.add(e).draw(false);
-    		// var buttonHtml = '<span id="editButton" class="bi-pen" onclick="editInventory('+e.productId+')"></span>'
-    		// var row = '<tr id="inventory'+i+'">'
-    		// + '<td>' + e.productId + '</td>'
-    		// + '<td>' + e.barcode + '</td>'
-    		// + '<td>' + e.productName + '</td>'
-    		// + '<td id="inventory'+e.productId+'quantity">' + e.quantity + '</td>'
-    		// + '<td>' + buttonHtml + '</td>'
-    		// + '</tr>';
-            // $tbody.append(row);
     	}
 
     return false;
@@ -28,11 +17,9 @@ function displayInventoryData(inventories) {
 
 function addInventory(e) {
     var $form = $('#addInventory');
-    console.log($form)
     e.preventDefault();
     var json = toJson($form);
     var url = getInventoryUrl();
-    console.log(json);
     $.ajax({
         url: url,
         type: 'POST',
@@ -50,10 +37,6 @@ function addInventory(e) {
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
-            $(':input','#addInventory')
-            .not(':button, :submit, :reset, :hidden')
-            .val('')
-            $('#addModal').modal('hide');
             toast(error.message,'WARN');
         }
     });
@@ -66,19 +49,16 @@ async function editInventory(barcode,quantity) {
     $('#quantity').val(quantity)
     $('#barcode').val(barcode)
     prevValue["quantity"] = parseInt($('#quantity').val());
-    console.log(prevValue);
 }
 
 function updateInventory(e) {
     e.preventDefault();
     var $form = $('#editInventory');
-    console.log($form)
     var json = toJson($form);
     json = JSON.parse(json);
     json.quantity = parseInt(json.quantity);
     json = JSON.stringify(json);
     var url = getInventoryUrl();
-    console.log(json);
     $.ajax({
         url: url,
         type: 'PUT',
@@ -107,13 +87,10 @@ function getInventories() {
         type: 'GET',
         success: function (response) {
             inventories = response;
-            console.log("sdf")
-            console.log(inventories)
             displayInventoryData(inventories);
         },
         error: function (error) {
-            console.log(error)
-            //            alert(error+ "An error has occurred");
+            toast("Could not Retrive Information",'WARN');
         }
     });
 }
@@ -127,16 +104,16 @@ async function getInventoryById(id) {
             inventory = response;
         },
         error: function (error) {
-            console.log(error)
+            toast("Could not Retrive Information",'WARN');
         }
     });
     return inventory;
 }
+
 //Upload
 
 function upload(){
     var $file = $('#inventoryFile')
-    console.log($file);
     if($file.val() == ''){
         toast("Select File","WARN");
         return ;
@@ -153,8 +130,12 @@ function updateFileName(){
 function uploadRows(){
 	
 	var json = JSON.stringify(fileData);
-    console.log(json);
+    if(!checkFile(fileData)){
+        toast("Invalid file format",'WARN')
+        return;
+    }
     let url = getInventoryUrl();
+
 	// Make ajax call
 	$.ajax({
 	   url: url+'/upload',
@@ -164,7 +145,7 @@ function uploadRows(){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-            toast("Susccessfully Uploaded",'INFO');
+            toast("Susccess",'INFO');
             getInventories()
             $("#uploadModal").modal("hide");
 	   },
@@ -175,12 +156,18 @@ function uploadRows(){
 
 }
 
+function checkFile(jsonFile){
+    let keys = Object.keys(jsonFile[0])
+    if(keys[0] == "barcode" && keys[1]=="quantity"){
+        return true;
+    }
+    return false;
+}
+
 // Download CSV
 function downloadCSV(){
     jsonToCsv(reportInventory);
 }
-
-
 
 //ACTIVE TAB
 function activeTab() {
@@ -240,8 +227,6 @@ function init() {
     });
     $('#editInventory :input').keyup(function () {
         let quantity = parseInt($('#quantity').val());
-        console.log(prevValue);
-        console.log(quantity);
         if (quantity == (prevValue["quantity"])) {
             $('#update-inventory').prop('disabled', true);
             return;

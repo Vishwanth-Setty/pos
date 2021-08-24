@@ -6,7 +6,7 @@ import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
 import com.increff.pos.pojo.ProductPojo;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.*;
 import static com.increff.pos.utils.ConvertUtil.convert;
 
 @Service
-public class ReportService extends ValidateUtils {
+public class ReportService extends AbstractApi {
 
     @Autowired
     BrandService brandService;

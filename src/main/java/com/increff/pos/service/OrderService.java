@@ -5,7 +5,7 @@ import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
 import com.increff.pos.pojo.ProductPojo;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
-public class OrderService extends ValidateUtils {
+public class OrderService extends AbstractApi {
 
     @Autowired
     OrderDao orderDao;
@@ -43,7 +43,7 @@ public class OrderService extends ValidateUtils {
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setOrderTime(ZonedDateTime.now());
         orderPojo.setInvoiceGenerated(false);
-        orderPojo = orderDao.insert(orderPojo);
+        orderPojo = orderDao.persist(orderPojo);
 
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             orderItemPojo.setOrderId(orderPojo.getId());

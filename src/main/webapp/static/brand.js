@@ -4,7 +4,6 @@ let prevValue = {};
 
 
 function displayBrandData(brands) {
-    console.log(brands)
     var $tbody = $('#brand-table').find('tbody');
     $tbody.empty();
     var dataTable = $("#brand-table").DataTable();
@@ -17,7 +16,6 @@ function displayBrandData(brands) {
         }
         reportBrand.push(brandData);
     }
-    console.log(reportBrand)
     reportBrand = reportBrand;
     for (var i in brands) {
         var e = brands[i];
@@ -26,14 +24,6 @@ function displayBrandData(brands) {
         brand.push(e.brand)
         brand.push(e.category)
         dataTable.row.add(e).draw(false);
-        //    		var buttonHtml = '<span id="editButton" onclick="editBrand('+e.id+')"><span class="material-icons md-24">edit</span></span>'
-        //    		var row = '<tr id="brand'+i+'">'
-        //    		+ '<td>' + e.id + '</td>'
-        //    		+ '<td>' + e.brand + '</td>'
-        //    		+ '<td>'  + e.category + '</td>'
-        //    		+ '<td>' + buttonHtml + '</td>'
-        //    		+ '</tr>';
-        //            $tbody.append(row);
     }
     return false;
 }
@@ -49,18 +39,14 @@ function getBrands() {
             displayBrandData(brands);
         },
         error: function () {
-            alert("Could not Retrive Information");
+            toast("Could not Retrive Information", 'WARN');
         }
     });
 }
 
 function openCreateModal() {
-    // $(':input', '#')
-    //     .not(':button, :submit, :reset, :hidden')
-    //     .val('');
     $('#createBrand').trigger("reset");
     $('#addModal').modal('show');
-
 }
 
 function addBrand(e) {
@@ -68,7 +54,6 @@ function addBrand(e) {
     var $form = $('#createBrand');
     var json = toJson($form);
     var url = getBrandUrl();
-    console.log(json);
     $.ajax({
         url: url,
         type: 'POST',
@@ -97,7 +82,6 @@ function editBrand(e) {
         url: getBrandUrl() + '/' + e,
         type: 'GET',
         success: function (response) {
-            console.log(response);
             $('#brandId').val(response.id)
             $('#brandName').val(response.brand)
             $('#categoryName').val(response.category)
@@ -107,7 +91,7 @@ function editBrand(e) {
             prevValue["category"] = response.category;
         },
         error: function () {
-            toast("Error while Retriving Information");        }
+            toast("Error while Retriving Information",'WARN');        }
     });
 }
 
@@ -117,7 +101,6 @@ function updateBrand(e) {
     var id = $('#brandId').val();
     var json = toJson($form);
     var url = getBrandUrl();
-    console.log(json);
     $.ajax({
         url: url + '/' + id,
         type: 'PUT',
@@ -155,9 +138,11 @@ function updateFileName(){
 }
 
 function uploadRows(){
-	
 	var json = JSON.stringify(fileData);
-    console.log(json);
+    if(!checkFile(fileData)){
+        toast("Invalid file format",'WARN')
+        return;
+    }
     let url = getBrandUrl();
     switch(type){
         case 'Brand':
@@ -173,7 +158,7 @@ function uploadRows(){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		toast("Susccessfull",'INFO');
+	   		toast("Susccess",'INFO');
             getBrands();
             $("#uploadModal").modal("hide");
 	   },
@@ -184,51 +169,18 @@ function uploadRows(){
 
 }
 
+function checkFile(jsonFile){
+    let keys = Object.keys(jsonFile[0])
+    if(keys[0] == "brand" && keys[1]=="category"){
+        return true;
+    }
+    return false;
+}
+
 // Download CSV
 function downloadCSV(){
     jsonToCsv(reportBrand);
 }
-
-
-// function download(){
-//     let url = getReportUrl()+"/brand";
-//     $.ajax({
-//         url: url,
-//         cache: false,
-//         xhr: function () {
-//             var xhr = new XMLHttpRequest();
-//             xhr.onreadystatechange = function () {
-//                 if (xhr.readyState == 2) {
-//                     if (xhr.status == 200) {
-//                         xhr.responseType = "blob";
-//                     } else {
-//                         xhr.responseType = "text";
-//                     }
-//                 }
-//             };
-//             return xhr;
-//         },
-//         success: function (data) {
-//             //Convert the Byte Data to BLOB object.
-//             var blob = new Blob([data], { type: "application/octetstream" });
-
-//             //Check the Browser type and download the File.
-//             var isIE = false || !!document.documentMode;
-//             if (isIE) {
-//                 window.navigator.msSaveBlob(blob, fileName);
-//             } else {
-//                 var url = window.URL || window.webkitURL;
-//                 link = url.createObjectURL(blob);
-//                 var a = $("<a />");
-//                 a.attr("download", fileName);
-//                 a.attr("href", link);
-//                 $("body").append(a);
-//                 a[0].click();
-//                 $("body").remove(a);
-//             }
-//         }
-//     });
-// }
 
 //ACTIVE TAB
 function activeTab() {
@@ -255,7 +207,6 @@ function init() {
     $("#brand-table").DataTable({
         data: [],
         info: false,
-        // stripeClasses: [ 'odd-row', 'even-row' ],
         columns: [{
                 data: "brand"
             },
@@ -278,8 +229,6 @@ function init() {
     $('#editBrand :input').keyup(function () {
         let brand = $('#brandName').val();
         let category = $('#categoryName').val();
-        console.log(prevValue)
-        console.log(brand, category)
         if (brand == prevValue["brand"] && category == prevValue["category"]) {
             $('#update-brand').prop('disabled', true);
             return;

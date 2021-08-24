@@ -11,7 +11,6 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.utils.ConvertUtil;
-import com.increff.pos.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +77,7 @@ public class OrderDto {
         Set<String> hash_Set = new HashSet<String>();
         for(OrderItemForm orderItemForm : orderItemFormList){
             if(hash_Set.contains(orderItemForm.getBarcode())){
-                throw new ApiException("Found same barcode in multiple rows");
+                throw new ApiException("Duplicate records exists for barcode - "+orderItemForm.getBarcode());
             }
             hash_Set.add(orderItemForm.getBarcode());
         }

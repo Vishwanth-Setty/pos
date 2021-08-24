@@ -9,7 +9,7 @@ import javax.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 
-public abstract class ValidateUtils {
+public abstract class AbstractApi {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
     public void checkNull(Object object, String message) throws ApiException{
@@ -25,8 +25,13 @@ public abstract class ValidateUtils {
     }
     public <T> void checkValid(T object) throws ApiException {
         Set<ConstraintViolation<T>> violations = validator.validate(object) ;
+        String errorMessage = "";
         if(violations.size()>0){
-            throw new ApiException("Some fields are empty");
+            for(ConstraintViolation<T> constraintViolation: violations){
+                String error = "[ "+constraintViolation.getPropertyPath()+"-"+constraintViolation.getMessage()+" ] \n";
+                errorMessage = errorMessage.concat(error);
+            }
+            throw new ApiException(errorMessage);
         }
     }
     public <T> void checkValidList(List<T> objects) throws ApiException {

@@ -44,8 +44,5 @@ public class OrderDao extends AbstractDao<OrderPojo> {
         return query.getResultList();
     }
 
-//    protected TypedQuery<OrderPojo> getQuery(String jpql) {
-//        return em.createQuery(jpql, OrderPojo.class);
-//    }
 
 }

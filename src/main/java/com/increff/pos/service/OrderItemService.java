@@ -19,7 +19,7 @@ public class OrderItemService {
     }
     @Transactional
     public void create(OrderItemPojo orderItemPojo){
-        orderItemDao.insert(orderItemPojo);
+        orderItemDao.persist(orderItemPojo);
     }
 
     public OrderItemPojo selectById(int id){

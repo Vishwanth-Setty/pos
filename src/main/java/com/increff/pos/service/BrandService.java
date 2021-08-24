@@ -2,7 +2,7 @@ package com.increff.pos.service;
 
 import com.increff.pos.dao.BrandDao;
 import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-public class BrandService extends ValidateUtils {
+public class BrandService extends AbstractApi {
 
     @Autowired
     private BrandDao dao;
@@ -19,13 +19,12 @@ public class BrandService extends ValidateUtils {
     public BrandPojo addBrand(BrandPojo brandPojo) throws ApiException {
         BrandPojo exists = dao.selectByNameAndCategory(brandPojo.getBrand(),brandPojo.getCategory());
         checkNull(exists,"Brand and Category already exists");
-        brandPojo = dao.insert(brandPojo);
+        brandPojo = dao.persist(brandPojo);
         return brandPojo;
     }
 
     @Transactional
     public List<BrandPojo> getAllBrands() {
-        System.out.println(dao.selectAll().size());
         return dao.selectAll();
     }
 

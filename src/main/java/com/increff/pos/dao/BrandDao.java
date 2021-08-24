@@ -29,8 +29,4 @@ public class BrandDao extends AbstractDao<BrandPojo> {
                 .stream().findFirst().orElse(null);
     }
 
-//    private TypedQuery<BrandPojo> getQuery(String jpql) {
-//        return em.createQuery(jpql, BrandPojo.class);
-//    }
-
 }

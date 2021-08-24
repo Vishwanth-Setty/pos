@@ -2,7 +2,7 @@ package com.increff.pos.service;
 
 import com.increff.pos.dao.InventoryDao;
 import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class InventoryService extends ValidateUtils {
+public class InventoryService extends AbstractApi {
 
     @Autowired
     InventoryDao inventoryDao;
@@ -29,7 +29,7 @@ public class InventoryService extends ValidateUtils {
     public InventoryPojo add(InventoryPojo inventoryPojo) throws ApiException{
         InventoryPojo exists = inventoryDao.select(inventoryPojo.getProductId());
         checkNull(exists,"Inventory exists");
-        return inventoryDao.insert(inventoryPojo);
+        return inventoryDao.persist(inventoryPojo);
     }
 
     @Transactional

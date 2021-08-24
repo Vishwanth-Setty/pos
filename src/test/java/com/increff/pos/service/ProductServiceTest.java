@@ -86,20 +86,6 @@ public class ProductServiceTest extends AbstractUnitTest {
 
     }
 
-    @Test
-    public void testCheckDuplicates() throws ApiException {
-        BrandPojo brandPojo1 = create("new1","cat");
-        BrandPojo brandPojo2 = create("new2","cat");
-        String error = "";
-        List<ProductForm> productFormList = new ArrayList<>();
-        ProductForm productForm = createProductForm("1q2w3e",brandPojo1.getBrand(),brandPojo1.getCategory(),"name1",100.00);
-        productFormList.add(productForm);
-        productForm = createProductForm("1q23e",brandPojo1.getBrand(),brandPojo1.getCategory(),"name2",100.00);
-        productFormList.add(productForm);
-        error = productService.checkDuplicates(productFormList);
-        assertEquals(error,"");
-    }
-
     private ProductPojo create(String barcode, Integer brandId, String name, Double mrp){
         ProductPojo productPojo = new ProductPojo();
         productPojo.setMrp(mrp);

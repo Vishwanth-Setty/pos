@@ -9,7 +9,7 @@ import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.utils.CommonUtils;
 import com.increff.pos.utils.ConvertUtil;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class InventoryDto extends ValidateUtils {
+public class InventoryDto extends AbstractApi {
     @Autowired
     InventoryService inventoryService;
 
@@ -54,13 +54,12 @@ public class InventoryDto extends ValidateUtils {
         checkNotNull(productPojo,"Invalid barcode");
         CommonUtils.normalize(inventoryForm);
         InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());                     //see this as case
-        System.out.println(inventoryPojo.getQuantity());
         inventoryService.update(inventoryPojo);
     }
 
     public void upload(List<InventoryForm> inventoryFormList) throws ApiException {
         checkValidList(inventoryFormList);
-        String errorMessage = checkData(inventoryFormList);
+        String errorMessage = validate(inventoryFormList);
         if(!errorMessage.equals("")){
             throw new ApiException(errorMessage);
         }
@@ -76,15 +75,15 @@ public class InventoryDto extends ValidateUtils {
             }
         }
     }
-    private String checkData(List<InventoryForm> inventoryFormList) throws ApiException{
+    private String validate(List<InventoryForm> inventoryFormList) throws ApiException{
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(inventoryFormList);
         if(!errorMessage.equals("")){
-            return "Found duplicate barcodes "+errorMessage;
+            return "Duplicate records exists for barcode [ "+errorMessage + " ]";
         }
         errorMessage = checkBarcode(inventoryFormList);
         if(!errorMessage.equals("")){
-            return "Invalid Barcodes "+errorMessage;
+            return "Invalid Barcodes [ "+errorMessage+" ]";
         }
         return "";
     }
@@ -97,7 +96,7 @@ public class InventoryDto extends ValidateUtils {
             ++i;
             String barcode = inventoryForm.getBarcode();
             if (hash_Set.contains(barcode)) {
-                errorMessage.append(" (").append(barcode).append(") ");
+                errorMessage.append("").append(barcode).append(", ");
             }
             hash_Set.add(barcode);
         }
@@ -112,7 +111,7 @@ public class InventoryDto extends ValidateUtils {
             String barcode = inventoryForm.getBarcode();
             ProductPojo productPojo = productService.getByBarcode(barcode);
             if (productPojo == null) {
-                errorMessage.append(" (").append(barcode).append(") ");
+                errorMessage.append("").append(barcode).append(", ");
             }
         }
         return errorMessage.toString();

@@ -7,22 +7,11 @@ function displayOrderData(inventories) {
     dataTable.clear();
     for (var i in inventories) {
         var e = inventories[i];
-        console.log(e);
         var time = ( (e.orderTime.hour<10)?('0'+e.orderTime.hour.toString()):(e.orderTime.hour.toString())) 
                     + ":" +( (e.orderTime.minute<10)?('0'+e.orderTime.minute.toString()):(e.orderTime.minute.toString()));
         e.orderTime = new Date(e.orderTime.year,e.orderTime.monthValue-1,e.orderTime.dayOfMonth).toLocaleDateString();
         e.orderTime = e.orderTime + " " + time;
         dataTable.row.add(e).draw(false);
-        
-        // var buttonHtml = '<span id="editButton" class="bi-pen" onclick="editInventory('+e.productId+')"></span>'
-        // var row = '<tr id="inventory'+i+'">'
-        // + '<td>' + e.productId + '</td>'
-        // + '<td>' + e.barcode + '</td>'
-        // + '<td>' + e.productName + '</td>'
-        // + '<td id="inventory'+e.productId+'quantity">' + e.quantity + '</td>'
-        // + '<td>' + buttonHtml + '</td>'
-        // + '</tr>';
-        // $tbody.append(row);
     }
     dataTable.column(2).visible(false);
 
@@ -35,7 +24,6 @@ function displayEditOrderItemData(editOrderData){
     dataTable.clear();
     for (var i in editOrderData) {
         var orderItem = editOrderData[i];
-        console.log(orderItem);
         dataTable.row.add(orderItem).draw(false);
     }
 
@@ -43,15 +31,12 @@ function displayEditOrderItemData(editOrderData){
 
 function addOrder() {
     var dataTable = $('#new-order-table').DataTable()
-    console.log(dataTable.rows().data())
     addOrderItems = [];
     for(let i=0;i<dataTable.rows().data().length;i++){
         addOrderItems.push(dataTable.rows().data()[i]);
     }
-    console.log(addOrderItems);
     order["orderItemList"] = addOrderItems;
     var json = JSON.stringify(order);
-    console.log(json);
     var url = getOrderUrl();
     $.ajax({
         url: url,
@@ -66,7 +51,7 @@ function addOrder() {
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
             $('#addModal').modal('hide');
-            toast('Successfully created a Order');
+            toast('Success');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -86,24 +71,21 @@ async function editOrder(id, quantity) {
         type: 'GET',
         success: function (response) {
             orderItems = response;
-            console.log(orderItems)
             displayEditOrderItemData(orderItems);
         },
         error: function (error) {
-            alert(error+ "An error has occurred");
+            toast("Could not Retrive Information",'WARN');
         }
     });
 }
 
 function updateOrder() {
     var dataTable = $('#order-item-table').DataTable()
-    console.log(dataTable.rows().data())
     addOrderItems = [];
     for(let i=0;i<dataTable.rows().data().length;i++){
         addOrderItems.push(dataTable.rows().data()[i]);
     }
 
-    console.log(addOrderItems);
     for(i in addOrderItems){
         addOrderItems[i]["quantity"] = parseInt(addOrderItems[i]["quantity"]);
         addOrderItems[i]["sellingPrice"] = parseFloat(addOrderItems[i]["sellingPrice"]);
@@ -112,7 +94,6 @@ function updateOrder() {
     order["orderItemList"] = addOrderItems;
     order["id"] = parseInt($('#orderId').val());
     var json = JSON.stringify(order);
-    console.log(json);
     var url = getOrderUrl();
     $.ajax({
         url: url,
@@ -124,7 +105,7 @@ function updateOrder() {
         success: function (response) {
             getOrders();
             $('#editModal').modal('hide');
-            toast('Successful');
+            toast('Success');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -141,11 +122,9 @@ function getOrders() {
         type: 'GET',
         success: function (response) {
             orders = response;
-            console.log(orders)
             displayOrderData(orders);
         },
         error: function (error) {
-            console.log(error)
             //            alert(error+ "An error has occurred");
         }
     });
@@ -168,7 +147,6 @@ function addProductToTable(e){
 
       },
       error: function (error) {
-          console.log("error");
           toast("Invalid Barcode",'WARN');
     },
     });
@@ -194,7 +172,6 @@ async function addProductToTableToUpdateOrderItem(e){
 
       },
       error: function (error) {
-          console.log("error");
           toast("Invalid Barcode",'WARN');
     },
     });
@@ -264,12 +241,7 @@ function generateInvoice(){
         success: function (response) {
             getOrders();
             toast('Success');
-            // var blob = new Blob([response], {type: "application/pdf"})
-            console.log(response);
             var file = b64toBlob(response);
-            console.log(file);
-            var fileURL = URL.createObjectURL(file);
-            // window.open(fileURL);
             downloadFile(file, "test.pdf");
             $('#downloadInvoiceModal').modal('hide');
 
@@ -281,7 +253,6 @@ function generateInvoice(){
     });
 }
 function openModal() {
-    console.log("asdfas");
     $('#createOrder').trigger('reset');
     $('#new-order-table').DataTable().clear().draw();
     $('#addModal').modal('show');

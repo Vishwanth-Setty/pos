@@ -1,26 +1,12 @@
 let prevValue = {};
 
 function displayProductData(products) {
-    console.log(products);
-    var $tbody = $("#product-table").find("tbody");
     let table = $("#product-table").DataTable();
     table.clear();
     table.column(0).visible(false);
     for (var i in products) {
         var e = products[i];
         table.row.add(e).draw(false);
-        // var buttonHtml = '<span id="editButton" class="bi-pen" onclick="editProduct('+
-        // e.id+')"><span class="material-icons md-24">edit</span></span>'
-        // var row = '<tr id="product'+i+'">'
-        // + '<td>' + e.id + '</td>'
-        // + '<td>' + e.barcode + '</td>'
-        // + '<td>' + e.brand + '</td>'
-        // + '<td>'  + e.category + '</td>'
-        // + '<td>' + e.name + '</td>'
-        // + '<td> &#8377 ' + e.mrp + '</td>'
-        // + '<td>' + buttonHtml + '</td>'
-        // + '</tr>';
-        // $tbody.append(row);
     }
     return false;
 }
@@ -47,9 +33,6 @@ function addProduct(e) {
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
-            // $(':input', '#addProduct')
-            //     .not(':button, :submit, :reset, :hidden')
-            //     .val('')
             toast(error.message,'WARN');
 
         }
@@ -78,7 +61,6 @@ function updateProduct(e) {
     var id = $("#productId").val();
     var json = toJson($form);
     var url = getProductUrl();
-    console.log(json);
     $.ajax({
         url: url + "/" + id,
         type: "PUT",
@@ -107,12 +89,10 @@ function getProducts() {
         type: "GET",
         success: function (response) {
             products = response;
-            console.log(products);
             displayProductData(products);
         },
         error: function (error) {
-            console.log(error);
-            //            alert(error+ "An error has occurred");
+            toast("Could not Retrive Information",'WARN');
         },
     });
 }
@@ -126,7 +106,6 @@ async function getProductById(id) {
             product = response;
         },
         error: function (error) {
-            console.log(error);
         },
     });
     return product;
@@ -153,9 +132,14 @@ function uploadRows(){
 	for(item in fileData){
         fileData[item]["mrp"] = parseInt(fileData[item]["mrp"]);
     }
+    if(!checkFile(fileData)){
+        toast("Invalid file format",'WARN')
+        return;
+    }
+
 	var json = JSON.stringify(fileData);
-    console.log(json);
     let url = getProductUrl();
+
 	// Make ajax call
 	$.ajax({
 	   url: url+'/upload',
@@ -177,10 +161,16 @@ function uploadRows(){
 
 }
 
+function checkFile(jsonFile){
+    let keys = Object.keys(jsonFile[0])
+    if(keys[0] == "barcode" && keys[1]=="brand"  && keys[2]=="category"  && keys[3]=="name"  && keys[4]=="mrp" ){
+        return true;
+    }
+    return false;
+}
 
 //ACTIVE TAB
 function activeTab() {
-    console.log("Asdfa");
     $("#nav-brand").removeClass("active");
     $("#nav-product").addClass("active");
     $("#nav-inventory").removeClass("active");
@@ -250,8 +240,6 @@ function init() {
     $('#editProduct :input').keyup(function () {
         let name = $('#name').val();
         let mrp = $('#mrp').val();
-        console.log(prevValue);
-        console.log(name,mrp);
         if (name == prevValue["name"] && mrp == prevValue["mrp"]) {
             $('#update-product').prop('disabled', true);
             return;

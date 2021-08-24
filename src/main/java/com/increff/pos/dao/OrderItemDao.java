@@ -29,8 +29,5 @@ public class OrderItemDao extends AbstractDao<OrderItemPojo> {
         return query.getResultList();
     }
 
-//    protected TypedQuery<OrderItemPojo> getQuery(String jpql) {
-//        return em.createQuery(jpql, OrderItemPojo.class);
-//    }
 
 }

@@ -3,26 +3,19 @@
     <OrderItem>
         <barcode>1e3et34</barcode>
         <mrp>12.912</mrp>
-        <perUnitSellingPrice>123.0</perUnitSellingPrice>
-        <quantity>10</quantity>
-        <totalSellingPrice>1230.0</totalSellingPrice>
+        <perUnitSellingPrice>10.0</perUnitSellingPrice>
+        <quantity>4</quantity>
+        <totalSellingPrice>40.0</totalSellingPrice>
     </OrderItem>
     <OrderItem>
         <barcode>123wde</barcode>
         <mrp>123.0</mrp>
-        <perUnitSellingPrice>123.0</perUnitSellingPrice>
-        <quantity>4</quantity>
-        <totalSellingPrice>492.0</totalSellingPrice>
+        <perUnitSellingPrice>12.0</perUnitSellingPrice>
+        <quantity>11</quantity>
+        <totalSellingPrice>132.0</totalSellingPrice>
     </OrderItem>
-    <OrderItem>
-        <barcode>y7u8i9</barcode>
-        <mrp>120.0</mrp>
-        <perUnitSellingPrice>123.0</perUnitSellingPrice>
-        <quantity>1</quantity>
-        <totalSellingPrice>123.0</totalSellingPrice>
-    </OrderItem>
-    <date>12/08/2021 14:42</date>
-    <orderId>1002</orderId>
+    <date>18/08/2021 09:08</date>
+    <orderId>1005</orderId>
     <totalQuantity>15</totalQuantity>
-    <totalAmount>1845.0</totalAmount>
+    <totalAmount>172.0</totalAmount>
 </OrderItemData>

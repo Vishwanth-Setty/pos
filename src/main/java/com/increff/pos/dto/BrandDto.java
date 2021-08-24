@@ -7,7 +7,7 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
 import com.increff.pos.utils.CommonUtils;
 import com.increff.pos.utils.ConvertUtil;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class BrandDto extends ValidateUtils {
+public class BrandDto extends AbstractApi {
 
     @Autowired
     BrandService brandService;
@@ -57,7 +57,7 @@ public class BrandDto extends ValidateUtils {
 
     public void uploadList(List<BrandForm> brandFormList) throws ApiException {
         checkValidList(brandFormList);
-        String errorMessage = checkData(brandFormList);
+        String errorMessage = validate(brandFormList);
 
         if (!errorMessage.equals("")) {
             throw new ApiException(errorMessage);
@@ -68,23 +68,23 @@ public class BrandDto extends ValidateUtils {
         }
     }
 
-    private String checkData(List<BrandForm> brandFormList) {
+    private String validate(List<BrandForm> brandFormList) {
         String errorMessage = "";
 
-        errorMessage = checkDuplicates(brandFormList);
+        errorMessage = checkDuplicateRecords(brandFormList);
         if (!errorMessage.equals("")) {
-            return "Found duplicate pairs " + errorMessage;
+            return "Duplicate records exists for brand-category: [ " + errorMessage + " ]" ;
         }
 
-        errorMessage = checkDuplicatesInDatabase(brandFormList);
+        errorMessage = checkExists(brandFormList);
         if (!errorMessage.equals("")) {
-            return "Brand and Category pairs Already Exists " + errorMessage;
+            return "Brand-Category already exists [" + errorMessage +" ]";
         }
 
         return errorMessage;
     }
 
-    private static String checkDuplicates(List<BrandForm> brandFormList) {
+    private static String checkDuplicateRecords(List<BrandForm> brandFormList) {
         StringBuilder errors = new StringBuilder();
         Set<String> hash_Set = new HashSet<String>();
 
@@ -94,7 +94,7 @@ public class BrandDto extends ValidateUtils {
             String key = brand + '#' + category;
 
             if (hash_Set.contains(key)) {
-                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+                errors.append("").append(brand).append(":").append(category).append(", ");
             }
 
             hash_Set.add(key);
@@ -103,7 +103,7 @@ public class BrandDto extends ValidateUtils {
         return errors.toString();
     }
 
-    private String checkDuplicatesInDatabase(List<BrandForm> brandFormList) {
+    private String checkExists(List<BrandForm> brandFormList) {
         StringBuilder errors = new StringBuilder();
 
         for (BrandForm brandForm : brandFormList) {
@@ -112,7 +112,7 @@ public class BrandDto extends ValidateUtils {
             BrandPojo brandExists = brandService.getBrandByNameAndCategory(brand, category);
 
             if (brandExists != null) {
-                errors.append(" ( ").append(brand).append(" ").append(category).append(" ) ");
+                errors.append(" ").append(brand).append(":").append(category).append(", ");
             }
 
         }

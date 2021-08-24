@@ -1,10 +1,8 @@
 package com.increff.pos.service;
 
 import com.increff.pos.dao.ProductDao;
-import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.ProductPojo;
-import com.increff.pos.utils.CommonUtils;
-import com.increff.pos.utils.ValidateUtils;
+import com.increff.pos.utils.AbstractApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +10,14 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class ProductService extends ValidateUtils {
+public class ProductService extends AbstractApi {
     @Autowired
     private ProductDao productDao;
     @Transactional
     public ProductPojo add(ProductPojo productPojo) throws ApiException {
         ProductPojo exists = productDao.selectByBarcode(productPojo.getBarcode());
         checkNull(exists,"Barcode exists");
-        return productDao.insert(productPojo);
+        return productDao.persist(productPojo);
     }
 
     @Transactional
@@ -50,21 +48,6 @@ public class ProductService extends ValidateUtils {
         oldProductPojo.setBrandId(newProductPojo.getBrandId());
         oldProductPojo.setName(newProductPojo.getName());
         oldProductPojo.setMrp(newProductPojo.getMrp());
-    }
-
-    @Transactional
-    public String checkDuplicates(List<ProductForm> productFormList){
-        StringBuilder errorMessage = new StringBuilder();
-        int i = 1;
-        for(ProductForm productForm: productFormList){
-            ++i;
-            String barcode = productForm.getBarcode();
-            ProductPojo exists = getByBarcode(barcode);
-            if (exists != null) {
-                errorMessage.append(" ").append(barcode).append(") ");
-            }
-        }
-        return errorMessage.toString();
     }
 
 }

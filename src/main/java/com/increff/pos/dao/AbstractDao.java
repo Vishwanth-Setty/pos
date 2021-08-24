@@ -21,7 +21,7 @@ public abstract class AbstractDao<T> {
         clazz = clazz1;
     }
 
-    public T insert(T t){
+    public T persist(T t){
         em.persist(t);
         return t;
     }

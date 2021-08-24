@@ -36,8 +36,4 @@ public class ProductDao extends AbstractDao<ProductPojo> {
         return query.getResultList();
     }
 
-//    TypedQuery<ProductPojo> getQuery(String jpql) {
-//        return em.createQuery(jpql, ProductPojo.class);
-//    }
-
 }

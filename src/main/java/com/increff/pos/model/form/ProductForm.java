@@ -18,6 +18,6 @@ public class ProductForm {
     private String brand;
     @NotBlank
     private String category;
-    @NotBlank
+    @NotNull
     private Double mrp;
 }
