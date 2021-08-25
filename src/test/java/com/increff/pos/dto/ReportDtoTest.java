@@ -49,6 +49,37 @@ public class ReportDtoTest extends AbstractUnitTest {
         assertEquals(salesReportDataList.get(0).getRevenue(),1000.00,DELTA);
     }
 
+    @Test
+    public void testGetReportWithNoFilters() throws ApiException {
+        BrandPojo brandPojo = create("new","cat");
+        ProductPojo productPojo = create("1e3r4",brandPojo.getId(),"name",123.03);
+        InventoryPojo inventoryPojo = create(productPojo.getId(),100);
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+        orderItemPojoList.add(create(productPojo.getId(),10,100.00));
+        OrderPojo orderPojo = orderService.create(orderItemPojoList);
+        orderService.generateInvoice(orderPojo.getId());
+
+        ReportForm reportForm = create("12/12/2019","12/12/2022","","");
+        List<SalesReportData> salesReportDataList = reportDto.getSalesReport(reportForm);
+
+        assertEquals(salesReportDataList.get(0).getRevenue(),1000.00,DELTA);
+    }
+
+    @Test
+    public void testGetReportWithFilters() throws ApiException {
+        BrandPojo brandPojo = create("new","cat");
+        ProductPojo productPojo = create("1e3r4",brandPojo.getId(),"name",123.03);
+        InventoryPojo inventoryPojo = create(productPojo.getId(),100);
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+        orderItemPojoList.add(create(productPojo.getId(),10,100.00));
+        OrderPojo orderPojo = orderService.create(orderItemPojoList);
+        orderService.generateInvoice(orderPojo.getId());
+
+        ReportForm reportForm = create("12/12/2019","12/12/2022","nw","ad");
+        List<SalesReportData> salesReportDataList = reportDto.getSalesReport(reportForm);
+
+        assertEquals(salesReportDataList.size(),0);
+    }
 
     @Test
     public void testCheckDates() {

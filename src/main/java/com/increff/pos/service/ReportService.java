@@ -21,15 +21,6 @@ import static com.increff.pos.utils.ConvertUtil.convert;
 @Transactional(rollbackFor = ApiException.class)
 public class ReportService extends AbstractApi {
 
-    @Autowired
-    BrandService brandService;
-
-    @Autowired
-    ProductService productService;
-
-    @Autowired
-    OrderService orderService;
-
     public List<SalesReportData> getSalesReport(ReportForm reportForm,List<BrandPojo> brandPojoList,
                                                 List<ProductPojo> productPojoList,
                                                 List<OrderItemPojo> orderItemPojoList) throws ApiException {
@@ -38,30 +29,19 @@ public class ReportService extends AbstractApi {
 
         ZonedDateTime startDate = convert((reportForm.getStartDate().split("/")),"start");
         ZonedDateTime endDate = convert(reportForm.getEndDate().split("/"),"end");
-        if(startDate.isAfter(endDate)){
-            throw new ApiException("Invalid date range selected");
-        }
 
-//        List<BrandPojo> brandPojoList = brandService.getAllBrands();
         HashMap<Integer,String> brandIdToNameAndCategory=new HashMap<>();
         brandListToMap(brandPojoList,brandIdToNameAndCategory);
 
         String filterBrand = reportForm.getBrand();
         String filterCategory =  reportForm.getCategory();
 
-//        List<ProductPojo> productPojoList = productService.getAll();
         HashMap<Integer,String> mapProductIdWithBrand=new HashMap<Integer,String>();
         productListToMap(productPojoList,mapProductIdWithBrand,brandIdToNameAndCategory);
 
-//        List<OrderPojo> orderPojoList = orderService.getAllInvoiceGeneratedOrder(true);
-//        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
-//        for(OrderPojo orderPojo:orderPojoList){
-//            orderItemPojoList.addAll(orderService.getById(orderPojo.getId()));
-//        }
 
         HashMap<String,List<OrderItemPojo>> uniqueCategories = new HashMap<>();
         for(OrderItemPojo orderItemPojo:orderItemPojoList){
-//            OrderPojo orderPojo = orderService.getOnlyOrderById(orderItemPojo.getOrderId());
             String brandAndCategory = mapProductIdWithBrand.get(orderItemPojo.getProductId());
             String brand = brandAndCategory.split("#")[0];
             String category = brandAndCategory.split("#")[1];
@@ -75,9 +55,6 @@ public class ReportService extends AbstractApi {
                     continue;
                 }
             }
-//            if(!(startDate.isBefore(orderPojo.getOrderTime()) && endDate.isAfter(orderPojo.getOrderTime()))){
-//                continue;
-//            }
 
             if(!uniqueCategories.containsKey(category)){
                 List<OrderItemPojo> tempOrderItemPojoList = new ArrayList<>();

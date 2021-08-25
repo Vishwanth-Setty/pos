@@ -126,18 +126,11 @@ public class ProductDto extends AbstractApi {
         for (ProductForm productForm : productFormList) {
             ++i;
             Set<String> brandAndCategory = new HashSet<>();
-            List<BrandPojo> brandPojoList = brandService.getAllBrands();
-            brandPojoList.forEach(value -> {
-                brandAndCategory.add(value.getBrand() + '#' + value.getCategory());
-            });
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
-            String key = brand + '#' + category;
-
-            String barcode = productForm.getBarcode();
-
-            if (!brandAndCategory.contains(key)) {
-                errorMessage.append(" ").append(barcode).append(", ");
+            BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(),productForm.getCategory());
+            if (brandPojo==null) {
+                errorMessage.append(" ").append(productForm.getBarcode()).append(", ");
             }
         }
         return errorMessage.toString();

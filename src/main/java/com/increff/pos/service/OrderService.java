@@ -38,9 +38,9 @@ public class OrderService extends AbstractApi {
     }
 
     public OrderPojo create(List<OrderItemPojo> orderItemPojoList) throws ApiException {
-        checkInventory(orderItemPojoList);
-        checkSellingPrice(orderItemPojoList);
         checkValidInventory(orderItemPojoList);
+        checkInventoryList(orderItemPojoList);
+        checkSellingPrice(orderItemPojoList);
 
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setOrderTime(ZonedDateTime.now());
@@ -57,7 +57,7 @@ public class OrderService extends AbstractApi {
 
     public void update(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         checkValidInventory(orderItemPojoList);
-
+        checkInventoryList(orderItemPojoList);
         checkSellingPrice(orderItemPojoList);
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
             if (orderItemPojo.getId() == null) {
@@ -93,10 +93,14 @@ public class OrderService extends AbstractApi {
         return orderDao.selectMultipleByMethod("invoiceGenerated",invoiceGenerated);
     }
 
-    private void checkInventory(List<OrderItemPojo> orderItemPojoList) throws ApiException {
+    private void checkInventoryList(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
             InventoryPojo inventoryPojo = inventoryService.getById(orderItemPojo.getProductId());
             int reqQuantity = orderItemPojo.getQuantity();
+            if(orderItemPojo.getId() != null){
+                OrderItemPojo orderItemPojoOld = orderItemDao.select(orderItemPojo.getId());
+                reqQuantity = orderItemPojo.getQuantity()-orderItemPojoOld.getQuantity();
+            }
             if (inventoryPojo.getQuantity() < reqQuantity) {
                 ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
                 throw new ApiException("Insufficient inventory available for barcode - "+productPojo.getBarcode());
@@ -106,19 +110,16 @@ public class OrderService extends AbstractApi {
 
     private void checkValidInventory(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
-            InventoryPojo inventoryPojo = inventoryService.getById(orderItemPojo.getProductId());
             ProductPojo productPojo = productService.getById(orderItemPojo.getProductId());
+            InventoryPojo inventoryPojo = inventoryService.getById(orderItemPojo.getProductId());
+            checkNotNull(inventoryPojo,"Inventory doesn't exists for this barcode:"+ productPojo.getBarcode());
+
             checkNotNull(inventoryPojo,"Inventory is not created for barcode - "+productPojo.getBarcode());
         }
     }
     private void updateInventory(OrderItemPojo orderItemPojo) throws ApiException {
         InventoryPojo inventoryPojo = inventoryService.getById(orderItemPojo.getProductId());
         int quantity = inventoryPojo.getQuantity() - orderItemPojo.getQuantity();
-
-        if(quantity<0){
-            ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-            throw new ApiException("Insufficient inventory available for barcode - "+productPojo.getBarcode());
-        }
         inventoryPojo.setQuantity(quantity);
         inventoryService.update(inventoryPojo);
     }
@@ -126,18 +127,10 @@ public class OrderService extends AbstractApi {
     private void updateInventory(OrderItemPojo orderItemPojo, OrderItemPojo newOrderItemPojo) throws ApiException {
         InventoryPojo inventoryPojo = inventoryService.getById(orderItemPojo.getProductId());
         int quantity = inventoryPojo.getQuantity() + orderItemPojo.getQuantity() - newOrderItemPojo.getQuantity();
-        if(quantity<0){
-            ProductPojo productPojo = productService.getById(inventoryPojo.getProductId());
-            throw new ApiException("Insufficient inventory available for barcode - "+productPojo.getBarcode());
-        }
         inventoryPojo.setQuantity(quantity);
         inventoryService.update(inventoryPojo);
     }
 
-    private boolean checkInvoice(int orderId){
-        OrderPojo orderPojo = getOnlyOrderById(orderId);
-        return orderPojo.getInvoiceGenerated();
-    }
     private void checkSellingPrice(List<OrderItemPojo> orderItemPojoList) throws ApiException {
         for(OrderItemPojo orderItemPojo : orderItemPojoList){
             ProductPojo productPojo = productService.getById(orderItemPojo.getProductId());

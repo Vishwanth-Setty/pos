@@ -30,6 +30,7 @@ public class InventoryDto extends AbstractApi {
         checkValid(inventoryForm);
         ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
         CommonUtils.normalize(inventoryForm);
+        checkNotNull(productPojo,"Invalid barcode");
         InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());
         inventoryService.add(inventoryPojo);
     }
