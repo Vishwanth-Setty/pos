@@ -11,10 +11,14 @@ import com.increff.pos.service.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static org.junit.Assert.*;
 
 
@@ -144,6 +148,17 @@ public class ConvertUtilTest extends AbstractUnitTest {
         assertEquals((orderItemForm.getOrderId().intValue()),orderItemPojo.getOrderId().intValue());
         assertEquals((orderItemForm.getQuantity().intValue()),orderItemPojo.getQuantity().intValue());
         assertEquals(orderItemForm.getBarcode(),orderItemForm.getBarcode());
+    }
+
+    @Test
+    public void testStringToZoneDateTime(){
+        String date = "11/11/2020";
+        String[] dateList = date.split("/");
+        ZonedDateTime zonedDateTime = ConvertUtil.convert(dateList,"start");
+        LocalDate localDate = LocalDate.of(parseInt(dateList[2]), parseInt(dateList[1]), parseInt(dateList[0]));
+        LocalTime localTime = LocalTime.of(0, 0);
+        ZoneId zoneId = ZoneId.of("GMT+05:30");
+        assertEquals(zonedDateTime,ZonedDateTime.of(localDate, localTime, zoneId));
     }
 
 

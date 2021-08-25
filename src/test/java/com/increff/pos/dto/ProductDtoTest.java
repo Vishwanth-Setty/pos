@@ -79,6 +79,58 @@ public class ProductDtoTest extends AbstractUnitTest {
         assertEquals(productDataList.size(), 2);
     }
 
+    @Test
+    public void testCheckDuplicatesRecords() throws ApiException {
+        try{
+
+            createBrand("new", "cat");
+            List<ProductForm> productFormList = new ArrayList<>();
+            productFormList.add(createForm("1q2w3e", "new", "cat", "productNew", 100.00));
+            productFormList.add(createForm("1q2w3e", "new", "cat", "productNew", 100.00));
+
+            productDto.upload(productFormList);
+            List<ProductData> productDataList = productDto.getAll();
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+    @Test
+    public void testCheckInvalidBrand() throws ApiException {
+        try{
+
+            createBrand("new", "cat");
+            List<ProductForm> productFormList = new ArrayList<>();
+            productFormList.add(createForm("1q2w3e", "new1", "cat", "productNew", 100.00));
+            productFormList.add(createForm("1q2w3r", "new", "cat", "productNew", 100.00));
+
+            productDto.upload(productFormList);
+            List<ProductData> productDataList = productDto.getAll();
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+    @Test
+    public void testCheckExists() throws ApiException {
+        try{
+            createBrand("new", "cat");
+            ProductForm productForm = createForm("1q2w3e", "new", "cat", "product1", 100.00);
+            productDto.add(productForm);
+            List<ProductForm> productFormList = new ArrayList<>();
+            productFormList.add(createForm("1q2w3e", "new", "cat", "productNew", 100.00));
+            productFormList.add(createForm("1q2w3r", "new", "cat", "productNew", 100.00));
+
+            productDto.upload(productFormList);
+            List<ProductData> productDataList = productDto.getAll();
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
     private BrandPojo createBrand(String brand, String category) throws ApiException {
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand(brand);

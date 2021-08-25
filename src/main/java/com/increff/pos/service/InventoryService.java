@@ -21,17 +21,17 @@ public class InventoryService extends AbstractApi {
     }
 
     public InventoryPojo getById(int id) {
-        return inventoryDao.selectOneByMethod("productId", id);
+        return inventoryDao.selectByMethod("productId", id);
     }
 
     public InventoryPojo add(InventoryPojo inventoryPojo) throws ApiException {
-        InventoryPojo exists = inventoryDao.selectOneByMethod("productId", inventoryPojo.getProductId());
+        InventoryPojo exists = inventoryDao.selectByMethod("productId", inventoryPojo.getProductId());
         checkNull(exists, "Inventory already exists");
         return inventoryDao.persist(inventoryPojo);
     }
 
     public void update(InventoryPojo inventoryPojo) {
-        InventoryPojo oldInventoryPojo = inventoryDao.selectOneByMethod("productId", inventoryPojo.getProductId());
+        InventoryPojo oldInventoryPojo = inventoryDao.selectByMethod("productId", inventoryPojo.getProductId());
         oldInventoryPojo.setQuantity(inventoryPojo.getQuantity());
     }
 

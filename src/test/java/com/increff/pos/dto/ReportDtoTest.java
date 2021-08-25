@@ -1,17 +1,20 @@
-package com.increff.pos.service;
+package com.increff.pos.dto;
 
 import com.increff.pos.AbstractUnitTest;
 import com.increff.pos.model.data.SalesReportData;
 import com.increff.pos.model.form.ReportForm;
 import com.increff.pos.pojo.*;
+import com.increff.pos.service.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportServiceTest extends AbstractUnitTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+public class ReportDtoTest extends AbstractUnitTest {
 
     private static final double DELTA = 1e-15;
 
@@ -28,7 +31,7 @@ public class ReportServiceTest extends AbstractUnitTest {
     OrderService orderService;
 
     @Autowired
-    ReportService reportService;
+    ReportDto reportDto;
 
     @Test
     public void testGetReport() throws ApiException {
@@ -39,15 +42,48 @@ public class ReportServiceTest extends AbstractUnitTest {
         orderItemPojoList.add(create(productPojo.getId(),10,100.00));
         OrderPojo orderPojo = orderService.create(orderItemPojoList);
         orderService.generateInvoice(orderPojo.getId());
-        List<BrandPojo> brandPojoList = brandService.getAllBrands();
-        List<ProductPojo> productPojoList = productService.getAll();
+
         ReportForm reportForm = create("12/12/2019","12/12/2022","new","cat");
-        List<SalesReportData> salesReportDataList = reportService.getSalesReport(reportForm,brandPojoList,
-                productPojoList,orderItemPojoList);
+        List<SalesReportData> salesReportDataList = reportDto.getSalesReport(reportForm);
 
         assertEquals(salesReportDataList.get(0).getRevenue(),1000.00,DELTA);
     }
 
+
+    @Test
+    public void testCheckDates() {
+        try{
+
+            BrandPojo brandPojo = create("new","cat");
+            ProductPojo productPojo = create("1e3r4",brandPojo.getId(),"name",123.03);
+            InventoryPojo inventoryPojo = create(productPojo.getId(),100);
+            List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+            orderItemPojoList.add(create(productPojo.getId(),10,100.00));
+            OrderPojo orderPojo = orderService.create(orderItemPojoList);
+            orderService.generateInvoice(orderPojo.getId());
+
+            ReportForm reportForm = create("12/12/2019","12/12/2000","new","cat");
+            List<SalesReportData> salesReportDataList = reportDto.getSalesReport(reportForm);
+        }
+        catch (ApiException apiException){
+            assertEquals(apiException.getMessage(),"Invalid date range provided");
+        }
+    }
+    @Test
+    public void testCheckNonSelect() throws ApiException {
+        BrandPojo brandPojo = create("new","cat");
+        ProductPojo productPojo = create("1e3r4",brandPojo.getId(),"name",123.03);
+        InventoryPojo inventoryPojo = create(productPojo.getId(),100);
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+        orderItemPojoList.add(create(productPojo.getId(),10,100.00));
+        OrderPojo orderPojo = orderService.create(orderItemPojoList);
+        orderService.generateInvoice(orderPojo.getId());
+
+        ReportForm reportForm = create("12/12/2019","17/08/2020","new","cat");
+        List<SalesReportData> salesReportDataList = reportDto.getSalesReport(reportForm);
+        assertEquals(salesReportDataList.size(),0);
+
+    }
     private ProductPojo create(String barcode, int brandId, String name, Double mrp) throws ApiException {
         ProductPojo productPojo = new ProductPojo();
 

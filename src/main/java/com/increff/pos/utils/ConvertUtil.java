@@ -90,7 +90,12 @@ public class ConvertUtil {
         orderItemPojo.setQuantity(orderItemForm.getQuantity());
         orderItemPojo.setSellingPrice(orderItemForm.getSellingPrice());
         orderItemPojo.setProductId(productId);
-        orderItemPojo.setId(orderItemForm.getOrderItemId());
+        if(orderItemForm.getOrderItemId()==null || orderItemForm.getOrderItemId()==0){
+            orderItemPojo.setId(null);
+        }
+        else{
+            orderItemPojo.setId(orderItemForm.getOrderItemId());
+        }
         orderItemPojo.setOrderId(orderItemForm.getOrderId());
         return orderItemPojo;
     }

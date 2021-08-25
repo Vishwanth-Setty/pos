@@ -14,9 +14,6 @@ public class ProductDao extends AbstractDao<ProductPojo> {
     @PersistenceContext
     private EntityManager em;
 
-    private static String SELECT_BRAND_ID = "select p from ProductPojo p where brandId=:brandId";
-    private static String SELECT_BY_BARCODE = "select p from ProductPojo p where barcode=:barcode";
-
     ProductDao() {
         super(ProductPojo.class);
     }

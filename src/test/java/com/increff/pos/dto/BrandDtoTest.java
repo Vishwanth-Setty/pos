@@ -34,6 +34,18 @@ public class BrandDtoTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testFormValid() {
+        try{
+
+            BrandForm brandForm = create("new","");
+            brandDto.add(brandForm);
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+    @Test
     public void testGetAll() throws ApiException {
         BrandForm brandForm = create("new","cat");
         brandDto.add(brandForm);
@@ -70,6 +82,46 @@ public class BrandDtoTest extends AbstractUnitTest {
         assertEquals(brandDataList.size(),2);
     }
 
+    @Test
+    public void testCheckDuplicateRecords() {
+        try{
+            List<BrandForm> brandFormList = new ArrayList<>();
+            brandFormList.add(create("new","cat"));
+            brandFormList.add(create("new","cat"));
+            brandDto.uploadList(brandFormList);
+        }
+        catch(ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+    @Test
+    public void testCheckExists() {
+        try{
+            BrandForm brandForm = create("new","cat");
+            brandDto.add(brandForm);
+            List<BrandForm> brandFormList = new ArrayList<>();
+            brandFormList.add(create("new","cat"));
+            brandFormList.add(create("new1","cat1"));
+            brandDto.uploadList(brandFormList);
+        }
+        catch(ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+    @Test
+    public void testValidUpload() {
+        try{
+            List<BrandForm> brandFormList = new ArrayList<>();
+            brandFormList.add(create("","cat"));
+            brandFormList.add(create("new1",""));
+            brandDto.uploadList(brandFormList);
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
 
     private BrandForm create(String brand,String category){
         BrandForm brandForm = new BrandForm();

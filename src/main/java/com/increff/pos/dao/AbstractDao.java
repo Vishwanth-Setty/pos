@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -46,10 +47,10 @@ public abstract class AbstractDao<T> {
 
         TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
 
-        return typedQuery.getResultList().stream().findFirst().orElse(null);
+        return singleResult(typedQuery);
     }
 
-    public <Z> T selectOneByMethod(String method, Z value) {
+    public <Z> T selectByMethod(String method, Z value) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
         Root<T> root = criteriaQuery.from(clazz);
@@ -57,10 +58,10 @@ public abstract class AbstractDao<T> {
         criteriaQuery.select(root);
 
         TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
-        return typedQuery.getResultList().stream().findFirst().orElse(null);
+        return singleResult(typedQuery);
 
     }
-    public <Z> List<T> selectByMethod(String method, Z value) {
+    public <Z> List<T> selectMultipleByMethod(String method, Z value) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(clazz);
         Root<T> root = criteriaQuery.from(clazz);
@@ -74,6 +75,15 @@ public abstract class AbstractDao<T> {
 
     protected TypedQuery<T> getQuery(String jpql) {
         return em.createQuery(jpql, clazz);
+    }
+
+    private T singleResult(TypedQuery<T> typedQuery){
+        try{
+            return typedQuery.getSingleResult();
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
 }

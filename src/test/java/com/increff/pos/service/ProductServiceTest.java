@@ -31,7 +31,7 @@ public class ProductServiceTest extends AbstractUnitTest {
             productService.add(productPojo);
 
         } catch (ApiException apiException) {
-            assertEquals("Barcode exists",apiException.getMessage());
+            assertEquals("Barcode already exists",apiException.getMessage());
         }
     }
 

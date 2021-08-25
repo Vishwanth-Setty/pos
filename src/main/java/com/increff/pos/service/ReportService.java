@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -32,39 +30,38 @@ public class ReportService extends AbstractApi {
     @Autowired
     OrderService orderService;
 
-    public List<SalesReportData> getSalesReport(ReportForm reportForm) throws ApiException {
+    public List<SalesReportData> getSalesReport(ReportForm reportForm,List<BrandPojo> brandPojoList,
+                                                List<ProductPojo> productPojoList,
+                                                List<OrderItemPojo> orderItemPojoList) throws ApiException {
+
         checkValid(reportForm);
 
-        LocalDate localDate = LocalDate.of(2019, 03, 12);
-        LocalTime localTime = LocalTime.of(12,  44);
-        ZoneId zoneId = ZoneId.of("GMT+05:30");
         ZonedDateTime startDate = convert((reportForm.getStartDate().split("/")),"start");
         ZonedDateTime endDate = convert(reportForm.getEndDate().split("/"),"end");
         if(startDate.isAfter(endDate)){
             throw new ApiException("Invalid date range selected");
         }
-        ZonedDateTime timeStamp = ZonedDateTime.of( localDate, localTime, zoneId );
 
-        List<BrandPojo> brandPojoList = brandService.getAllBrands();
+//        List<BrandPojo> brandPojoList = brandService.getAllBrands();
         HashMap<Integer,String> brandIdToNameAndCategory=new HashMap<>();
         brandListToMap(brandPojoList,brandIdToNameAndCategory);
 
         String filterBrand = reportForm.getBrand();
         String filterCategory =  reportForm.getCategory();
 
-        List<ProductPojo> productPojoList = productService.getAll();
+//        List<ProductPojo> productPojoList = productService.getAll();
         HashMap<Integer,String> mapProductIdWithBrand=new HashMap<Integer,String>();
         productListToMap(productPojoList,mapProductIdWithBrand,brandIdToNameAndCategory);
 
-        List<OrderPojo> orderPojoList = orderService.getAllInvoiceGeneratedOrder(true);
-        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
-        for(OrderPojo orderPojo:orderPojoList){
-            orderItemPojoList.addAll(orderService.getById(orderPojo.getId()));
-        }
+//        List<OrderPojo> orderPojoList = orderService.getAllInvoiceGeneratedOrder(true);
+//        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+//        for(OrderPojo orderPojo:orderPojoList){
+//            orderItemPojoList.addAll(orderService.getById(orderPojo.getId()));
+//        }
 
         HashMap<String,List<OrderItemPojo>> uniqueCategories = new HashMap<>();
         for(OrderItemPojo orderItemPojo:orderItemPojoList){
-            OrderPojo orderPojo = orderService.getOnlyOrderById(orderItemPojo.getOrderId());
+//            OrderPojo orderPojo = orderService.getOnlyOrderById(orderItemPojo.getOrderId());
             String brandAndCategory = mapProductIdWithBrand.get(orderItemPojo.getProductId());
             String brand = brandAndCategory.split("#")[0];
             String category = brandAndCategory.split("#")[1];
@@ -78,9 +75,9 @@ public class ReportService extends AbstractApi {
                     continue;
                 }
             }
-            if(!(startDate.isBefore(orderPojo.getOrderTime()) && endDate.isAfter(orderPojo.getOrderTime()))){
-                continue;
-            }
+//            if(!(startDate.isBefore(orderPojo.getOrderTime()) && endDate.isAfter(orderPojo.getOrderTime()))){
+//                continue;
+//            }
 
             if(!uniqueCategories.containsKey(category)){
                 List<OrderItemPojo> tempOrderItemPojoList = new ArrayList<>();

@@ -16,8 +16,6 @@ public class InventoryDao extends AbstractDao<InventoryPojo> {
     @PersistenceContext
     private EntityManager em;
 
-    private static String select_id = "select p from InventoryPojo p where productId=:id";
-
     InventoryDao() {
         super(InventoryPojo.class);
     }

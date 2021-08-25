@@ -17,8 +17,8 @@ public class ProductService extends AbstractApi {
     private ProductDao productDao;
 
     public ProductPojo add(ProductPojo productPojo) throws ApiException {
-        ProductPojo exists = productDao.selectOneByMethod("barcode",productPojo.getBarcode());
-        checkNull(exists,"Barcode exists");
+        ProductPojo exists = productDao.selectByMethod("barcode",productPojo.getBarcode());
+        checkNull(exists,"Barcode already exists");
         return productDao.persist(productPojo);
     }
 
@@ -27,7 +27,7 @@ public class ProductService extends AbstractApi {
     }
 
     public ProductPojo getByBarcode(String barcode) {
-        return productDao.selectOneByMethod("barcode",barcode);
+        return productDao.selectByMethod("barcode",barcode);
     }
 
     public List<ProductPojo> getAll() {
@@ -35,12 +35,12 @@ public class ProductService extends AbstractApi {
     }
 
     public List<ProductPojo> getByBrandId(int brandId){
-        return productDao.selectByMethod("brandId",brandId);
+        return productDao.selectMultipleByMethod("brandId",brandId);
     }
 
     public void update(ProductPojo newProductPojo, int id) throws ApiException {
         ProductPojo oldProductPojo = productDao.select(id);
-        checkNotNull(oldProductPojo,"Invalid Product Id");
+        checkNotNull(oldProductPojo,"Product Id doesn't exists");
         oldProductPojo.setBarcode(newProductPojo.getBarcode());
         oldProductPojo.setBrandId(newProductPojo.getBrandId());
         oldProductPojo.setName(newProductPojo.getName());

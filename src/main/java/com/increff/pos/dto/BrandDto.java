@@ -72,11 +72,13 @@ public class BrandDto extends AbstractApi {
 
         errorMessage = checkDuplicateRecords(brandFormList);
         if (!errorMessage.equals("")) {
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
             return "Duplicate records exists for brand-category: [ " + errorMessage + " ]" ;
         }
 
         errorMessage = checkExists(brandFormList);
         if (!errorMessage.equals("")) {
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
             return "Brand-Category already exists [" + errorMessage +" ]";
         }
 
@@ -93,7 +95,7 @@ public class BrandDto extends AbstractApi {
             String key = brand + '#' + category;
 
             if (hash_Set.contains(key)) {
-                errors.append("").append(brand).append(":").append(category).append(", ");
+                errors.append(brand).append(":").append(category).append(", ");
             }
 
             hash_Set.add(key);
@@ -114,7 +116,7 @@ public class BrandDto extends AbstractApi {
             String category = brandForm.getCategory();
             String key = brand+'#'+category;
             if (brandAndCategory.contains(key)) {
-                errors.append(" ").append(brand).append(":").append(category).append(", ");
+                errors.append(brand).append(":").append(category).append(", ");
             }
         }
         return errors.toString();

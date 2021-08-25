@@ -146,6 +146,10 @@ function addProductToTable(e) {
         url: url,
         type: "GET",
         success: function (response) {
+            if(checkData(response.barcode,"#new-item-table")){
+                toast("Cannot enter same barcode twice", 'WARN');
+                return false;
+            }
             product["barcode"] = response.barcode
             product["quantity"] = $('#addQuantity').val()
             product["sellingPrice"] = $('#addSellingPrice').val()
@@ -157,8 +161,11 @@ function addProductToTable(e) {
             toast("Invalid Barcode", 'WARN');
         },
     });
+    return ;
 
 }
+
+
 
 async function addProductToTableToUpdateOrderItem(e) {
     e.preventDefault();
@@ -169,6 +176,10 @@ async function addProductToTableToUpdateOrderItem(e) {
         type: "GET",
         success: function (validProduct) {
             product = {};
+            if(checkData(validProduct.barcode,"#order-item-table")){
+                toast("Cannot enter same barcode twice", 'WARN');
+                return false;
+            }
             product["orderItemId"] = 0
             product["barcode"] = validProduct.barcode
             product["quantity"] = $('#addItemQuantityToUpdate').val()
@@ -182,6 +193,22 @@ async function addProductToTableToUpdateOrderItem(e) {
             toast("Invalid Barcode", 'WARN');
         },
     });
+    return ;
+}
+
+function checkData(barcode,tableId){
+    var dataTable = $(tableId).DataTable()
+    addOrderItems = [];
+    for (let i = 0; i < dataTable.rows().data().length; i++) {
+        addOrderItems.push(dataTable.rows().data()[i]);
+    }
+    for(items of addOrderItems){
+        if(barcode == items.barcode){
+            return true;
+        }
+        
+    }
+    return false;
 }
 
 function editOrderItem(barcode, quantity, sellingPrice) {

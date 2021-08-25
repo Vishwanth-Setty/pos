@@ -53,7 +53,7 @@ public class InventoryDto extends AbstractApi {
         ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
         checkNotNull(productPojo,"Invalid barcode");
         CommonUtils.normalize(inventoryForm);
-        InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());                     //see this as case
+        InventoryPojo inventoryPojo = ConvertUtil.convert(inventoryForm,productPojo.getId());
         inventoryService.update(inventoryPojo);
     }
 
@@ -79,10 +79,12 @@ public class InventoryDto extends AbstractApi {
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(inventoryFormList);
         if(!errorMessage.equals("")){
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
             return "Duplicate records exists for barcode [ "+errorMessage + " ]";
         }
         errorMessage = checkBarcode(inventoryFormList);
         if(!errorMessage.equals("")){
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
             return "Invalid Barcodes [ "+errorMessage+" ]";
         }
         return "";

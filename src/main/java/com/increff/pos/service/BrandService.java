@@ -35,14 +35,14 @@ public class BrandService extends AbstractApi {
         return dao.selectByNameAndCategory(brand, category);
     }
 
-    public void updateBrand(BrandPojo p, int id) throws ApiException {
+    public void updateBrand(BrandPojo updatedBrandPojo, int id) throws ApiException {
         BrandPojo brandPojo = getBrandById(id);
-        checkNotNull(brandPojo, "Invalid Brand Id");
+        checkNotNull(brandPojo, "Invalid brand and category");
 
-        BrandPojo checkBrandPojo = dao.selectByNameAndCategory(p.getBrand(), p.getCategory());
+        BrandPojo checkBrandPojo = dao.selectByNameAndCategory(updatedBrandPojo.getBrand(), updatedBrandPojo.getCategory());
         checkNull(checkBrandPojo, "Brand and Category already exists");
 
-        brandPojo.setBrand(p.getBrand());
-        brandPojo.setCategory(p.getCategory());
+        brandPojo.setBrand(updatedBrandPojo.getBrand());
+        brandPojo.setCategory(updatedBrandPojo.getCategory());
     }
 }

@@ -59,7 +59,7 @@ public class OrderDto {
     }
     public void update(OrderForm orderForm) throws ApiException {
         if(orderService.isInvoiceGenerated(orderForm.getId())){
-            throw new ApiException("Invoice already generated");
+            throw new ApiException("Cannot edit for invoiced order");
         }
         checkDuplicatesRecords(orderForm.getOrderItemList());
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();

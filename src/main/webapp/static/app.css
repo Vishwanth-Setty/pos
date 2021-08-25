@@ -16,6 +16,9 @@ body {
 	max-width: none;
 	
 }
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+	background-color: rgb(226 243 248);
+ }
 .toast{
 	opacity:0;
 	position: fixed;
@@ -29,6 +32,9 @@ body {
 }
 .toast-body{
 	padding: 25px;
+	min-width: 12vw;
+	max-width: 25vw;
+	text-align: center;
 }
 
 .footer {
@@ -131,7 +137,7 @@ body {
     height: 45px;
     font-size: 20px;
 	color:rgb(83, 83, 83);
-	border:2px solid #0069d9;
+	border:2px solid #0099c8;
 	background-color: whitesmoke;
 	transition: 0.5s;
 	padding-left: 10px;
@@ -141,8 +147,8 @@ body {
     height: 45px;
     font-size: 20px;
 	color:whitesmoke;
-	border:2px solid #0069d9;
-	background-color: 0069d9;
+	border:2px solid #0099c8;
+	background-color: #0099c8;
 }
 .text-btn-align{
 	margin-top:7px;
@@ -179,7 +185,7 @@ hr {
     height: 45px;
     font-size: 20px;
 	color:rgb(83, 83, 83);
-	border:2px solid #0069d9;
+	border:2px solid #0099c8;
 	background-color: whitesmoke;
 	transition: 0.5s;
 }
@@ -188,8 +194,8 @@ hr {
     height: 45px;
     font-size: 20px;
 	color:whitesmoke;
-	border:2px solid #0069d9;
-	background-color: 0069d9;
+	border:2px solid #0099c8;
+	background-color: #0099c8;
 }
 
 div.card {

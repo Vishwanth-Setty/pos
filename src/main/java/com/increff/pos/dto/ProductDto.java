@@ -64,7 +64,7 @@ public class ProductDto extends AbstractApi {
         checkValid(productForm);
         CommonUtils.normalize(productForm);
         BrandPojo brandPojo = brandService.getBrandByNameAndCategory(productForm.getBrand(), productForm.getCategory());
-        checkNotNull(brandPojo, "Invalid Brand and Category");
+        checkNotNull(brandPojo, "Brand Id doesn't exists");
         ProductPojo productPojo = ConvertUtil.convert(productForm, brandPojo.getId());
         productService.update(productPojo, id);
     }
@@ -89,15 +89,18 @@ public class ProductDto extends AbstractApi {
         String errorMessage = "";
         errorMessage = checkDuplicatesRecords(productFormList);
         if (!errorMessage.equals("")) {
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
             return "Duplicate records exists for barcode [ " + errorMessage + " ]";
         }
         errorMessage = checkBrandAndCategory(productFormList);
         if (!errorMessage.equals("")) {
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
             return "Invalid brand and category combinations for brand-category: [ " + errorMessage + " ]";
         }
         errorMessage = checkExists(productFormList);
         if (!errorMessage.equals("")) {
-            return "Barcode already exists [ " + errorMessage +" ]";
+            errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
+            return "Barcode already exists [ " + errorMessage + " ]";
         }
         return "";
     }
@@ -124,12 +127,12 @@ public class ProductDto extends AbstractApi {
             ++i;
             Set<String> brandAndCategory = new HashSet<>();
             List<BrandPojo> brandPojoList = brandService.getAllBrands();
-            brandPojoList.forEach(value->{
-                brandAndCategory.add(value.getBrand()+'#'+value.getCategory());
+            brandPojoList.forEach(value -> {
+                brandAndCategory.add(value.getBrand() + '#' + value.getCategory());
             });
             String brand = productForm.getBrand();
             String category = productForm.getCategory();
-            String key = brand+'#'+category;
+            String key = brand + '#' + category;
 
             String barcode = productForm.getBarcode();
 
@@ -141,7 +144,7 @@ public class ProductDto extends AbstractApi {
     }
 
     @Transactional
-    public String checkExists(List<ProductForm> productFormList){
+    public String checkExists(List<ProductForm> productFormList) {
         StringBuilder errorMessage = new StringBuilder();
         int i = 1;
         List<ProductPojo> productPojoList = productService.getAll();
@@ -149,7 +152,7 @@ public class ProductDto extends AbstractApi {
         productPojoList.forEach(productPojo -> {
             barcodes.add(productPojo.getBarcode());
         });
-        for(ProductForm productForm: productFormList){
+        for (ProductForm productForm : productFormList) {
             ++i;
             String barcode = productForm.getBarcode();
             if (barcodes.contains(barcode)) {

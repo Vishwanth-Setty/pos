@@ -68,19 +68,67 @@ public class InventoryDtoTest extends AbstractUnitTest {
         inventoryPojo = inventoryService.getById(productPojo.getId());
         assertEquals(inventoryPojo.getQuantity().intValue(),110);
     }
+
+    @Test
     public void testUpload() throws ApiException {
         createProduct("1q2w3e","new","cat","product1",100.00);
-        createProduct("1q2w3r","new","cat","product1",100.00);
 
         List<InventoryForm> inventoryFormList = new ArrayList<>();
         inventoryFormList.add(createForm("1q2w3e",110));
-        inventoryFormList.add(createForm("1q2w3r",110));
         inventoryDto.upload(inventoryFormList);
         List<InventoryData> inventoryDataList = inventoryDto.getAll();
 
-        assertEquals(inventoryDataList.size(),2);
+        assertEquals(inventoryDataList.size(),1);
+    }
+    @Test
+    public void testUploadAndUpdate() throws ApiException {
+        createProduct("1q2w3e","new","cat","product1",100.00);
+        InventoryForm inventoryForm = createForm("1q2w3e",100);
+        inventoryDto.add(inventoryForm);
+        List<InventoryForm> inventoryFormList = new ArrayList<>();
+        inventoryFormList.add(createForm("1q2w3e",120));
+        inventoryDto.upload(inventoryFormList);
+        List<InventoryData> inventoryDataList = inventoryDto.getAll();
+
+        assertEquals(inventoryDataList.size(),1);
     }
 
+    @Test
+    public void testCheckDuplicatesRecords() throws ApiException {
+        try{
+
+            createProduct("1q2w3e","new","cat","product1",100.00);
+
+            List<InventoryForm> inventoryFormList = new ArrayList<>();
+            inventoryFormList.add(createForm("1q2w3e",110));
+            inventoryFormList.add(createForm("1q2w3e",120));
+
+            inventoryDto.upload(inventoryFormList);
+            List<InventoryData> inventoryDataList = inventoryDto.getAll();
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testCheckBarcode() throws ApiException {
+        try{
+
+            createProduct("1q2w3e","new","cat","product1",100.00);
+
+            List<InventoryForm> inventoryFormList = new ArrayList<>();
+            inventoryFormList.add(createForm("1q2w3e",110));
+            inventoryFormList.add(createForm("1q2w4e",120));
+
+            inventoryDto.upload(inventoryFormList);
+            List<InventoryData> inventoryDataList = inventoryDto.getAll();
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
 
     private BrandPojo createBrand(String brand, String category) throws ApiException {
         BrandPojo brandPojo = new BrandPojo();

@@ -113,6 +113,62 @@ public class OrderDtoTest extends AbstractUnitTest {
 
     }
 
+    @Test
+    public void testUpdateWithInvoice() throws ApiException {
+        try {
+
+            ProductPojo productPojo = createProduct("1q2w3e", "new", "cat", "product1", 100.00);
+            InventoryPojo inventoryPojo = createInventory(productPojo.getId(), 100);
+            List<OrderItemForm> orderItemFormList = new ArrayList<>();
+            orderItemFormList.add(createOrderItemForm(null, null, productPojo.getBarcode(),
+                    10, 10.00));
+            OrderForm orderForm = createOrderForm(null, orderItemFormList);
+            OrderData orderData = orderDto.add(orderForm);
+            orderDto.generateInvoice(orderData.getOrderId());
+            List<OrderItemData> orderItemDataList = orderDto.getById(orderData.getOrderId());
+            orderItemFormList = new ArrayList<>();
+            orderItemFormList.add(createOrderItemForm(orderItemDataList.get(0).getOrderItemId(), orderItemDataList.get(0).getOrderId(),
+                    productPojo.getBarcode(), 10, 99.00));
+            orderForm.setId(orderData.getOrderId());
+            orderForm.setOrderItemList(orderItemFormList);
+            orderDto.update(orderForm);
+            orderItemDataList = orderDto.getById(orderData.getOrderId());
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateWithDuplicates() throws ApiException {
+        try {
+
+            ProductPojo productPojo = createProduct("1q2w3e", "new", "cat", "product1", 100.00);
+            InventoryPojo inventoryPojo = createInventory(productPojo.getId(), 100);
+            List<OrderItemForm> orderItemFormList = new ArrayList<>();
+            orderItemFormList.add(createOrderItemForm(null, null, productPojo.getBarcode(),
+                    10, 10.00));
+            OrderForm orderForm = createOrderForm(null, orderItemFormList);
+            OrderData orderData = orderDto.add(orderForm);
+            List<OrderItemData> orderItemDataList = orderDto.getById(orderData.getOrderId());
+            orderItemFormList = new ArrayList<>();
+            orderItemFormList.add(createOrderItemForm(orderItemDataList.get(0).getOrderItemId(), orderItemDataList.get(0).getOrderId(),
+                    productPojo.getBarcode(), 10, 99.00));
+            orderItemFormList.add(createOrderItemForm(orderItemDataList.get(0).getOrderItemId(), orderItemDataList.get(0).getOrderId(),
+                    productPojo.getBarcode(), 10, 99.00));
+
+            orderForm.setId(orderData.getOrderId());
+            orderForm.setOrderItemList(orderItemFormList);
+            orderDto.update(orderForm);
+            orderItemDataList = orderDto.getById(orderData.getOrderId());
+        }
+        catch (ApiException apiException){
+            assertNotEquals("",apiException.getMessage());
+        }
+    }
+
+
+
     private BrandPojo createBrand(String brand, String category) throws ApiException {
         BrandPojo brandPojo = new BrandPojo();
         brandPojo.setBrand(brand);

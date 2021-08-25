@@ -3,15 +3,15 @@ function toast(message,type){
     $('.toast-body').text(message)
     switch (type){
         case 'INFO':
-            $('#toast').css({"background": "#9affa2", "opacity": "1"});
+            $('#toast').css({"background": "#9affa2", "opacity": "1","color": "black"});
             $('#toast').css('opacity', '1');
-            setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0"})}, 3000);
+            setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0","color": "black"})}, 3000);
             break;
         case 'WARN':
             $('#toast').css({"background": "#e65e3f", "opacity": "1", "color": "white"});
             break;
         default :
-            $('#toast').css({"background": "#9affa2", "opacity": "1"});
+            $('#toast').css({"background": "#9affa2", "opacity": "1","color": "black"});
             $('#toast').css('opacity', '1');
             setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0", "color": "black"})}, 3000);
             break;
