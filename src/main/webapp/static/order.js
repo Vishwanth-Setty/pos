@@ -2,6 +2,16 @@ let orderItems = [];
 let order = {};
 let addOrderItems = [];
 var editor;
+var editToggle = 0;
+var prevState = {};
+
+function toggleEdit() {
+    if (editToggle) {
+        editToggle = 0;
+    } else {
+        editToggle = 1;
+    }
+}
 
 function displayOrderData(inventories) {
     var $tbody = $('#order-table').find('tbody');
@@ -28,7 +38,8 @@ function displayEditOrderItemData(editOrderData) {
         var orderItem = editOrderData[i];
         dataTable.row.add(orderItem).draw(false);
     }
-
+    console.log(dataTable.rows().data())
+    dataTable.column(-3).visible(false);
 }
 
 function addOrder() {
@@ -36,6 +47,10 @@ function addOrder() {
     addOrderItems = [];
     for (let i = 0; i < dataTable.rows().data().length; i++) {
         addOrderItems.push(dataTable.rows().data()[i]);
+    }
+    if(addOrderItems.length == 0){
+        toast("Cannot create order with 0(zero) items", 'WARN');
+        return;
     }
     order["orderItemList"] = addOrderItems;
     var json = JSON.stringify(order);
@@ -64,15 +79,16 @@ function addOrder() {
 }
 
 async function editOrder(id, quantity) {
-    $('#editModal').modal('show');
     let url = getOrderUrl();
     $('#orderId').val(id);
-    $('#editOrder').trigger('reset');
+    $('#editOrderAddProduct').trigger('reset');
     $.ajax({
         url: url + '/' + id,
         type: 'GET',
         success: function (response) {
             orderItems = response;
+            $('#editModal').modal('show');
+            $('#orderIdInEdit').html(id);
             displayEditOrderItemData(orderItems);
         },
         error: function (error) {
@@ -146,7 +162,7 @@ function addProductToTable(e) {
         url: url,
         type: "GET",
         success: function (response) {
-            if(checkData(response.barcode,"#new-item-table")){
+            if (checkData(response.barcode, "#new-item-table")) {
                 toast("Cannot enter same barcode twice", 'WARN');
                 return false;
             }
@@ -161,7 +177,7 @@ function addProductToTable(e) {
             toast("Invalid Barcode", 'WARN');
         },
     });
-    return ;
+    return;
 
 }
 
@@ -176,7 +192,7 @@ async function addProductToTableToUpdateOrderItem(e) {
         type: "GET",
         success: function (validProduct) {
             product = {};
-            if(checkData(validProduct.barcode,"#order-item-table")){
+            if (checkData(validProduct.barcode, "#order-item-table")) {
                 toast("Cannot enter same barcode twice", 'WARN');
                 return false;
             }
@@ -193,20 +209,20 @@ async function addProductToTableToUpdateOrderItem(e) {
             toast("Invalid Barcode", 'WARN');
         },
     });
-    return ;
+    return;
 }
 
-function checkData(barcode,tableId){
+function checkData(barcode, tableId) {
     var dataTable = $(tableId).DataTable()
     addOrderItems = [];
     for (let i = 0; i < dataTable.rows().data().length; i++) {
         addOrderItems.push(dataTable.rows().data()[i]);
     }
-    for(items of addOrderItems){
-        if(barcode == items.barcode){
+    for (items of addOrderItems) {
+        if (barcode == items.barcode) {
             return true;
         }
-        
+
     }
     return false;
 }
@@ -255,15 +271,56 @@ $('#new-order-table tbody').on('click', 'tr', function () {
     }
 });
 
+// Disbale button
+$(function () {
+    $('form > input').keyup(function () {
+
+        var empty = false;
+        $('form > input').each(function () {
+            console.log($(this).val());
+            if ($(this).val() == '') {
+                empty = true;
+            }
+        });
+
+        if (empty) {
+            $('#addProductToUpdateOrder').attr('disabled', 'disabled');
+        } else {
+            $('#addProductToUpdateOrder').removeAttr('disabled');
+        }
+    });
+});
+
 $('#new-order-table').on('click', 'tbody td.row-remove', function (e) {
     var dataTable = $("#new-order-table").DataTable();
     dataTable.row('.selected').remove().draw(false);
 });
 
+$('#order-item-table').on('click', 'tbody td.toggle-edit', function (e) {
+    var dataTable = $("#order-item-table").DataTable();
+    console.log($(this))
+    if ($(this).closest('tr').hasClass('editable')) {
+        $(this).closest('tr').removeClass('editable');
+        $(this).closest('tr').find('.toggle-submit').css('visibility', 'collapse');
+        $(this).closest('tr').find('.toggle-e').css('visibility', 'visible');
+        $(this).closest('tr').find('input').prop("disabled", true);
+
+    } else {
+        dataTable.$('tr.editable').removeClass('editable');
+        $(this).closest('tr').addClass('editable');
+        $(this).closest('tr').find('.toggle-submit').css('visibility', 'visible');
+        $(this).closest('tr').find('.toggle-e').css('visibility', 'collapse');
+        $(this).closest('tr').find('input').prop("disabled", false);
+    }
+});
 
 //GenerateInvoice
-function generateInvoice() {
+function generateInvoice(getOrderId) {
     orderId = parseInt($('#orderIdForInvoice').val());
+    console.log(orderId);
+    if(Number.isInteger(getOrderId)){
+        orderId = getOrderId;
+    }
     var url = getOrderUrl() + "/invoice/" + orderId;
     $.ajax({
         url: url,
@@ -294,8 +351,27 @@ function openModal() {
 }
 
 function openModalForInvoice(orderId) {
-    $('#orderIdForInvoice').val(orderId);
-    $('#downloadInvoiceModal').modal('show');
+    let url = getOrderUrl();
+    let orders;
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (response) {
+            orders = response;
+            console.log(response);
+            for (order of response) {
+                if (order.orderId == orderId && !order.invoiceGenerated) {
+                    $('#orderIdForInvoice').val(orderId);
+                    $('#downloadInvoiceModal').modal('show');
+                    displayOrderData(orders);
+                }
+            }
+        },
+        error: function (error) {
+            toast("Could not Retrive Information", 'WARN');
+        }
+    });
+
 }
 
 function init() {
@@ -305,7 +381,7 @@ function init() {
     $('#createOrder').submit(addProductToTable);
     $('#editItemSubmit').click(changeEditOrderItemData);
     $('#editOrder').submit(updateOrder);
-    $('#addProductToUpdateOrder').click(addProductToTableToUpdateOrderItem);
+    $('#editOrderAddProduct').submit(addProductToTableToUpdateOrderItem);
     $('#downloadInvoice').click(generateInvoice);
     $('#editOrderItemBlock').hide()
 
@@ -325,16 +401,21 @@ function init() {
                 mData: null,
                 bSortable: false,
                 mRender: function (o) {
-                    var html = '<span class="invoice" onclick="openModalForInvoice(' +
-                        o.orderId +
-                        ')"><span data-toggle="tooltip" data-placement="top" title="Generate Invoice" class="material-icons md-24">receipt</span></span>'
+                    var html = '';
                     if (!o.invoiceGenerated) {
-                        html += '<span id="editButton" onclick="editOrder(' +
+                        html += '<span class="invoice"><span data-toggle="tooltip" onclick="openModalForInvoice(' +
+                            o.orderId +
+                            ')" data-placement="top" title="Generate Invoice" class="material-icons md-24">receipt</span></span>' +
+
+                            '<span id="editButton" onclick="editOrder(' +
                             o.orderId +
                             ')"><span data-toggle="tooltip" data-placement="top" title="Edit Order" class="material-icons md-24">edit</span></span>'
 
                     } else {
-                        html += '<span id="editButton"style="color:#c3c3c3;"><span  class="disable-edit material-icons md-24">edit</span></span>'
+                        html += '<span class="invoice"><span data-toggle="tooltip" data-placement="top" title="Generate Invoice" onclick="generateInvoice('+
+                        o.orderId
+                        +')" class="material-icons md-24">receipt</span></span>' +
+                            '<span id="editButton"style="color:#c3c3c3;"><span class="disable-edit material-icons md-24">edit</span></span>'
                     }
                     return html;
                 },
@@ -392,7 +473,7 @@ function init() {
             {
                 data: "quantity",
                 render: function (data, type, row) {
-                    return '<input class="form-control" style="height:20px;border:none;background:none;" type="text" pattern="^[0-9]\\d*$"title="Enter Only Non Negetive Integers"  id="Q' +
+                    return '<input disabled class="form-control" style="height:20px;border:none;background:none;" type="text" pattern="^[0-9]\\d*$"title="Enter Only Non Negetive Integers"  id="Q' +
                         row.orderItemId + row.barcode + '" value="' + data + '"/>'
                 },
             },
@@ -402,8 +483,19 @@ function init() {
             {
                 data: "sellingPrice",
                 render: function (data, type, row) {
-                    return '<input class="form-control" style="height:20px;border:none;background:none;" type="text" pattern="^(?:[1-9]\\d*|0)?(?:\\.\\d+)?$" title="Enter Valid positive number." id="S' +
+                    return '<input disabled  class="form-control" style="height:20px;border:none;background:none;" type="text" pattern="^(?:[1-9]\\d*|0)?(?:\\.\\d+)?$" title="Enter Valid positive number." id="S' +
                         row.orderItemId + row.barcode + '" value="' + data + '"/>'
+                },
+            },
+            {
+                mData: null,
+                bSortable: false,
+                className: 'toggle-edit',
+                mRender: function (o) {
+                    return (
+                        '<span><span data-toggle="tooltip" data-placement="top" title="Edit" onclick="toggleEdit()" class="material-icons md-24 toggle-e">edit</span></span>' +
+                        '<span><span data-toggle="tooltip" data-placement="top" title="Submit" class="material-icons md-24 toggle-submit">done</span></span>'
+                    );
                 },
             },
         ],
@@ -413,3 +505,33 @@ function init() {
 
 $(document).ready(init);
 $(document).ready(getOrders);
+$(document).ready(
+    (function () {
+        $('#editOrderAddProduct :input').keyup(function () {
+            var empty = true;
+            if ($('#addItemBarcodeToUpdate').val() != '' && $('#addItemQuantityToUpdate').val() != '' && $('#addItemSellingPriceToUpdate').val() != '') {
+                empty = false;
+            }
+            if (empty) {
+                $('#addProductToUpdateOrder').attr('disabled', 'disabled');
+            } else {
+                $('#addProductToUpdateOrder').removeAttr('disabled');
+            }
+        });
+    })
+);
+$(document).ready(
+    (function () {
+        $('#createOrder :input').keyup(function () {
+            var empty = true;
+            if ($('#addBarcode').val() != '' && $('#addQuantity').val() != '' && $('#addSellingPrice').val() != '') {
+                empty = false;
+            }
+            if (empty) {
+                $('#addProduct').attr('disabled', 'disabled');
+            } else {
+                $('#addProduct').removeAttr('disabled');
+            }
+        });
+    })
+);

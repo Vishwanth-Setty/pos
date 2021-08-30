@@ -30,19 +30,22 @@
         <div class="modal fade" id="downloadInvoiceModal" tabindex="-1" data-keyboard="false" data-backdrop="static"
             role="dialog" aria-labelledby="downloadInvoiceModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title" id="downloadInvoiceModalLabel">Download Invoice</h2>
+                <div class="modal-content text-center">
+                    <div class="modal-header" style="background-color: #ee4141;">
+                        <h2 class="modal-title" id="downloadInvoiceModalLabel" style="padding-left: 110px;color:white">Generate Invoice</h2>
                     </div>
                     <div class="modal-body">
                         <form>
                             <input type="hidden" id="orderIdForInvoice" />
-                            <p style="font-size: 20px;">Once Invoice is Downloaded you can't edit the Order</p>
-                            <div class="modal-footer" style="padding-bottom: 0px;">
-                                <button type="button" class="btn btn-primary" id="downloadInvoice">Download</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
+                            <p style="font-size: 20px;margin-bottom:-35px;">Once Invoice is generated you can't edit the order</p>
                         </form>
+                    </div>
+                    <div class="">
+                        <hr />
+                        <div class="row justify-content-around" style="padding:10px">
+                            <button type="button" class="btn btn-primary btn-lg col-auto" id="downloadInvoice" style="margin-left: 100px;">Confirm</button>
+                            <button type="button" class="btn btn-primary btn-lg col-auto" data-dismiss="modal" style="margin-right: 100px;">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,9 +60,17 @@
 
                     </div>
                     <div class="modal-body">
-                        <form id="editOrder">
-                            <div class="row">
-                                <div class="col">
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-auto">
+                                <h3>Order Id : </h3>
+                            </div>
+                            <div class="col-auto">
+                                <p id="orderIdInEdit" style="font-size:24px ;"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <form id="editOrderAddProduct">
                                     <h4>Add Item</h4>
                                     <hr />
                                     <input type="hidden" id="orderId" name="orderId" />
@@ -70,9 +81,8 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-3 text-btn-align">Quantity </label>
-                                        <input class="form-control col-7" name="quantity"
-                                            id="addItemQuantityToUpdate" type="text" pattern="^[0-9]\d*$"
-                                            title="Enter Only Non Negetive Integers">
+                                        <input class="form-control col-7" name="quantity" id="addItemQuantityToUpdate"
+                                            type="text" pattern="^[0-9]\d*$" title="Enter Only Non Negetive Integers">
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-3 text-btn-align">Selling price </label>
@@ -81,12 +91,14 @@
                                             pattern="^(?:[1-9]\d*|0)?(?:\.\d+)?$" title="Enter Valid positive number.">
                                     </div>
                                     <div class="row justify-content-center">
-                                        <button type="button" class="btn btn-primary col-4" style="margin-left: 90px;"
-                                            id="addProductToUpdateOrder">Add Product</button>
+                                        <button disabled="disabled" type="submit" class="btn btn-primary col-4"
+                                            style="margin-left: 90px;" id="addProductToUpdateOrder">Add Product</button>
                                     </div>
-                                </div>
+                                </form>
                             </div>
-                            <hr />
+                        </div>
+                        <hr />
+                        <form id="editOrder">
                             <div class="row">
                                 <div class="col">
                                     <h4>Order Items</h4>
@@ -99,7 +111,7 @@
                                                 <th scope="col">Quantity</th>
                                                 <th scope="col">OrderId</th>
                                                 <th scope="col">Selling Price</th>
-                                                <!-- <th scope="col">Actions</th> -->
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -148,7 +160,8 @@
                                             title="Enter Valid positive number." />
                                     </div>
                                     <div class="row justify-content-center" style="float: none;margin: 0 auto;">
-                                        <button type="submit" class="btn btn-primary " id="addProduct">Add
+                                        <button disabled="disabled" type="submit" class="btn btn-primary "
+                                            id="addProduct">Add
                                             Product</button>
                                     </div>
                                 </form>

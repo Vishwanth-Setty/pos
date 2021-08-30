@@ -38,6 +38,9 @@ public class InvoiceHelper {
         List<OrderItemData> orderItemDataList = orderDto.getById(orderId);
         List<OrderItemXml> orderItemXmlList = new ArrayList<>();
         for(OrderItemData orderItemData: orderItemDataList){
+            if(orderItemData.getQuantity()<=0){
+                continue;
+            }
             ProductPojo productPojo = productService.getByBarcode(orderItemData.getBarcode());
             OrderItemXml orderItemXml = ConvertUtil.covert(orderItemData,productPojo.getMrp());
             orderItemXmlList.add(orderItemXml);

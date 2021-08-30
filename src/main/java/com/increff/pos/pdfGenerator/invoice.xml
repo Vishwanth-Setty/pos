@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OrderItemData>
     <OrderItem>
-        <barcode>1q2w3e</barcode>
-        <mrp>100.0</mrp>
-        <perUnitSellingPrice>10.0</perUnitSellingPrice>
-        <quantity>10</quantity>
-        <totalSellingPrice>100.0</totalSellingPrice>
+        <barcode>1e3et34</barcode>
+        <mrp>120.0</mrp>
+        <perUnitSellingPrice>110.0</perUnitSellingPrice>
+        <quantity>88</quantity>
+        <totalSellingPrice>9680.0</totalSellingPrice>
     </OrderItem>
-    <date>25/08/2021 16:09</date>
-    <orderId>1021</orderId>
-    <totalQuantity>10</totalQuantity>
-    <totalAmount>100.0</totalAmount>
+    <date>12/08/2021 19:26</date>
+    <orderId>1004</orderId>
+    <totalQuantity>88</totalQuantity>
+    <totalAmount>9680.0</totalAmount>
 </OrderItemData>
