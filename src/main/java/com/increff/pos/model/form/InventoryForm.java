@@ -10,10 +10,10 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 public class InventoryForm {
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String barcode;
 
-    @NotNull
+    @NotNull(message = "Can not contain non-numeric or empty")
     @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Should be a positive integer")
     private Integer quantity;
 }

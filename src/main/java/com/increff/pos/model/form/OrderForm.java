@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderForm {
+
     private Integer id;
     private List<OrderItemForm> orderItemList;
 }

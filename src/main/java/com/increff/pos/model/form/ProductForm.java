@@ -1,29 +1,29 @@
 package com.increff.pos.model.form;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class ProductForm {
 
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String barcode;
 
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String brand;
 
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String category;
 
-    @NotNull
+    @NotNull(message = "Can not contain non-numeric or empty")
     @Min(value = 0L, message = "The value must be positive")
     private Double mrp;
 }

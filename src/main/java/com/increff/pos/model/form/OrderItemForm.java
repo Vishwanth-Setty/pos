@@ -8,13 +8,15 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class OrderItemForm {
+
     private Integer orderItemId;
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private Integer orderId;
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String barcode;
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private Integer quantity;
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private Double sellingPrice;
+
 }

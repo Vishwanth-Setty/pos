@@ -171,6 +171,9 @@ function addProductToTable(e) {
             product["sellingPrice"] = $('#addSellingPrice').val()
             var dataTable = $("#new-order-table").DataTable();
             dataTable.row.add(product).draw(false);
+            if(dataTable.rows().data().length){
+                $('#addOrderSubmit').removeAttr('disabled'); 
+            }
 
         },
         error: function (error) {
@@ -516,6 +519,21 @@ $(document).ready(
                 $('#addProductToUpdateOrder').attr('disabled', 'disabled');
             } else {
                 $('#addProductToUpdateOrder').removeAttr('disabled');
+            }
+        });
+    })
+);
+$(document).ready(
+    (function () {
+        $('#createOrder :input').keyup(function () {
+            var empty = true;
+            if ($('#addBarcode').val() != '' && $('#addQuantity').val() != '' && $('#addSellingPrice').val() != '') {
+                empty = false;
+            }
+            if (empty) {
+                $('#addProduct').attr('disabled', 'disabled');
+            } else {
+                $('#addProduct').removeAttr('disabled');
             }
         });
     })

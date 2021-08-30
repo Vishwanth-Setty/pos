@@ -10,10 +10,10 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class ReportForm {
 
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String startDate;
 
-    @NotBlank
+    @NotBlank(message = "Can not be blank")
     private String endDate;
 
     @NotNull
