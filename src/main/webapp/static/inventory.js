@@ -150,7 +150,8 @@ function uploadRows(){
             $("#uploadModal").modal("hide");
 	   },
 	   error: function(error){
-           toast(error.responseJSON.message,'WARN')
+           toast(errorMsg(error.responseJSON.message), 'WARN')
+
 	   }
 	});
 

@@ -3,7 +3,7 @@ var reportData = [];
 
 function displaySalesReport(report){
     var dataTable = $('#report-table').DataTable()
-    dataTable.clear().draw();
+    dataTable.clear().draw(false);
     for (var i in report) {
         var e = report[i];
         dataTable.row.add(e).draw(false);
@@ -37,7 +37,7 @@ function getReport() {
             if(response.length==0){
                 toast("Not Report", 'WARN');
                 displaySalesReport([]);
-            $('#downloadCSVButton').removeClass('btn-large-text');;
+                $('#downloadCSVButton').removeClass('btn-large-text');;
                 $('#downloadCSVButton').attr('disabled', true);   
             }
             else{
@@ -48,7 +48,8 @@ function getReport() {
         error: function (error) {
             error = error.responseJSON;
             $('#downloadCSVButton').removeClass('btn-large-text');
-            $('#downloadCSVButton').attr('disabled', true);   
+            $('#downloadCSVButton').attr('disabled', true);
+            displaySalesReport([]);
             toast(error.message, 'WARN');
         },
     });

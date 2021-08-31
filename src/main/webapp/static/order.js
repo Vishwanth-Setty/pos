@@ -272,6 +272,7 @@ $('#new-order-table tbody').on('click', 'tr', function () {
         dataTable.$('tr.selected').removeClass('selected');
         $(this).addClass('selected');
     }
+
 });
 
 // Disbale button
@@ -297,6 +298,9 @@ $(function () {
 $('#new-order-table').on('click', 'tbody td.row-remove', function (e) {
     var dataTable = $("#new-order-table").DataTable();
     dataTable.row('.selected').remove().draw(false);
+    if(dataTable.rows().data().length==0){
+        $('#addOrderSubmit').attr('disabled', 'disabled');
+    }
 });
 
 $('#order-item-table').on('click', 'tbody td.toggle-edit', function (e) {

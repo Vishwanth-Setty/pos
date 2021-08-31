@@ -155,8 +155,8 @@ function uploadRows(){
 
 	   },
 	   error: function(error){
-           toast(error.responseJSON.message,'WARN')
-	   }
+        toast(errorMsg(error.responseJSON.message), 'WARN')
+    }
 	});
 
 }

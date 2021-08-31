@@ -34,10 +34,27 @@ public abstract class AbstractApi {
             throw new ApiException(errorMessage);
         }
     }
-    public <T> void checkValidList(List<T> objects) throws ApiException {
-        for(T object:objects){
-            checkValid(object);
+    public <T> String checkValid(T object,int row){
+        Set<ConstraintViolation<T>> violations = validator.validate(object) ;
+        String errorMessage = "";
+        if(violations.size()>0){
+            for(ConstraintViolation<T> constraintViolation: violations){
+                String error = constraintViolation.getPropertyPath()+":"+constraintViolation.getMessage()+"-";
+                errorMessage = errorMessage.concat(error);
+            }
+            return String.valueOf(row) + "*" +errorMessage + "#";
         }
+        return errorMessage;
+
+    }
+    public <T> void checkValidList(List<T> objects) throws ApiException {
+        int i=0;
+        String errorMessage = "";
+        for(T object:objects){
+            ++i;
+            errorMessage = errorMessage.concat(checkValid(object,i));
+        }
+        throw new ApiException(errorMessage);
     }
 
 }

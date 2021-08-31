@@ -9,10 +9,10 @@ function displayBrandData(brands) {
     var dataTable = $("#brand-table").DataTable();
     dataTable.clear().draw();
     reportBrand = [];
-    for(items of brands){
+    for (items of brands) {
         let brandData = {
-            brand:items.brand,
-            category:items.category,
+            brand: items.brand,
+            category: items.category,
         }
         reportBrand.push(brandData);
     }
@@ -91,7 +91,8 @@ function editBrand(e) {
             prevValue["category"] = response.category;
         },
         error: function () {
-            toast("Error while Retriving Information",'WARN');        }
+            toast("Error while Retriving Information", 'WARN');
+        }
     });
 }
 
@@ -122,63 +123,81 @@ function updateBrand(e) {
 }
 
 //Upload Data
-function upload(){
+function upload() {
     var $file = $('#brandFile');
-    if($file.val() == ''){
-        toast("Select File","WARN");
-        return ;
+    if ($file.val() == '') {
+        toast("Select File", "WARN");
+        return;
     }
     processData($file);
 }
 
-function updateFileName(){
-	var $file = $('#brandFile');
-	var fileName = $file.val().replace(/^.*[\\\/]/, '');
-	$('#brandFileName').html(fileName);
+function updateFileName() {
+    var $file = $('#brandFile');
+    var fileName = $file.val().replace(/^.*[\\\/]/, '');
+    $('#brandFileName').html(fileName);
 }
 
-function uploadRows(){
-	var json = JSON.stringify(fileData);
-    if(!checkFile(fileData)){
-        toast("Invalid file format",'WARN')
+function uploadRows() {
+    var json = JSON.stringify(fileData);
+    if (!checkFile(fileData)) {
+        toast("Invalid file format", 'WARN')
         return;
     }
     let url = getBrandUrl();
-    switch(type){
+    switch (type) {
         case 'Brand':
             url = getBrandUrl();
     }
 
-	// Make ajax call
-	$.ajax({
-	   url: url+'/list',
-	   type: 'POST',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },	   
-	   success: function(response) {
-	   		toast("Susccess",'INFO');
+    // Make ajax call
+    $.ajax({
+        url: url + '/list',
+        type: 'POST',
+        data: json,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+            toast("Susccess", 'INFO');
             getBrands();
             $("#uploadModal").modal("hide");
-	   },
-	   error: function(error){
-           toast(error.responseJSON.message,'WARN')
-	   }
-	});
+        },
+        error: function (error) {
+            errorToJson(JSON.parse(json),error.responseJSON.message)
+            toast(errorMsg(error.responseJSON.message), 'WARN')
+        }
+    });
 
 }
 
-function checkFile(jsonFile){
+function errorToJson(json,error){
+    msgs = error.split("#");
+    rows = []
+    for (msg of msgs) {
+        row = {}
+        row["number"] = msg.split("*")[0];
+        row["message"] = msg.split("*")[1];
+        rows.push(row);
+        console.log(json);
+        if(row.number != "")
+            json[parseInt(row.number)-1]["error"] =  row["message"]
+    } 
+    console.log(json);
+}
+
+
+
+function checkFile(jsonFile) {
     let keys = Object.keys(jsonFile[0])
-    if(keys[0] == "brand" && keys[1]=="category"){
+    if (keys[0] == "brand" && keys[1] == "category") {
         return true;
     }
     return false;
 }
 
 // Download CSV
-function downloadCSV(){
+function downloadCSV() {
     jsonToCsv(reportBrand);
 }
 
@@ -198,7 +217,7 @@ function init() {
     $('#createBrand').submit(addBrand);
     $('#brandFile').on('change', updateFileName);
     $('#upload-data').click(upload);
-    $('#uploadModalButton').click(function(){
+    $('#uploadModalButton').click(function () {
         $('#uploadModal').modal('show');
         $('#brandFile').val("");
         $('#brandFileName').html("Choose file");
@@ -218,15 +237,16 @@ function init() {
                 "bSortable": false,
                 "mRender": function (o) {
                     return '<span id="editButton" onclick="editBrand(' + o.id +
-                     ')"><span data-toggle="tooltip" data-placement="top" title="Edit" class="material-icons md-24">edit</span></span>';
+                        ')"><span data-toggle="tooltip" data-placement="top" title="Edit" class="material-icons md-24">edit</span></span>';
                 }
             }
         ],
-        "columnDefs": [
-            { "width": "10px", "targets": -1 }
-        ]
+        "columnDefs": [{
+            "width": "10px",
+            "targets": -1
+        }]
     });
-    
+
     $('#editBrand :input').keyup(function () {
         let brand = $('#brandName').val();
         let category = $('#categoryName').val();

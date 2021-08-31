@@ -1,6 +1,6 @@
 //TOAST SERVICE
 function toast(message,type){
-    $('.toast-body').text(message)
+    $('.toast-body').html(message)
     switch (type){
         case 'INFO':
             $('#toast').css({"background": "#9affa2", "opacity": "1","color": "black"});
@@ -32,6 +32,24 @@ function toJson($form){
     }
     var json = JSON.stringify(data);
     return json;
+}
+
+function errorMsg(error) {
+    msgs = error.split("#");
+    rows = []
+    for (msg of msgs) {
+        row = {}
+
+        row["number"] = msg.split("*")[0];
+        row["message"] = msg.split("*")[1];
+        rows.push(row);
+    }
+    var html = ''
+    for (row of rows) {
+        if(row.number != "")
+            html += '<p>Row(' + row.number + ') ' + row.message.slice(0,-1) + "</p>"
+    }
+    return html;
 }
 
 
