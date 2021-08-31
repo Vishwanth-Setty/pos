@@ -150,7 +150,10 @@ function uploadRows(){
             $("#uploadModal").modal("hide");
 	   },
 	   error: function(error){
-           toast(error.responseJSON.message,'WARN')
+           toast(error.responseJSON.message,'WARN');
+           var $file = $('#inventoryFile');
+            $file.val('');
+            $('#inventoryFileName').html('');
 	   }
 	});
 

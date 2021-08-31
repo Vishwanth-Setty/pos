@@ -10,6 +10,7 @@ import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
+import com.increff.pos.utils.AbstractApi;
 import com.increff.pos.utils.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class OrderDto {
+public class OrderDto extends AbstractApi {
 
     @Autowired
     OrderService orderService;
@@ -47,6 +48,7 @@ public class OrderDto {
         return orderItemDataList;
     }
     public OrderData add(OrderForm orderForm) throws ApiException {
+        checkValidList(orderForm.getOrderItemList());
         checkDuplicatesRecords(orderForm.getOrderItemList());
         List<OrderItemForm> orderItemFormList = orderForm.getOrderItemList();
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
@@ -58,6 +60,7 @@ public class OrderDto {
         return orderData;
     }
     public void update(OrderForm orderForm) throws ApiException {
+        checkValidList(orderForm.getOrderItemList());
         if(orderService.isInvoiceGenerated(orderForm.getId())){
             throw new ApiException("Cannot edit for invoiced order");
         }

@@ -27,9 +27,6 @@ public class ReportService extends AbstractApi {
 
         checkValid(reportForm);
 
-        ZonedDateTime startDate = convert((reportForm.getStartDate().split("/")),"start");
-        ZonedDateTime endDate = convert(reportForm.getEndDate().split("/"),"end");
-
         HashMap<Integer,String> brandIdToNameAndCategory=new HashMap<>();
         brandListToMap(brandPojoList,brandIdToNameAndCategory);
 
