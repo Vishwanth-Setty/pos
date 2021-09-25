@@ -1,33 +1,65 @@
 //TOAST SERVICE
-function toast(message,type){
-    $('.toast-body').text(message)
-    switch (type){
+function toast(message, type) {
+    $('.toast-body').html(message)
+    switch (type) {
         case 'INFO':
-            $('#toast').css({"background": "#9affa2", "opacity": "1","color": "black"});
+            $('#toast').css({
+                "background": "#9affa2",
+                "opacity": "1",
+                "color": "black",
+                "font-weight": "bold",
+                "font-size": "22px"
+            });
             $('#toast').css('opacity', '1');
-            setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0","color": "black"})}, 3000);
+            setTimeout(function () {
+                $('#toast').css({
+                    "background": "#ffffff00",
+                    "opacity": "0",
+                    "color": "black"
+                })
+            }, 3000);
             break;
         case 'WARN':
-            $('#toast').css({"background": "#e65e3f", "opacity": "1", "color": "white"});
+            $('#toast').css({
+                "background": "#c95757",
+                "opacity": "1",
+                "color": "white",
+                "font-weight": "bold"
+            });
             break;
-        default :
-            $('#toast').css({"background": "#9affa2", "opacity": "1","color": "black"});
+        default:
+            $('#toast').css({
+                "background": "#9affa2",
+                "opacity": "1",
+                "color": "black",
+                "font-weight": "bold",
+                "font-size": "22px"
+            });
             $('#toast').css('opacity', '1');
-            setTimeout(function(){ $('#toast').css({"background": "#ffffff00", "opacity": "0", "color": "black"})}, 3000);
+            setTimeout(function () {
+                $('#toast').css({
+                    "background": "#ffffff00",
+                    "opacity": "0",
+                    "color": "black"
+                })
+            }, 3000);
             break;
     };
-    
+
 }
-$('#close-button').click(function(){
-    $('#toast').css({"background": "#ffffff00", "opacity": "0"})
+$('#close-button').click(function () {
+    $('#toast').css({
+        "background": "#ffffff00",
+        "opacity": "0"
+    })
 })
 
 //HELPER METHOD
-function toJson($form){
+function toJson($form) {
     var serialized = $form.serializeArray();
     var s = '';
     var data = {};
-    for(s in serialized){
+    for (s in serialized) {
         data[serialized[s]['name']] = serialized[s]['value'].trim().toLowerCase()
     }
     var json = JSON.stringify(data);
@@ -36,44 +68,48 @@ function toJson($form){
 
 
 //URL
-function getBrandUrl(){
-	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/brand";
+function getBrandUrl() {
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/brand";
 }
 
-function getProductUrl(){
-	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/product";
+function getProductUrl() {
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/product";
 }
+
 function getInventoryUrl() {
     var baseUrl = $("meta[name=baseUrl]").attr("content")
     return baseUrl + "/api/inventory";
 }
+
 function getOrderUrl() {
     var baseUrl = $("meta[name=baseUrl]").attr("content")
     return baseUrl + "/api/order";
 }
-function getReportUrl(){
-	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/report";
+
+function getReportUrl() {
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/report";
 }
 
 
 //validations
 
-function validatePositiveNumber(num){
+function validatePositiveNumber(num) {
     var number = new Number(num)
-    if(!Number.isInteger(number)){
+    if (!Number.isInteger(number)) {
         return "Not a Number";
     }
-    if(number<0){
+    if (number < 0) {
         return "Number should be non negative";
     }
     return true;
 }
-function validateDouble(number){
+
+function validateDouble(number) {
     var num = new Number(number);
-    if(/^[0-9]{0,3}(\.[0-9]{0,2})?$/.test(num) && num > 0){
+    if (/^[0-9]{0,3}(\.[0-9]{0,2})?$/.test(num) && num > 0) {
         return true;
     }
     return false;
@@ -81,19 +117,21 @@ function validateDouble(number){
 
 //JSON to CSV
 
-function jsonToCsv(json){
+function jsonToCsv(json) {
     const items = json
     const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
     const header = Object.keys(items[0])
     const csv = [
-    header.join('\t'), // header row first
-    ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join('\t'))
+        header.join('\t'), // header row first
+        ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join('\t'))
     ].join('\r\n')
 
-    blob = new Blob([csv], { type: 'text/csv' });
+    blob = new Blob([csv], {
+        type: 'text/csv'
+    });
     var csvUrl = window.webkitURL.createObjectURL(blob);
     ReportTitle = "report";
-    var filename =  (ReportTitle || 'UserExport') + '.tsv';
+    var filename = (ReportTitle || 'UserExport') + '.tsv';
     //this trick will generate a temp "a" tag
     var link = document.createElement("a");
     link.id = "lnkDwnldLnk";
@@ -118,22 +156,22 @@ var processCount = 0;
 var type;
 
 
-function processData($file,from){
+function processData($file, from) {
     // console.log($file);
     type = from;
-	var file = $file[0].files[0];
+    var file = $file[0].files[0];
     // console.log("file" ,file)
-	readFileData(file, readFileDataCallback);
+    readFileData(file, readFileDataCallback);
 }
 
-function readFileDataCallback(results){
-	fileData = results.data;
+function readFileDataCallback(results) {
+    fileData = results.data;
     console.log(fileData)
-    if(fileData.length>5000){
+    if (fileData.length > 5000) {
         alert("Cant upload more than 5000 rows")
         return false;
     }
-	uploadRows();
+    uploadRows();
 }
 
 const downloadFile = (blob, fileName) => {
@@ -149,53 +187,57 @@ const downloadFile = (blob, fileName) => {
     link.remove();
     // in case the Blob uses a lot of memory
     setTimeout(() => URL.revokeObjectURL(link.href), 7000);
-  };
+};
 
-  function b64toBlob (b64Data, contentType='', sliceSize=512) {
+function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
     const byteCharacters = atob(b64Data);
     const byteArrays = [];
-  
+
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-  
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-  
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
     }
-  
-    const blob = new Blob(byteArrays, {type: contentType});
+
+    const blob = new Blob(byteArrays, {
+        type: contentType
+    });
     return blob;
-  }
-  
-
-
-function readFileData(file, callback){
-	var config = {
-		header: true,
-		delimiter: "\t",
-		skipEmptyLines: "greedy",
-		complete: function(results) {
-			callback(results);
-	  	}	
-	}
-	Papa.parse(file, config);
 }
 
 
-function writeFileData(arr){
-	var config = {
-		quoteChar: '',
-		escapeChar: '',
-		delimiter: "\t"
-	};
-	
-	var data = Papa.unparse(arr, config);
-    var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
-    var fileUrl =  null;
+
+function readFileData(file, callback) {
+    var config = {
+        header: true,
+        delimiter: "\t",
+        skipEmptyLines: "greedy",
+        complete: function (results) {
+            callback(results);
+        }
+    }
+    Papa.parse(file, config);
+}
+
+
+function writeFileData(arr) {
+    var config = {
+        quoteChar: '',
+        escapeChar: '',
+        delimiter: "\t"
+    };
+
+    var data = Papa.unparse(arr, config);
+    var blob = new Blob([data], {
+        type: 'text/tsv;charset=utf-8;'
+    });
+    var fileUrl = null;
 
     if (navigator.msSaveBlob) {
         fileUrl = navigator.msSaveBlob(blob, 'download.tsv');
@@ -205,10 +247,5 @@ function writeFileData(arr){
     var tempLink = document.createElement('a');
     tempLink.href = fileUrl;
     tempLink.setAttribute('download', 'download.tsv');
-    tempLink.click(); 
+    tempLink.click();
 }
-
-
-
-
-

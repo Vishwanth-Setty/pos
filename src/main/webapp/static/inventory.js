@@ -33,7 +33,7 @@ function addInventory(e) {
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
             $('#addModal').modal('hide');
-            toast('Success');
+            toast("Success",'INFO');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -69,7 +69,7 @@ function updateInventory(e) {
         success: function (response) {
             getInventories();
             $('#editModal').modal('hide');
-            toast('Success');
+            toast("Success",'INFO');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
@@ -128,7 +128,9 @@ function updateFileName(){
 }
 
 function uploadRows(){
-	
+	for(item in fileData){
+        fileData[item]["quantity"] = parseInt(fileData[item]["quantity"]);
+    }
 	var json = JSON.stringify(fileData);
     if(!checkFile(fileData)){
         toast("Invalid file format",'WARN')
@@ -145,7 +147,7 @@ function uploadRows(){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-            toast("Susccess",'INFO');
+            toast("Success",'INFO');
             getInventories()
             $("#uploadModal").modal("hide");
 	   },
@@ -235,6 +237,15 @@ function init() {
             return;
         }
         $('#update-inventory').prop('disabled', false);
+    });
+    $('#addInventory :input').keyup(function () {
+        let barcode = ($('#addBarcode').val());
+        let quantity = ($('#addQuantity').val());
+        if (quantity == '' || barcode == '') {
+            $('#addInventoryButton').prop('disabled', true);
+            return;
+        }
+        $('#addInventoryButton').prop('disabled', false);
     });
 }
 

@@ -13,7 +13,6 @@ public class OrderItemForm {
 
     private Integer orderItemId;
 
-    @NotNull(message = "Can not be blank")
     private Integer orderId;
 
     @NotBlank(message = "Can not be blank")

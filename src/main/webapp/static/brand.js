@@ -158,7 +158,7 @@ function uploadRows(){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		toast("Susccess",'INFO');
+	   		toast("Success",'INFO');
             getBrands();
             $("#uploadModal").modal("hide");
 	   },
@@ -238,6 +238,15 @@ function init() {
             return;
         }
         $('#update-brand').prop('disabled', false);
+    });
+    $('#createBrand :input').keyup(function () {
+        let brand = $('#addBrandName').val();
+        let category = $('#addCategoryName').val();
+        if (brand == '' || category == '') {
+            $('#addBrandButton').prop('disabled', true);
+            return;
+        }
+        $('#addBrandButton').prop('disabled', false);
     });
 
 }

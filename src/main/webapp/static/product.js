@@ -29,11 +29,11 @@ function addProduct(e) {
                 .not(':button, :submit, :reset, :hidden')
                 .val('')
             $('#addModal').modal('hide');
-            toast('Success','INFO');
+            toast('Success', 'INFO');
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
-            toast(error.message,'WARN');
+            toast(error.message, 'WARN');
 
         }
     });
@@ -75,7 +75,7 @@ function updateProduct(e) {
         },
         error: function (error) {
             error = JSON.parse(error.responseText);
-            toast(error.message,'WARN');
+            toast(error.message, 'WARN');
         },
     });
     return false;
@@ -92,7 +92,7 @@ function getProducts() {
             displayProductData(products);
         },
         error: function (error) {
-            toast("Could not Retrive Information",'WARN');
+            toast("Could not Retrive Information", 'WARN');
         },
     });
 }
@@ -105,68 +105,67 @@ async function getProductById(id) {
         success: function (response) {
             product = response;
         },
-        error: function (error) {
-        },
+        error: function (error) {},
     });
     return product;
 }
 
 //Upload
 
-function upload(){
+function upload() {
     var $file = $('#productFile');
-    if($file.val() == ''){
-        toast("Select File","WARN");
-        return ;
+    if ($file.val() == '') {
+        toast("Select File", "WARN");
+        return;
     }
     processData($file);
 }
 
-function updateFileName(){
-	var $file = $('#productFile');
+function updateFileName() {
+    var $file = $('#productFile');
     var fileName = $file.val().replace(/^.*[\\\/]/, '');
-	$('#productFileName').html(fileName);
+    $('#productFileName').html(fileName);
 }
 
-function uploadRows(){
-	for(item in fileData){
+function uploadRows() {
+    for (item in fileData) {
         fileData[item]["mrp"] = parseInt(fileData[item]["mrp"]);
     }
-    if(!checkFile(fileData)){
-        toast("Invalid file format",'WARN')
+    if (!checkFile(fileData)) {
+        toast("Invalid file format", 'WARN')
         return;
     }
 
-	var json = JSON.stringify(fileData);
+    var json = JSON.stringify(fileData);
     let url = getProductUrl();
 
-	// Make ajax call
-	$.ajax({
-	   url: url+'/upload',
-	   type: 'POST',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },	   
-	   success: function(response) {
-        toast("Susccessfull",'INFO');
-        getProducts(); 
-        $("#uploadModal").modal("hide");
+    // Make ajax call
+    $.ajax({
+        url: url + '/upload',
+        type: 'POST',
+        data: json,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+            toast("Success", 'INFO');
+            getProducts();
+            $("#uploadModal").modal("hide");
 
-	   },
-	   error: function(error){
-           toast(error.responseJSON.message,'WARN');
-           var $file = $('#productFile');
+        },
+        error: function (error) {
+            toast(error.responseJSON.message, 'WARN');
+            var $file = $('#productFile');
             $file.val('');
             $('#productFileName').html('');
-	   }
-	});
+        }
+    });
 
 }
 
-function checkFile(jsonFile){
+function checkFile(jsonFile) {
     let keys = Object.keys(jsonFile[0])
-    if(keys[0] == "barcode" && keys[1]=="brand"  && keys[2]=="category"  && keys[3]=="name"  && keys[4]=="mrp" ){
+    if (keys[0] == "barcode" && keys[1] == "brand" && keys[2] == "category" && keys[3] == "name" && keys[4] == "mrp") {
         return true;
     }
     return false;
@@ -190,13 +189,13 @@ function openModal() {
 
 function init() {
     activeTab();
-    
+
     $("#editProduct").submit(updateProduct);
     $("#addProductModal").click(openModal);
     $("#addProduct").submit(addProduct);
     $('#productFile').on('change', updateFileName);
     $('#upload-data').click(upload);
-    $('#uploadModalButton').click(function(){
+    $('#uploadModalButton').click(function () {
         $("#uploadModal").modal("show");
         $('#inventoryFile').val("");
         $('#inventoryFileName').html("Choose file");
@@ -235,9 +234,10 @@ function init() {
                 },
             },
         ],
-        "columnDefs": [
-            { "width": "10px", "targets": -1 }
-        ],
+        "columnDefs": [{
+            "width": "10px",
+            "targets": -1
+        }],
     });
 
     $('#editProduct :input').keyup(function () {
@@ -248,6 +248,18 @@ function init() {
             return;
         }
         $('#update-product').prop('disabled', false);
+    });
+    $('#addProduct :input').keyup(function () {
+        let barcode = $('#addBarcode').val();
+        let brand = $('#addBrandName').val();
+        let category = $('#addCategoryName  ').val();
+        let name = $('#addName').val();
+        let mrp = $('#addMrp').val();
+        if (name == '' || barcode == '' || category == '' || brand == '' || mrp == '') {
+            $('#addProductButton').prop('disabled', true);
+            return;
+        }
+        $('#addProductButton').prop('disabled', false);
     });
 }
 

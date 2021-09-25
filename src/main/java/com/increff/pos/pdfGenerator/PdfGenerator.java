@@ -1,7 +1,6 @@
 package com.increff.pos.pdfGenerator;
 
 
-import com.increff.pos.model.data.OrderItemXMLs;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;

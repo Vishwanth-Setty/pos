@@ -28,7 +28,7 @@ public abstract class AbstractApi {
         String errorMessage = "";
         if(violations.size()>0){
             for(ConstraintViolation<T> constraintViolation: violations){
-                String error = "[ "+constraintViolation.getPropertyPath()+"-"+constraintViolation.getMessage()+" ] \n";
+                String error = "[ "+constraintViolation.getPropertyPath()+"-"+constraintViolation.getMessage()+" ] <br>";
                 errorMessage = errorMessage.concat(error);
             }
             throw new ApiException(errorMessage);

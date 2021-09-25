@@ -1,7 +1,5 @@
 package com.increff.pos;
 
-import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.pojo.ProductPojo;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

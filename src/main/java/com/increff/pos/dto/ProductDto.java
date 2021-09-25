@@ -95,7 +95,7 @@ public class ProductDto extends AbstractApi {
         errorMessage = checkBrandAndCategory(productFormList);
         if (!errorMessage.equals("")) {
             errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
-            return "Invalid brand and category combinations for brand-category: [ " + errorMessage + " ]";
+            return "Invalid brand and category combinations for barcode: [ " + errorMessage + " ]";
         }
         errorMessage = checkExists(productFormList);
         if (!errorMessage.equals("")) {
